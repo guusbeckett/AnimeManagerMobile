@@ -7,6 +7,8 @@
     <string name="edit_watch">Edit currently watching</string>
     <string name="edit_read">Edit currently reading</string>
     <string name="menu_add">Add</string>
+    <string name="list_location">List location</string>
+    <string name="fansub_list">Edit Fansub teams</string>
     <string name="view_list">View another list</string>
 
 </resources>

@@ -1,31 +1,37 @@
 package jim.reupload.nl.animemanagermobile;
 
+import android.annotation.TargetApi;
 import android.app.ActionBar;
+import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 
-public class EditWatch extends Activity {
+public class SettingsPage extends Activity {
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        setContentView(R.layout.activity_edit_anime);
-    }
-	
-	@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.edit_menu, menu);
-        return true;
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionBar.setDisplayShowTitleEnabled(false);
 
-    }
+        Tab tab = actionBar.newTab()
+                .setText(R.string.list_location)
+                .setTabListener(new TabListener<FileLocationFrag>(
+                        this, "artist", FileLocationFrag.class));
+        actionBar.addTab(tab);
+
+        tab = actionBar.newTab()
+            .setText(R.string.fansub_list)
+            .setTabListener(new TabListener<SubbersFragment>(
+                    this, "album", SubbersFragment.class));
+        actionBar.addTab(tab);
+	}
 	
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
@@ -39,5 +45,5 @@ public class EditWatch extends Activity {
 	            return super.onOptionsItemSelected(item);
 	    }
 	}
-	
 }
+
