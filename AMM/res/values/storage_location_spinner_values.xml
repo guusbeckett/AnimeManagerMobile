@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="spinner_storage">
+        <item>None</item>
         <item>Dropbox</item>
         <item>SkyDrive</item>
         <item>Google Drive</item>

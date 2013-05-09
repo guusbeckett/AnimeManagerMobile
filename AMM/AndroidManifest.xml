@@ -30,6 +30,10 @@
             android:label="@string/app_name" >
         </activity>
         <activity
+            android:name="jim.reupload.nl.animemanagermobile.MediaPage"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
             android:name="jim.reupload.nl.animemanagermobile.EditRead"
             android:label="@string/app_name" >
         </activity>

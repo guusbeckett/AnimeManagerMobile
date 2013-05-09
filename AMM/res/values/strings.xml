@@ -8,7 +8,9 @@
     <string name="edit_read">Edit currently reading</string>
     <string name="menu_add">Add</string>
     <string name="list_location">List location</string>
+    <string name="select_store">Please select an option for storage</string>
     <string name="fansub_list">Edit Fansub teams</string>
     <string name="view_list">View another list</string>
+    <string name="fetch_metadata">Fetch MetaData</string>
 
 </resources>
