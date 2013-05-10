@@ -35,10 +35,6 @@ public class AniDBWrapper {
 		ArrayList<String> title = new ArrayList<String>();
 
 
-		if (android.os.Build.VERSION.SDK_INT > 9) {
-		      StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-		      StrictMode.setThreadPolicy(policy);
-		    }
 		try {
 			if (desperate)
 				query = URLEncoder.encode(query, "UTF-8");
@@ -105,6 +101,10 @@ public class AniDBWrapper {
 	}
 	
 	public static HttpEntity httpget(String url) {
+		if (android.os.Build.VERSION.SDK_INT > 9) {
+		      StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+		      StrictMode.setThreadPolicy(policy);
+		    }
 		HttpResponse responseGet = null;
 		try {
 			HttpClient client = new DefaultHttpClient();  
@@ -179,5 +179,18 @@ public class AniDBWrapper {
 		else
 			return null;
 	}
+	
+	public static void fetchImage(String filename, Activity act) {
+		String url = "http://img7.anidb.net/pics/anime/" + filename;
+	    HttpEntity resEntityGet = httpget(url);
+
+	    try {
+			resEntityGet.writeTo(DataManage.openOutputStreamToExternal(new File(act.getExternalFilesDir(null), "/images/"), filename));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	
 }

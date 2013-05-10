@@ -1,7 +1,9 @@
 package jim.reupload.nl.animemanagermobile;
 
+import jim.reupload.nl.animemanagermobile.dialogs.WaitDialog;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -51,6 +53,7 @@ public class MainMenu extends Activity {
 	        final Button editAnimeButton = (Button) findViewById(R.id.button1);
 	        final Button editMangaButton = (Button) findViewById(R.id.button2);
 	        final Button viewListButton = (Button) findViewById(R.id.button3);
+	        final Activity act = this;
 	        editAnimeButton.setOnClickListener(new View.OnClickListener() {
 	            public void onClick(View v) {
 	            	startActivity(intent1);

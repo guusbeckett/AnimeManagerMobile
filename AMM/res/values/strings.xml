@@ -12,5 +12,12 @@
     <string name="fansub_list">Edit Fansub teams</string>
     <string name="view_list">View another list</string>
     <string name="fetch_metadata">Fetch MetaData</string>
+    <string name="frag_general">General</string>
+    <string name="frag_chars">Characters</string>
+    <string name="frag_desc">Description</string>
+    <string name="frag_eps">Episodes</string>
+    <string name="frag_cats">Categories</string>
+    <string name="frag_tags">Tags</string>
+    <string name="wait_fs">Please wait for filesystem sync</string>
 
 </resources>

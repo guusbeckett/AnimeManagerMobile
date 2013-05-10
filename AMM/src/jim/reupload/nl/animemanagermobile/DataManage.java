@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
@@ -21,6 +22,8 @@ import org.apache.http.util.ByteArrayBuffer;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.provider.OpenableColumns;
 import android.util.Log;
@@ -37,8 +40,10 @@ import com.dropbox.sync.android.DbxPath.InvalidPathException;
 public class DataManage {
 
 	
+	private static Object cached;
 	private DbxAccountManager mDbxAcctMgr;
-	private boolean fslive;
+	private static boolean fslive;
+	private static Object cached2;
 	private DbxFileSystem dbxFs;
 	private AnimeObject[] list;
 	private boolean writePos;
@@ -327,4 +332,67 @@ public class DataManage {
 		else
 			return null;
 	}
+	
+	public static void cacheObject(Object item) {
+		cached = item;
+	}
+	
+	public static Object getCached() {
+		return cached;
+	}
+	public static void cacheObject2(Object item) {
+		cached2 = item;
+	}
+	
+	public static Object getCached2() {
+		return cached2;
+	}
+	
+	public static boolean isCached() {
+		return (cached!=null);
+	}
+	public static boolean isCached2() {
+		return (cached2!=null);
+	}
+
+	public static OutputStream openOutputStreamToExternal(
+			File externalFilesDir, String filename) {
+		String state = Environment.getExternalStorageState();
+
+		if (Environment.MEDIA_MOUNTED.equals(state)) {
+			    // We can read and write the media
+			FileOutputStream fos = null;
+			if (!externalFilesDir.exists()){
+				externalFilesDir.mkdirs();
+			}
+				try {
+					fos = new FileOutputStream(new File(externalFilesDir, filename));
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			return fos;
+		}
+		else
+			return null;
+	}
+	
+	 public static Bitmap loadImageFromExternal(String filename, Activity act) {
+	      try {
+	          File f = new File(act.getExternalFilesDir(null)+"/images/", filename);
+	          if (!f.exists()) { Log.d("BitMapLoader", "File " + f + " Not Found"); return null; }
+	          Bitmap tmp = BitmapFactory.decodeFile(f.toString());
+	          return tmp;
+	      } catch (Exception e) {
+	    	  Log.d("BitMapLoader", "exception found");
+	          return null;
+	      }
+	  }
+	 
+	 public static void clearCaches() {
+		 cached =null;
+		 cached2=null;
+	 }
+	
+	
 }
