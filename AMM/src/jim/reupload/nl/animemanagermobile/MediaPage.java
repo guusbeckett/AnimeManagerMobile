@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -15,7 +16,8 @@ import android.widget.TextView;
 public class MediaPage extends Activity {
 	
 	private MediaObject media;
-	private RelativeLayout rl;
+	private LinearLayout linlay;
+	private int aid;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,11 +31,12 @@ public class MediaPage extends Activity {
         setContentView(R.layout.media_page);
         
         ScrollView view = (ScrollView) findViewById(R.id.media_relative);
-        rl = new RelativeLayout(this);
-        view.addView(rl);
+        linlay = new LinearLayout(this);
+        view.addView(linlay);
+        linlay.setOrientation(LinearLayout.VERTICAL);
         final TextView tv = new TextView(this);
         String regState = "This show has no registered AID";
-        int aid = DataManage.getAID(media.getTitle());
+        aid = DataManage.getAID(media.getTitle(), this);
         if (aid != 0)
         	regState = "This show's AID is: " + aid;
         tv.setText("This is the page of " + media.getTitle() + "\nProgress "  +  media.getProgress() + " of " + media.getTotal() + "\n" + regState);
@@ -48,10 +51,20 @@ public class MediaPage extends Activity {
 	            }
 	        });
         
-        rl.addView(tv);
-        rl.addView(but);
-        
+        linlay.addView(tv);
+        linlay.addView(but);
+        if (aid != 0) {
+        	if (AniDBWrapper.doesAniDBfileExist(aid, this)){
+        		String stuff = "";
+        		for (String part : AniDBWrapper.parseAniDBfile(aid, this)) {
+        			stuff += "\n\n\n\n" + part;
+        		}
+        		TextView allMeta = new TextView(this);
+        		allMeta.setText(stuff);
+        		linlay.addView(allMeta);
+        	}
         }
+	}
 	
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -79,14 +92,10 @@ public class MediaPage extends Activity {
         if (title.length < 1)
         	title = AniDBWrapper.getMostLikelyID(media.getTitle(), true).toArray(new String[0]);
         if (title.length == 1) {
-        	DataManage.register(media.getTitle(), Integer.parseInt(title[0].split("\\^")[1]), this);
+        	if (aid == 0)
+        		DataManage.register(media.getTitle(), Integer.parseInt(title[0].split("\\^")[1]), this);
+        	AniDBWrapper.grabAnimeMetadata(Integer.parseInt(title[0].split("\\^")[1]), this);
         }
-        TextView tv2 = new TextView(this);
-        String lel = "";
         
-        for (String item:title)
-        	lel+="aniDB title: " + item.split("\\^")[0] + "\naniDB id: " + item.split("\\^")[1]+"\n";
-        tv2.setText("\n\n\n\n\n" + lel);
-        rl.addView(tv2);
 	}
 }

@@ -1,20 +1,27 @@
 package jim.reupload.nl.animemanagermobile;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import org.apache.http.util.ByteArrayBuffer;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Environment;
 import android.provider.OpenableColumns;
 import android.util.Log;
 import android.widget.Toast;
@@ -159,53 +166,64 @@ public class DataManage {
 	}
 	
 	public static boolean isRegistered(String show, Activity act) {
-		String in = readRegistered();
+		String in = readRegistered(act);
 	       
 		return false;
 	}
 	
-	public static int getAID(String show) {
-		String[] in = readRegistered().split("\n");
+	public static int getAID(String show, Activity act) {
+		String[] in = readRegistered(act).split("\n");
 		int i = 0;
 		for (String item : in) {
-			if (getMD5(show).equals(item.split(" ")[0]))
+			if (getHash(show).equals(item.split(" ")[0]))
 				i = Integer.parseInt(item.split(" ")[1]);
+			else
+				Log.d("reject", item.split(" ")[0] + " is not " + getHash(show));
 		}
 		return i;
 		
 	}
 	
 	public static void register(String show, int id, Activity act) {
-		String in = readRegistered();
+		String in = readRegistered(act);
+		Log.d("old registers", in);
 		
-		in+="\n" + getMD5(show) + " " + id;
+		in+="\n" + getHash(show) + " " + id;
 		writeRegistered(in, act);
+		Log.d("new registers", in);
 		Context context = act.getApplicationContext();
 		CharSequence text = "Registered " + show + " with id " + id;
 		int duration = Toast.LENGTH_SHORT;
-
+		
 		Toast toast = Toast.makeText(context, text, duration);
 		toast.show();
 	}
 	
-	public static String readRegistered() {
-		String out = "";
-		FileInputStream fis;
-		try {
-			fis = new FileInputStream("registered");
-			out = new Scanner(fis,"UTF-8").useDelimiter("\\A").next();
+	public static String readRegistered(Activity act) {
+		BufferedInputStream buf;
+		ByteArrayBuffer baf = null;
+		 try {
+			buf = new BufferedInputStream(new FileInputStream(new File(act.getFilesDir(), "registered")));
+			int current = 0;
+			baf = new ByteArrayBuffer(1024);
+			while ((current = buf.read()) != -1)  {
+			    baf.append((byte) current);
+			}
 		} catch (FileNotFoundException e) {
-			//ignore
+			Log.e("internal error", "Register file does not exist");
+			return "";
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-	Log.d("wow", out);
-	return out;
+		 return new String(baf.toByteArray());
 	}
 	
 	public static void writeRegistered(String stream, Activity act) {
 
 		FileOutputStream fos;
 		try {
-			fos = act.openFileOutput("registered", Context.MODE_PRIVATE);
+			fos = new FileOutputStream(new File(act.getFilesDir(), "registered"));
 			fos.write(stream.getBytes());
 			fos.close();
 		} catch (FileNotFoundException e) {
@@ -218,22 +236,95 @@ public class DataManage {
 		
 	}
 	
-	public static byte[] getMD5 (String in) {
-		byte[] bytesOfMessage = null;
-		MessageDigest md = null;
+	public static String getHash (String in) {
 		try {
-			bytesOfMessage = in.getBytes("UTF-8");
-
-			
-			md = MessageDigest.getInstance("MD5");
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			in = URLEncoder.encode(in, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return md.digest(bytesOfMessage);
+		return in;
 		
+	}
+	
+	public static String convertStreamToString(InputStream is) throws Exception {
+	    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+	    StringBuilder sb = new StringBuilder();
+	    String line = null;
+	    while ((line = reader.readLine()) != null) {
+	      sb.append(line).append("\n");
+	    }
+	    return sb.toString();
+	}
+
+	public static boolean writeToExternal(String stream, String filename, Activity act) {
+		String state = Environment.getExternalStorageState();
+
+		if (Environment.MEDIA_MOUNTED.equals(state)) {
+		    // We can read and write the media
+			File approot = act.getExternalFilesDir(null);
+			FileOutputStream fos;
+			try {
+				fos = new FileOutputStream(new File(approot, filename));
+				fos.write(stream.getBytes());
+				fos.close();
+			} catch (FileNotFoundException e) {
+				return false;
+			} catch (IOException e) {
+				return false;
+			}
+			return true;
+		} else {
+		    return false;
+		}
+		
+	}
+	
+	public static boolean doesExternalFileExist(String filename, Activity act) {
+		
+		String state = Environment.getExternalStorageState();
+
+		if (Environment.MEDIA_MOUNTED.equals(state) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+		    File approot = act.getExternalFilesDir(null);
+		    File file = new File(approot , filename);
+		    if (file.exists()) {
+		    	Log.d("exist check", "File " + file +" does exist");
+		    	return true;
+		    }
+		    else
+		    	return false;
+		} else {
+		    return false;
+		}
+	}
+
+	public static String readFromExternal(String filename, Activity act) {
+		String state = Environment.getExternalStorageState();
+
+		if (Environment.MEDIA_MOUNTED.equals(state) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+		    File approot = act.getExternalFilesDir(null);
+		    File file = new File(approot , filename);
+		    if (doesExternalFileExist(filename, act)) {
+		    	BufferedInputStream buf;
+				ByteArrayBuffer baf = null;
+				 try {
+					buf = new BufferedInputStream(new FileInputStream(file));
+					int current = 0;
+					baf = new ByteArrayBuffer(2048);
+					while ((current = buf.read()) != -1)  {
+					    baf.append((byte) current);
+					}
+				} catch (FileNotFoundException e) {
+					return null;
+				} catch (IOException e) {
+					return null;
+				}
+				 return new String(baf.toByteArray());
+		    }
+		    else
+		    	return null;
+		}
+		else
+			return null;
 	}
 }
