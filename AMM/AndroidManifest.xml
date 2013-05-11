@@ -43,6 +43,10 @@
             android:label="@string/app_name" >
         </activity>
         <activity
+            android:name="jim.reupload.nl.animemanagermobile.SeenList"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
             android:name="jim.reupload.nl.animemanagermobile.SettingsPage"
             android:label="@string/app_name" >
         </activity>

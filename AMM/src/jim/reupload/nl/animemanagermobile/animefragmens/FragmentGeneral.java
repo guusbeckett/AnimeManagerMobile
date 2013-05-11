@@ -41,12 +41,13 @@ public class FragmentGeneral extends Fragment {
         linlay = new LinearLayout(this.getActivity());
         view.addView(linlay);
         linlay.setOrientation(LinearLayout.VERTICAL);
-        Log.d("", "1");
+        Log.d("lel", "1");
         TextView title = new TextView(this.getActivity());
         title.setGravity(Gravity.CENTER);
     	title.setText(media.getTitle());
     	title.setTypeface(null, Typeface.BOLD);
     	linlay.addView(title);
+    	Log.d("lel", "2");
         if (metadata != null) {
         	Bitmap bm = null;
         	if (DataManage.doesExternalFileExist(this.getActivity().getExternalFilesDir(null) + "/image/" + metadata[10], this.getActivity())) {
@@ -61,6 +62,7 @@ public class FragmentGeneral extends Fragment {
         	
         	linlay.addView(img);
         }
+        
         else {
         	TextView nometa = new TextView(this.getActivity());
         	nometa.setText("No Metadata for " + media.getTitle());
@@ -68,6 +70,7 @@ public class FragmentGeneral extends Fragment {
         	nometa.setTextSize(8);
         	linlay.addView(nometa);
         }
+        Log.d("lel", "3");
        /* final TextView tv = new TextView(this.getActivity());
         String regState = "This show has no registered AID";*/
         TextView prog1 = new TextView(this.getActivity());
@@ -75,7 +78,7 @@ public class FragmentGeneral extends Fragment {
         	prog1.setText("Progress: "+media.getProgress() + "/" + metadata[1]);
         else
         	prog1.setText("Progress: "+media.getProgress() + "/" + media.getTotal());
-        aid = DataManage.getAID(media.getTitle(), this.getActivity());
+        aid = media.getId();
         prog1.setOnClickListener(new View.OnClickListener() {
 
         	  @Override
@@ -87,13 +90,14 @@ public class FragmentGeneral extends Fragment {
         	});
         linlay.addView(prog1);
         
-        Log.d("", "2");
+        Log.d("lel", "4");
       //  if (aid != 0)
         //	regState = "This show's AID is: " + aid;
         //tv.setText("This is the page of " + media.getTitle() + "\nProgress "  +  media.getProgress() + " of " + media.getTotal() + "\n" + regState);
        // Button but = new Button(this.getActivity());
         //but.setText("+");
-        Log.d("", "3");
+        Log.d("lel", "5");
+        Log.d("aid", aid+"");
         data = new DataManage();
        /* final Activity act = this.getActivity();
         but.setOnClickListener(new View.OnClickListener() {

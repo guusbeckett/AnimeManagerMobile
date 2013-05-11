@@ -61,8 +61,6 @@ public class FragmentCategories extends Fragment {
 		for (String cat : stream.split("<category id=\"")) {
 			if (cat.contains("<name>")) {
 				String[] chara = new String[2];
-				Log.d("nee", cat);
-				Log.d("wow", "1");
 				chara[0] = cat.split("<name>")[1].split("</name>")[0];
 				chara[1] = cat.split("<description>")[1].split("</description>")[0];
 				cats.add(chara);

@@ -49,7 +49,7 @@ public class MainMenu extends Activity {
         else {
 	        final Intent intent1 = new Intent(this, EditWatch.class);
 	        final Intent intent2 = new Intent(this, EditRead.class);
-	        final Intent intent3 = new Intent(this, ViewList.class);
+	        final Intent intent3 = new Intent(this, SeenList.class);
 	        final Button editAnimeButton = (Button) findViewById(R.id.button1);
 	        final Button editMangaButton = (Button) findViewById(R.id.button2);
 	        final Button viewListButton = (Button) findViewById(R.id.button3);

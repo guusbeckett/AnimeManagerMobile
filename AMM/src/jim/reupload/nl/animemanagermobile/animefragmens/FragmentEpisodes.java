@@ -58,15 +58,20 @@ public class FragmentEpisodes extends Fragment {
     }
 	
 	public String[][] parseEps(String stream) {
+		//Log.d("nee", stream);
 		ArrayList<String[]> eps = new ArrayList<String[]>();
 		for (String ep : stream.split("<episode id=\"")) {
-			if (ep.contains("<name>")) {
+			if (ep.contains("<epno")) {
 				String[] chara = new String[4];
-				Log.d("nee", ep);
-				Log.d("wow", "1");
-				chara[0] = ep.split("<epno")[1].split(">")[1].split("</epno>")[0];
-				chara[1] = ep.split("<length>")[1].split("</length>")[0];
-				chara[2] = ep.split("<airdate>")[1].split("</airdate>")[0];
+				chara[0] = ep.split("<epno")[1].split(">")[1].split("</epno")[0];
+				if (ep.contains("<length>"))
+					chara[1] = ep.split("<length>")[1].split("</length>")[0];
+				else
+					chara[1] = "Lenght is unknown";
+				if (ep.contains("<airdate>"))
+					chara[2] = ep.split("<airdate>")[1].split("</airdate>")[0];
+				else
+					chara[2] = "No airdate is known";
 				for (String title : ep.split("<title "))
 					chara[3]+="\n"+title.split(">")[1].split("<")[0];
 				eps.add(chara);

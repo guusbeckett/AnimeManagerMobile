@@ -44,6 +44,7 @@ public class DataManage {
 	private DbxAccountManager mDbxAcctMgr;
 	private static boolean fslive;
 	private static Object cached2;
+	private static Object cached3;
 	private DbxFileSystem dbxFs;
 	private AnimeObject[] list;
 	private boolean writePos;
@@ -119,6 +120,20 @@ public class DataManage {
 						
 				}
 				break;
+			case (2):
+				for (String nya : lel.split("Read:")[0].split("Seen:")[1].split("\n")) {
+					if (!nya.isEmpty())
+					{
+						String prog = nya;
+						if (prog.length() == 1) {
+							list.add(new AnimeObject(prog));
+						}
+						else {
+							list.add(new AnimeObject(prog));
+						}
+					}
+						
+				}
 		}
 		
 		return list;
@@ -162,8 +177,10 @@ public class DataManage {
 		String data = testFile.readString();
 		String data2 = data.split("Reading:")[1];
 		data = "Watching:\n";
-		for (AnimeObject item : list)
-			data += item.getWriteable() + "\n";
+		for (AnimeObject item : list) {
+			if (item!=null)
+				data += item.getWriteable() + "\n";
+		}
 		data+="\nReading:"+data2;
 		testFile.writeString(data);
 		ArrayList<AnimeObject> henk = null;
@@ -347,12 +364,22 @@ public class DataManage {
 	public static Object getCached2() {
 		return cached2;
 	}
+	public static void cacheObject3(Object item) {
+		cached3 = item;
+	}
+	
+	public static Object getCached3() {
+		return cached3;
+	}
 	
 	public static boolean isCached() {
 		return (cached!=null);
 	}
 	public static boolean isCached2() {
 		return (cached2!=null);
+	}
+	public static boolean isCached3() {
+		return (cached3!=null);
 	}
 
 	public static OutputStream openOutputStreamToExternal(
@@ -393,6 +420,70 @@ public class DataManage {
 		 cached =null;
 		 cached2=null;
 	 }
+
+	public AnimeObject[] getSeenAnime(Activity activ) {
+		if (!fslive)
+			iniateFS(activ);
+		DbxFile testFile = null;
+		try {
+			testFile = dbxFs.open(new DbxPath("seen.txt"));
+		} catch (InvalidPathException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DbxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ArrayList<AnimeObject> henk = null;
+		try {
+			henk = formatArray(testFile.readString(), 2);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		testFile.close();
+		if (henk != null)
+			return henk.toArray(new AnimeObject[0]);
+		else
+			return null;
+	}
+
+	public MediaObject getFullAnimeDetails(Activity act, int point) {
+		writePos = true;
+		list = getSeenAnime(act);
+		return list[point];
+	}
+
+	public static void deleteExternalFile(String path, MediaPage mediaPage) {
+		File f = new File(path);
+		if (f.exists()) {
+			f.delete();
+		}
+		else {
+			throw new IllegalArgumentException(
+		            "File not found or IOexception occured while deleting " + path);
+		}
+		
+	}
+
+	public static void unregister(String name, Activity act) {
+		String wow = "";
+		for (String item :readRegistered(act).split("\n")) {
+			if (!item.contains(getHash(name)))
+				wow+=item+"\n";
+		}
+	}
+	
+	public void DeleteAnimeDetails(Activity act, int point) {
+		list[point] = null;
+		try {
+			writeAllAnime(act);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	
 	
 }

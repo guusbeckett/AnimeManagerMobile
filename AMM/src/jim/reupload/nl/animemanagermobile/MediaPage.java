@@ -8,13 +8,18 @@ import jim.reupload.nl.animemanagermobile.animefragmens.FragmentDescription;
 import jim.reupload.nl.animemanagermobile.animefragmens.FragmentEpisodes;
 import jim.reupload.nl.animemanagermobile.animefragmens.FragmentGeneral;
 import jim.reupload.nl.animemanagermobile.animefragmens.FragmentTags;
+import jim.reupload.nl.animemanagermobile.dialogs.ShowPickerDialog;
+import jim.reupload.nl.animemanagermobile.dialogs.ShowPickerDialog.OnDialogSelectorListener;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -30,29 +35,43 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class MediaPage extends FragmentActivity {
+public class MediaPage extends FragmentActivity implements OnDialogSelectorListener {
 	
 	private MediaObject media;
 	private LinearLayout linlay;
 	private int aid;
 	private ViewPager mViewPager;
 	private TabsAdapter mTabsAdapter;
+	private String[] title;
+	private String[] anidbParse;
+	private DataManage data;
+	private int point;
 
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final DataManage data = new DataManage();
-        final int point = getIntent().getIntExtra("point", 0);
-        media = data.getAnimeDetails(this, point);
+        data = new DataManage();
+        point = getIntent().getIntExtra("point", 0);
+        Log.d("chehck", "1");
+        boolean seen = getIntent().getBooleanExtra("seen", false);
+        if (!seen)
+        	media = data.getAnimeDetails(this, point);
+        else
+        	media = data.getFullAnimeDetails(this, point);
         aid = data.getAID(media.getTitle(), this);
         DataManage.clearCaches();
+        Log.d("chehck", "2");
+        if (aid!=0)
+        	media.setId(aid);
         DataManage.cacheObject(media);
-        
+        Log.d("chechk", "3");
         if (aid != 0) {
         	if (AniDBWrapper.doesAniDBfileExist(aid, this)){
-        		DataManage.cacheObject2(AniDBWrapper.parseAniDBfile(aid, this));
+        		anidbParse = AniDBWrapper.parseAniDBfile(aid, this);
+        		DataManage.cacheObject2(anidbParse);
         	}
         }
         
@@ -61,6 +80,7 @@ public class MediaPage extends FragmentActivity {
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.slider);
+        Log.d("chehck", "5");
         mViewPager = new ViewPager(this);
         mViewPager.setId(R.id.pager);
         setContentView(mViewPager);
@@ -121,6 +141,9 @@ public class MediaPage extends FragmentActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.media_view, menu);
+        if (aid != 0)
+        	menu.add(0, 5, 0, "Unlink Metadata"); 
+        menu.add(0, 6, 0, "Delete show"); 
 		return true;
 
     }
@@ -132,22 +155,75 @@ public class MediaPage extends FragmentActivity {
             case R.id.fetch_metadata:
                 //newGame();
             	handleMetadata();
+            	//
                 return true;
+            case android.R.id.home:
+	            // app icon in action bar clicked; go home
+            	finish();
+	            return true;
+            case 5:
+            	destroyMetadata();
+            	this.recreate();
+            	return true;
+            case 6:
+            	destroyMetadata();
+            	destroyMedia();
+            	this.finish();
+            	return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+	private void destroyMedia() {
+		// TODO Auto-generated method stub
+		data.DeleteAnimeDetails(this, point);
+	}
+
+	private void destroyMetadata() {
+		// TODO Auto-generated method stub
+		if (aid!=0) {
+			DataManage.deleteExternalFile(this.getExternalFilesDir(null) + "/images/" + anidbParse[10], this);
+			DataManage.deleteExternalFile(this.getExternalFilesDir(null) + "/" + Integer.toString(aid)+".xml", this);
+			DataManage.unregister(media.getTitle(), this);
+		}
+	}
+
 	private void handleMetadata() {
-		String[] title = AniDBWrapper.getMostLikelyID(media.getTitle(), false).toArray(new String[0]);
-        if (title.length < 1)
+		title = AniDBWrapper.getMostLikelyID(media.getTitle(), false).toArray(new String[0]);
+        if (title.length < 1) {
         	title = AniDBWrapper.getMostLikelyID(media.getTitle(), true).toArray(new String[0]);
+        	/*int duration = Toast.LENGTH_LONG;
+    		Toast toast = Toast.makeText(this, "Sorry, no metadata found for " + media.getTitle(), duration);
+    		toast.show();*/
+        }
         if (title.length == 1) {
         	if (aid == 0)
         		DataManage.register(media.getTitle(), Integer.parseInt(title[0].split("\\^")[1]), this);
         	AniDBWrapper.grabAnimeMetadata(Integer.parseInt(title[0].split("\\^")[1]), this);
+        	this.recreate();
+        }
+        else {
+        	DialogFragment newFragment = new ShowPickerDialog();
+        	((ShowPickerDialog) newFragment).setData(title);
+        	((ShowPickerDialog) newFragment).setTitle(media.getTitle());
+            newFragment.show(getSupportFragmentManager(), "show");
+            //this.recreate();
+            
         }
         
+	}
+
+	@Override
+	public void onSelectedOption(int selectedIndex) {
+		if (selectedIndex != 0) {
+			DataManage.register(media.getTitle(), Integer.parseInt(title[selectedIndex].split("\\^")[1]), this);
+        	AniDBWrapper.grabAnimeMetadata(Integer.parseInt(title[selectedIndex].split("\\^")[1]), this);
+			//this.recreate();
+        	finish();
+		}
+		Log.d("select", selectedIndex+"");
+		
 	}
 }
 class TabsAdapter extends FragmentPagerAdapter

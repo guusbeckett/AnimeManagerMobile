@@ -11,6 +11,7 @@ public class MediaObject implements Serializable {
 	private String title;
 	private int progress;
 	private int total;
+	private int id;
 
 	public MediaObject(String title, int progress, int total) {
 		this.title = title;
@@ -51,5 +52,13 @@ public class MediaObject implements Serializable {
 	
 	public void setTotal(int i) {
 		total = i;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

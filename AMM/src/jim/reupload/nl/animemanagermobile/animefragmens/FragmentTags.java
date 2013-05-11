@@ -59,8 +59,6 @@ public class FragmentTags extends Fragment {
 		for (String tag : stream.split("<tag id=\"")) {
 			if (tag.contains("<name>")) {
 				String[] chara = new String[3];
-				Log.d("nee", tag);
-				Log.d("wow", "1");
 				chara[0] = tag.split("<name>")[1].split("</name>")[0];
 				chara[1] = tag.split("<count>")[1].split("</count>")[0];
 				if (tag.contains("<description>"))
