@@ -27,23 +27,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="jim.reupload.nl.animemanagermobile.EditWatch"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
             android:name="jim.reupload.nl.animemanagermobile.MediaPage"
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name="jim.reupload.nl.animemanagermobile.EditRead"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
             android:name="jim.reupload.nl.animemanagermobile.ViewList"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name="jim.reupload.nl.animemanagermobile.SeenList"
             android:label="@string/app_name" >
         </activity>
         <activity
