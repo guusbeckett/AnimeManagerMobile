@@ -1,15 +1,26 @@
 package jim.reupload.nl.animemanagermobile;
 
+import java.util.Arrays;
+
 import com.dropbox.sync.android.DbxAccountManager;
+import com.microsoft.live.LiveAuthClient;
+import com.microsoft.live.LiveAuthException;
+import com.microsoft.live.LiveAuthListener;
+import com.microsoft.live.LiveConnectSession;
+import com.microsoft.live.LiveStatus;
 
 import android.app.Activity;
+import android.app.Application;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Config;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -19,6 +30,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class FileLocationFrag extends Fragment implements OnItemSelectedListener {
 
@@ -26,8 +38,14 @@ public class FileLocationFrag extends Fragment implements OnItemSelectedListener
 	private LinearLayout masll;
 	private LinearLayout ll;
 	private DbxAccountManager mDbxAcctMgr;
+	private Application mApp;
 	static final int REQUEST_LINK_TO_DBX = 0;  // This value is up to you
-
+	private final String live_client_id = "000000004C0EC966";
+	private LiveAuthClient mAuthClient;
+	private ProgressDialog mInitializeDialog;
+	private TextView mBeginTextView;
+	private Button mSignInButton;
+	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -106,8 +124,81 @@ public class FileLocationFrag extends Fragment implements OnItemSelectedListener
 			case (2):
 				TextView tv1 = new TextView(getActivity());
 				tv1.setText("Skydrive");
+				mApp =  this.getActivity().getApplication();
+		        mAuthClient = new LiveAuthClient(mApp, live_client_id);
+		        //mApp.setAuthClient(mAuthClient);
+
+		        mInitializeDialog = ProgressDialog.show(this.getActivity(), "", "Initializing. Please wait...", true);
+
+		        mBeginTextView = new TextView(this.getActivity());
+		        mSignInButton = new Button(this.getActivity());
+		        
+		        // Check to see if the CLIENT_ID has been changed.
+		        final Activity act = this.getActivity();
+		        final String[] scopes = new String[] {"wl.basic", "wl.offline_access", "wl.skydrive", "wl.skydrive_update"};
+		        mSignInButton.setOnClickListener(new OnClickListener() {
+		        	@Override
+		            public void onClick(View v) {
+		        		mAuthClient.login(act, Arrays.asList(scopes),
+		                                      new LiveAuthListener() {
+		                        /*@Override
+		                        public void onAuthComplete(LiveStatus status,
+		                                                   LiveConnectSession session,
+		                                                   Object userState) {
+		                            if (status == LiveStatus.CONNECTED) {
+		                                launchMainActivity(session);
+		                            } else {
+		                                showToast("Login did not connect. Status is " + status + ".");
+		                            }
+		                        }*/
+		    
+		                        @Override
+		                        public void onAuthError(LiveAuthException exception, Object userState) {
+		                            showToast(exception.getMessage());
+		                        }
+
+								@Override
+								public void onAuthComplete(LiveStatus status,
+										LiveConnectSession session,
+										Object userState) {
+									// TODO Auto-generated method stub
+									if (status == LiveStatus.CONNECTED) {
+		                                showToast("live connect sucess");
+		                            } else {
+		                                showToast("Login did not connect. Status is " + status + ".");
+		                            }
+								}
+		                    });
+		                }
+		            });
 				ll.removeAllViews();
+				mAuthClient.initialize(Arrays.asList(scopes), new LiveAuthListener() {
+		            @Override
+		            public void onAuthError(LiveAuthException exception, Object userState) {
+		                mInitializeDialog.dismiss();
+		                ll.addView(mBeginTextView);
+						ll.addView(mSignInButton);
+		                showToast(exception.getMessage());
+		            }
+
+		            @Override
+		            public void onAuthComplete(LiveStatus status,
+		                                       LiveConnectSession session,
+		                                       Object userState) {
+		                mInitializeDialog.dismiss();
+
+		                if (status == LiveStatus.CONNECTED) {
+		                    showToast("already connected");
+		                } else {
+		                	ll.addView(mBeginTextView);
+							ll.addView(mSignInButton);
+		                    showToast("Initialize did not connect. Please try login in.");
+		                }
+		            }
+		        });
 				ll.addView(tv1);
+				
+				
 				break;
 			case (3):
 				TextView tv2 = new TextView(getActivity());
@@ -140,6 +231,10 @@ public class FileLocationFrag extends Fragment implements OnItemSelectedListener
 	    }
 	}
 	
+	
+	private void showToast(String message) {
+        Toast.makeText(this.getActivity(), message, Toast.LENGTH_LONG).show();
+    }
 
 
 

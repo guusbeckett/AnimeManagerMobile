@@ -47,26 +47,29 @@ public class MainMenu extends Activity {
         	rl.addView(tx);
         }
         else {
-	        final Intent intent1 = new Intent(this, EditWatch.class);
-	        final Intent intent2 = new Intent(this, EditRead.class);
-	        final Intent intent3 = new Intent(this, SeenList.class);
+	        final Intent intent1 = new Intent(this, ViewList.class);
+	        //final Intent intent2 = new Intent(this, EditRead.class);
+	        //final Intent intent3 = new Intent(this, SeenList.class);
 	        final Button editAnimeButton = (Button) findViewById(R.id.button1);
 	        final Button editMangaButton = (Button) findViewById(R.id.button2);
 	        final Button viewListButton = (Button) findViewById(R.id.button3);
 	        final Activity act = this;
 	        editAnimeButton.setOnClickListener(new View.OnClickListener() {
 	            public void onClick(View v) {
+	            	intent1.putExtra("type", 1);
 	            	startActivity(intent1);
 	            }
 	        });
 	        editMangaButton.setOnClickListener(new View.OnClickListener() {
 	        	public void onClick(View v) {
-	        		startActivity(intent2);
+	        		intent1.putExtra("type", 3);
+	        		startActivity(intent1);
 	        	}
 	        });
 	        viewListButton.setOnClickListener(new View.OnClickListener() {
 	        	public void onClick(View v) {
-	        		startActivity(intent3);
+	        		intent1.putExtra("type", 2);
+	        		startActivity(intent1);
 	        	}
 	        });
         }

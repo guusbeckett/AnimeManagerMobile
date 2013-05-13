@@ -56,11 +56,21 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
         data = new DataManage();
         point = getIntent().getIntExtra("point", 0);
         Log.d("chehck", "1");
-        boolean seen = getIntent().getBooleanExtra("seen", false);
-        if (!seen)
-        	media = data.getAnimeDetails(this, point);
-        else
-        	media = data.getFullAnimeDetails(this, point);
+        int type = getIntent().getIntExtra("type", 0);
+        switch (type) {
+        	case (1):
+        		media = data.getAnimeDetails(this, point);
+        		break;
+        	case (2):
+        		media = data.getFullAnimeDetails(this, point);
+        		break;
+        	case (3):
+        		media = data.getMangaDetails(this, point);
+        		break;
+        	case (4):
+        		media = data.getFullMangaDetails(this, point);
+        		break;
+        }
         aid = data.getAID(media.getTitle(), this);
         DataManage.clearCaches();
         Log.d("chehck", "2");

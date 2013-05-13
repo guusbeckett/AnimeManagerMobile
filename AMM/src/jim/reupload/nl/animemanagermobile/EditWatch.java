@@ -1,6 +1,7 @@
 package jim.reupload.nl.animemanagermobile;
 
 
+import jim.reupload.nl.animemanagermobile.DataManage.skydrive;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
@@ -17,7 +18,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class EditWatch extends Activity implements OnItemClickListener {
+public class EditWatch extends Activity implements OnItemClickListener, skydrive {
 
 	private DataManage data;
 	private AnimeObject[] lel;
@@ -29,7 +30,12 @@ public class EditWatch extends Activity implements OnItemClickListener {
         actionBar.setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_edit_anime);
         data = new DataManage();
-        lel = data.getWatchingAnime(this);
+        if (data.isAsync(this)) {
+        	data.iniateFS(this);
+        }
+        else {
+        	lel = data.getWatchingAnime(this);
+        }
         RelativeLayout rl = (RelativeLayout) findViewById(R.id.anime_relative);
         if (lel == null) {
         	Log.d("SEVERE", "getAnime returned NULL");
@@ -100,6 +106,26 @@ public class EditWatch extends Activity implements OnItemClickListener {
 		Intent intent = new Intent(getBaseContext(), MediaPage.class);
 		intent.putExtra("point", arg2);
 		startActivity(intent);
+	}
+
+	@Override
+	public void initdone() {
+		
+		//data.getWatchingAnime(this);
+		data.findWatchingFile(this);
+		
+	}
+
+	@Override
+	public void fileReady() {
+		
+		//lel = data.getWatchingAnime(this);
+	}
+
+	@Override
+	public void filefound(String fileid) {
+		Log.d("ohowo", fileid);
+		
 	}
 	
 }

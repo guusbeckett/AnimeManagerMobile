@@ -1,23 +1,122 @@
 package jim.reupload.nl.animemanagermobile;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.view.Menu;
 
-public class ViewList extends Activity {
+import jim.reupload.nl.animemanagermobile.DataManage.skydrive;
+import android.app.ActionBar;
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+public class ViewList extends Activity implements OnItemClickListener, skydrive {
+
+	private DataManage data;
+	private MediaObject[] lel;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_list);
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        setContentView(R.layout.activity_edit_anime);
+        int typeList = this.getIntent().getIntExtra("type", 0);
+        data = new DataManage();
+        if (data.isAsync(this)) {
+        	data.iniateFS(this);
+        }
+        else {
+        	switch (typeList) {
+        		case (1):
+        			lel = data.getWatchingAnime(this);
+        			break;
+        		case (2):
+        			lel = data.getSeenAnime(this);
+        			break;
+        		case (3):
+        			lel = data.getReadingManga(this);
+        			break;
+        		case (4):
+        			lel = data.getReadManga(this);
+        			break;
+        	}
+        }
+        RelativeLayout rl = (RelativeLayout) findViewById(R.id.anime_relative);
+        if (lel == null) {
+        	Log.d("SEVERE", "getAnime returned NULL");
+        	TextView tv = new TextView(this);
+        	tv.setText("No items found");
+        }
+        else {
+        	Log.d("SUCCESS", "media succesfully read");
+        	ArrayAdapter adapter = new ArrayAdapter<String>(this, 
+                    android.R.layout.simple_list_item_1, MediaObject.convertMediaObjectArrayToStringArray(lel));
+        	ListView listView = new ListView(this);
+        	listView.setAdapter(adapter);
+        	rl.addView(listView);
+        	//listView.setOnItemSelectedListener(this);
+        	listView.setOnItemClickListener(this);
+        }
+        
     }
 	
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main_menu, menu);
+        getMenuInflater().inflate(R.menu.edit_menu, menu);
         return true;
 
     }
+	
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	        case android.R.id.home:
+	            // app icon in action bar clicked; go home
+	            Intent intent = new Intent(this, MainMenu.class);
+	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	            startActivity(intent);
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+		// TODO Auto-generated method stub
+		Intent intent = new Intent(getBaseContext(), MediaPage.class);
+		intent.putExtra("type", this.getIntent().getIntExtra("type", 0));
+		intent.putExtra("point", arg2);
+		startActivity(intent);
+	}
+
+	@Override
+	public void initdone() {
+		
+		//data.getWatchingAnime(this);
+		data.findWatchingFile(this);
+		
+	}
+
+	@Override
+	public void fileReady() {
+		
+		//lel = data.getWatchingAnime(this);
+	}
+
+	@Override
+	public void filefound(String fileid) {
+		Log.d("ohowo", fileid);
+		
+	}
 	
 }
