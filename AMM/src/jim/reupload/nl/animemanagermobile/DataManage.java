@@ -749,7 +749,7 @@ public class DataManage {
 		return list[point];
 	}
 
-	public static void deleteExternalFile(String path, MediaPage mediaPage) {
+	public static void deleteExternalFile(String path, Activity activ) {
 		File f = new File(path);
 		if (f.exists()) {
 			f.delete();
@@ -840,6 +840,23 @@ public class DataManage {
 		list = (AnimeObject[]) getReadManga(activ);
 		return list[point];
 	}
+
+	 public static File[] listFiles(File file2){
+		 
+	        File directory = file2;
+	        return directory.listFiles();
+	    }
+
+
+	public static void deleteAllMeta(Activity activ) {
+		for (File file : listFiles(activ.getExternalFilesDir(null))) {
+			deleteExternalFile(file.toString(), activ);
+		}
+		for (File file : listFiles(new File(activ.getExternalFilesDir(null) + "/images/"))) {
+			deleteExternalFile(file.toString(), activ);
+		}
+	}
+	
 	
 	
 	

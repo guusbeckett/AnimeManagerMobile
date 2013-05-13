@@ -1,6 +1,12 @@
-package jim.reupload.nl.animemanagermobile;
+package jim.reupload.nl.animemanagermobile.optionfragments;
 
 import java.util.Arrays;
+
+import jim.reupload.nl.animemanagermobile.R;
+import jim.reupload.nl.animemanagermobile.R.array;
+import jim.reupload.nl.animemanagermobile.R.id;
+import jim.reupload.nl.animemanagermobile.R.layout;
+import jim.reupload.nl.animemanagermobile.R.string;
 
 import com.dropbox.sync.android.DbxAccountManager;
 import com.microsoft.live.LiveAuthClient;
@@ -11,11 +17,11 @@ import com.microsoft.live.LiveStatus;
 
 import android.app.Activity;
 import android.app.Application;
-import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Config;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -49,7 +55,7 @@ public class FileLocationFrag extends Fragment implements OnItemSelectedListener
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.fragment_settings_location, container, false);
+        v = inflater.inflate(R.layout.fragment_settings, container, false);
         masll = (LinearLayout) v.findViewById(R.id.setting_scroll_location);
         ll = new LinearLayout(getActivity());
 	    ll.setOrientation(LinearLayout.VERTICAL);
@@ -58,7 +64,11 @@ public class FileLocationFrag extends Fragment implements OnItemSelectedListener
 	        tv.setText("my text " + i);
 	        ll.addView(tv);
         }*/
-        Spinner spinner = (Spinner) v.findViewById(R.id.spinner1);
+	    TextView tv = new TextView(getActivity());
+        tv.setText("Please select an option for storage");
+        masll.addView(tv);
+        Spinner spinner = new Spinner(this.getActivity());
+        masll.addView(spinner);
 	    // Create an ArrayAdapter using the string array and a default spinner layout
 	    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
 	            R.array.spinner_storage, android.R.layout.simple_spinner_item);

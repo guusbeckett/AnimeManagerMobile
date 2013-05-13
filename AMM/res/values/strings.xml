@@ -20,6 +20,7 @@
     <string name="frag_tags">Tags</string>
     <string name="wait_fs">Please wait for filesystem sync</string>
     <string name="ok_button_label">go!</string>
+    <string name="meta_storage">Metadata storage</string>
     <string name="show_options">Possible Shows:</string>
 
 </resources>

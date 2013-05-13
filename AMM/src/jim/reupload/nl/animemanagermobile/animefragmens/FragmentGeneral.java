@@ -14,10 +14,12 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -27,6 +29,7 @@ public class FragmentGeneral extends Fragment {
 	private int aid;
 	private MediaObject media;
 	private DataManage data;
+	private int maxValue ;
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,6 +50,7 @@ public class FragmentGeneral extends Fragment {
     	title.setText(media.getTitle());
     	title.setTypeface(null, Typeface.BOLD);
     	linlay.addView(title);
+    	final Activity act = this.getActivity();
     	Log.d("lel", "2");
         if (metadata != null) {
         	Bitmap bm = null;
@@ -74,17 +78,33 @@ public class FragmentGeneral extends Fragment {
        /* final TextView tv = new TextView(this.getActivity());
         String regState = "This show has no registered AID";*/
         TextView prog1 = new TextView(this.getActivity());
-        if (metadata != null)
+        if (metadata != null) {
         	prog1.setText("Progress: "+media.getProgress() + "/" + metadata[1]);
-        else
+        	maxValue = Integer.parseInt(metadata[1]);
+        }
+        else {
         	prog1.setText("Progress: "+media.getProgress() + "/" + media.getTotal());
+        	maxValue = media.getTotal();
+        }
+        if (maxValue == 0) {
+        	maxValue = 99;
+        }
         aid = media.getId();
         prog1.setOnClickListener(new View.OnClickListener() {
 
         	  @Override
         	  public void onClick(View v) {
-        	    // request your webservice here. Possible use of AsyncTask and ProgressDialog
-        	    // show the result here - dialog or Toast
+        	    NumberPicker numpick = new NumberPicker(act);
+        	    numpick.setMinValue(0);
+        	    numpick.setMaxValue(maxValue);
+        	    numpick.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						
+					}
+				});
         	  }
 
         	});

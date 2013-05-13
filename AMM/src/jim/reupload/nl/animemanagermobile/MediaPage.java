@@ -84,9 +84,6 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
         		DataManage.cacheObject2(anidbParse);
         	}
         }
-        
-        //DataManage.;
-        //DataManage.isRegistered(media.getTitle(), this);
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.slider);
@@ -110,41 +107,6 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
         		FragmentTags.class, null);
         mTabsAdapter.addTab(actionBar.newTab().setText(R.string.frag_eps),
         		FragmentEpisodes.class, null);
-
-        /*ScrollView view = (ScrollView) findViewById(R.id.media_relative);
-        linlay = new LinearLayout(this);
-        view.addView(linlay);
-        linlay.setOrientation(LinearLayout.VERTICAL);
-        final TextView tv = new TextView(this);
-        String regState = "This show has no registered AID";
-        aid = DataManage.getAID(media.getTitle(), this);
-        if (aid != 0)
-        	regState = "This show's AID is: " + aid;
-        tv.setText("This is the page of " + media.getTitle() + "\nProgress "  +  media.getProgress() + " of " + media.getTotal() + "\n" + regState);
-        Button but = new Button(this);
-        but.setText("+");
-        final Activity act = this;
-        but.setOnClickListener(new View.OnClickListener() {
-	            public void onClick(View v) {
-	            	media.setProgress(media.getProgress()+1);
-	            	tv.setText("This is the page of " + media.getTitle() + "\nProgress "  +  media.getProgress() + " of " + media.getTotal() );
-	            	data.writeAnimeDetails(act, (AnimeObject) media, point);
-	            }
-	        });
-        
-        linlay.addView(tv);
-        linlay.addView(but);
-        if (aid != 0) {
-        	if (AniDBWrapper.doesAniDBfileExist(aid, this)){
-        		String stuff = "";
-        		for (String part : AniDBWrapper.parseAniDBfile(aid, this)) {
-        			stuff += "\n\n\n\n" + part;
-        		}
-        		TextView allMeta = new TextView(this);
-        		allMeta.setText(stuff);
-        		linlay.addView(allMeta);
-        	}
-        }*/
 	}
 	
 	@Override

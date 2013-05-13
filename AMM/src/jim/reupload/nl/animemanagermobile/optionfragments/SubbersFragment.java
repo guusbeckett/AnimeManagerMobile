@@ -1,7 +1,9 @@
-package jim.reupload.nl.animemanagermobile;
+package jim.reupload.nl.animemanagermobile.optionfragments;
 
-import android.app.Fragment;
+import jim.reupload.nl.animemanagermobile.R;
+import jim.reupload.nl.animemanagermobile.R.layout;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,6 @@ public class SubbersFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_settings_location , container, false);
+        return inflater.inflate(R.layout.fragment_settings , container, false);
     }
 }
