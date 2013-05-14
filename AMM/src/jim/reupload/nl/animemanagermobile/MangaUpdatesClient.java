@@ -179,9 +179,10 @@ public class MangaUpdatesClient {
 			Log.d("check", "4");
 			data[10] = stream.split("<picture>")[1].split("</picture>")[0];
 			Log.d("check", "5");
-			//data[11] = stream.split("<categories>")[1].split("</categories>")[0];
+			data[11] = stream.split("<catagories>")[1].split("</catagories>")[0];
 			//data[12] = stream.split("<resources>")[1].split("</resources>")[0];
 			//data[13] = stream.split("<tags>")[1].split("</tags>")[0];
+			data[13] = "";
 			//Log.d("check", "5");
 			//data[14] = stream.split("<characters>")[1].split("</characters>")[0];
 			data[14] = "";

@@ -9,9 +9,12 @@ import jim.reupload.nl.animemanagermobile.MangaUpdatesClient;
 import jim.reupload.nl.animemanagermobile.MediaObject;
 import jim.reupload.nl.animemanagermobile.R;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.renderscript.Font.Style;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Gravity;
@@ -55,9 +58,10 @@ public class FragmentGeneral extends Fragment {
     	linlay.addView(title);
     	final Activity act = this.getActivity();
     	Log.d("lel", "2");
+    	int type = 0 ;
         if (metadata != null) {
         	Bitmap bm = null;
-        	int type = Integer.parseInt(metadata[16]);
+        	type = Integer.parseInt(metadata[16]);
         	if (type == 1 || type == 2) {
         		if (DataManage.doesExternalFileExist(this.getActivity().getExternalFilesDir(null) + "/image/" + metadata[10], this.getActivity())) {
         			bm = DataManage.loadImageFromExternal(metadata[10], this.getActivity());
@@ -68,7 +72,7 @@ public class FragmentGeneral extends Fragment {
         		}
             	
         	}
-        	else {
+        	else if (type != 0) {
         		if (DataManage.doesExternalFileExist(this.getActivity().getExternalFilesDir(null) + "/image/" + metadata[10].split("/")[metadata[10].split("/").length-1], this.getActivity())) {
         			bm = DataManage.loadImageFromExternal(metadata[10], this.getActivity());
             	}
@@ -122,24 +126,52 @@ public class FragmentGeneral extends Fragment {
 						
 					}
 				});
+        	    AlertDialog.Builder alert = new AlertDialog.Builder(act);
+
+                alert.setTitle("Select the value: ");
+
+                NumberPicker np = new NumberPicker(act);
+                np.setMinValue(0);
+                np.setMaxValue(maxValue);
+                np.setWrapSelectorWheel(false);
+                //np.setDisplayedValues(nums);
+                //np.setValue(50);
+
+                alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                  // Do something with value!
+                  }
+                });
+
+                alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                  public void onClick(DialogInterface dialog, int whichButton) {
+                    // Cancel.
+                  }
+                });
         	  }
 
         	});
         linlay.addView(prog1);
         TextView prog2 = new TextView(this.getActivity());
-        Calendar now = Calendar.getInstance();
-        String month = null;
-        String day = null;
-        if (now.get(Calendar.MONTH)+1 < 10)
-        	month = "0"+(now.get(Calendar.MONTH)+1);
-        else
-        	month = (now.get(Calendar.MONTH)+1)+"";
-        if (now.get(Calendar.DAY_OF_MONTH) < 10)
-        	day = "0"+now.get(Calendar.DAY_OF_MONTH);
-        else
-        	day = now.get(Calendar.DAY_OF_MONTH)+"";
-        if (metadata != null)
-        	//prog2.setText(AniDBWrapper.findEpisodeNearestAfterDate(now.get(Calendar.YEAR) + "-" + month + "-" + day, metadata[15]));
+        if (type == 1 || type == 2) {
+        	Calendar now = Calendar.getInstance();
+            String month = null;
+            String day = null;
+            if (now.get(Calendar.MONTH)+1 < 10)
+            	month = "0"+(now.get(Calendar.MONTH)+1);
+            else
+            	month = (now.get(Calendar.MONTH)+1)+"";
+            if (now.get(Calendar.DAY_OF_MONTH) < 10)
+            	day = "0"+now.get(Calendar.DAY_OF_MONTH);
+            else
+            	day = now.get(Calendar.DAY_OF_MONTH)+"";
+            String nextep = AniDBWrapper.findEpisodeNearestAfterDate(now.get(Calendar.YEAR) + "-" + month + "-" + day, metadata[15]);
+            if (nextep != null) {
+            	prog2.setText("Next airing episode: " + nextep.split("\\^")[0] + "\nAirdate: " + nextep.split("\\^")[1]);
+            	prog2.setTypeface(null, Typeface.ITALIC);
+            	prog2.setTextSize(11);
+            }
+        }
         linlay.addView(prog2);
         Log.d("lel", "4");
       //  if (aid != 0)

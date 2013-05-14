@@ -16,6 +16,7 @@ import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -128,7 +129,7 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
         getMenuInflater().inflate(R.menu.media_view, menu);
         if (id != 0)
         	menu.add(0, 5, 0, "Unlink Metadata"); 
-        menu.add(0, 6, 0, "Delete show"); 
+        menu.add(0, 6, 0, "Delete series"); 
 		return true;
 
     }
@@ -152,7 +153,6 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
             		case (4):
             			handleMangaMetadata();
             			break;
-            	//	
             	}
                 return true;
             case android.R.id.home:
@@ -174,7 +174,11 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
     }
 
 	private void handleMangaMetadata() {
-		title = MangaUpdatesClient.getMostLikelyID(media.getTitle(), false).toArray(new String[0]);
+		AlertDialog mInitializeDialog = ProgressDialog.show(this, "", "Fetching metadata. Please wait...", true);
+		if (id == 0)
+			title = MangaUpdatesClient.getMostLikelyID(media.getTitle(), false).toArray(new String[0]);
+		else
+			title = new String[]{id+""};
 		for (String item : title) {
 			Log.d("heh", item);
 		}
@@ -183,15 +187,18 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
         	int duration = Toast.LENGTH_LONG;
     		Toast toast = Toast.makeText(this, "Sorry, no metadata found for " + media.getTitle(), duration);
     		toast.show();
+    		mInitializeDialog.dismiss();
         }
-        if (title.length == 1) {
+        else if (title.length == 1) {
         	if (id == 0)
         		DataManage.register(media.getTitle(), Integer.parseInt(title[0].split("\\^")[1]), this, 1);
         	MangaUpdatesClient.grabMangaMetadata(Integer.parseInt(title[0].split("\\^")[1]), this);
+        	mInitializeDialog.dismiss();
         	this.recreate();
         }
         else {
         	temptype = 1;
+        	mInitializeDialog.dismiss();
         	DialogFragment newFragment = new ShowPickerDialog();
         	((ShowPickerDialog) newFragment).setData(title);
         	((ShowPickerDialog) newFragment).setTitle(media.getTitle());
