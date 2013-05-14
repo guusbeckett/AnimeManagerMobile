@@ -1,8 +1,11 @@
 package jim.reupload.nl.animemanagermobile.animefragmens;
 
+import java.util.Calendar;
+
 import jim.reupload.nl.animemanagermobile.AniDBWrapper;
 import jim.reupload.nl.animemanagermobile.AnimeObject;
 import jim.reupload.nl.animemanagermobile.DataManage;
+import jim.reupload.nl.animemanagermobile.MangaUpdatesClient;
 import jim.reupload.nl.animemanagermobile.MediaObject;
 import jim.reupload.nl.animemanagermobile.R;
 import android.app.Activity;
@@ -54,19 +57,32 @@ public class FragmentGeneral extends Fragment {
     	Log.d("lel", "2");
         if (metadata != null) {
         	Bitmap bm = null;
-        	if (DataManage.doesExternalFileExist(this.getActivity().getExternalFilesDir(null) + "/image/" + metadata[10], this.getActivity())) {
-        		bm = DataManage.loadImageFromExternal(metadata[10], this.getActivity());
+        	int type = Integer.parseInt(metadata[16]);
+        	if (type == 1 || type == 2) {
+        		if (DataManage.doesExternalFileExist(this.getActivity().getExternalFilesDir(null) + "/image/" + metadata[10], this.getActivity())) {
+        			bm = DataManage.loadImageFromExternal(metadata[10], this.getActivity());
+            	}
+        		else {
+            		AniDBWrapper.fetchImage(metadata[10], this.getActivity());
+            		bm = DataManage.loadImageFromExternal(metadata[10], this.getActivity());
+        		}
+            	
         	}
         	else {
-        		AniDBWrapper.fetchImage(metadata[10], this.getActivity());
-        		bm = DataManage.loadImageFromExternal(metadata[10], this.getActivity());
+        		if (DataManage.doesExternalFileExist(this.getActivity().getExternalFilesDir(null) + "/image/" + metadata[10].split("/")[metadata[10].split("/").length-1], this.getActivity())) {
+        			bm = DataManage.loadImageFromExternal(metadata[10], this.getActivity());
+            	}
+        		else {
+        			MangaUpdatesClient.fetchImage(metadata[10], this.getActivity());
+        			bm = DataManage.loadImageFromExternal(metadata[10].split("/")[metadata[10].split("/").length-1], this.getActivity());
+        		}
         	}
         	ImageView img = new ImageView(this.getActivity());
         	img.setImageBitmap(bm);
         	
         	linlay.addView(img);
+        	
         }
-        
         else {
         	TextView nometa = new TextView(this.getActivity());
         	nometa.setText("No Metadata for " + media.getTitle());
@@ -80,7 +96,8 @@ public class FragmentGeneral extends Fragment {
         TextView prog1 = new TextView(this.getActivity());
         if (metadata != null) {
         	prog1.setText("Progress: "+media.getProgress() + "/" + metadata[1]);
-        	maxValue = Integer.parseInt(metadata[1]);
+        	//maxValue = Integer.parseInt(metadata[1]);
+        	maxValue = 0;
         }
         else {
         	prog1.setText("Progress: "+media.getProgress() + "/" + media.getTotal());
@@ -109,7 +126,21 @@ public class FragmentGeneral extends Fragment {
 
         	});
         linlay.addView(prog1);
-        
+        TextView prog2 = new TextView(this.getActivity());
+        Calendar now = Calendar.getInstance();
+        String month = null;
+        String day = null;
+        if (now.get(Calendar.MONTH)+1 < 10)
+        	month = "0"+(now.get(Calendar.MONTH)+1);
+        else
+        	month = (now.get(Calendar.MONTH)+1)+"";
+        if (now.get(Calendar.DAY_OF_MONTH) < 10)
+        	day = "0"+now.get(Calendar.DAY_OF_MONTH);
+        else
+        	day = now.get(Calendar.DAY_OF_MONTH)+"";
+        if (metadata != null)
+        	//prog2.setText(AniDBWrapper.findEpisodeNearestAfterDate(now.get(Calendar.YEAR) + "-" + month + "-" + day, metadata[15]));
+        linlay.addView(prog2);
         Log.d("lel", "4");
       //  if (aid != 0)
         //	regState = "This show's AID is: " + aid;
@@ -118,7 +149,7 @@ public class FragmentGeneral extends Fragment {
         //but.setText("+");
         Log.d("lel", "5");
         Log.d("aid", aid+"");
-        data = new DataManage();
+        //data = new DataManage();
        /* final Activity act = this.getActivity();
         but.setOnClickListener(new View.OnClickListener() {
 	            private int point;

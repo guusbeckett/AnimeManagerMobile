@@ -27,6 +27,7 @@ public class MainMenu extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_menu, menu);
+        MangaUpdatesClient.getMostLikelyID("lel", false);
      // Restore preferences
         SharedPreferences settings = getSharedPreferences("AMMprefs", 0);
         int storageMethod = settings.getInt("storageMethod", 0);

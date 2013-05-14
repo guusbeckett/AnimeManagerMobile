@@ -41,8 +41,8 @@ public class ShowPickerDialog extends DialogFragment implements OnClickListener 
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         //builder.setMessage(R.string.show_options);
-        for (String item : names)
-        	Log.d(";_;", item);
+       // for (String item : names)
+        //	Log.d(";_;", item);
         final Activity ac = this.getActivity();
         
         builder.setItems(names, this);
@@ -60,7 +60,7 @@ public class ShowPickerDialog extends DialogFragment implements OnClickListener 
 				names[i] = item.split("\\^")[0];
 				ids[i] = Integer.parseInt(item.split("\\^")[1]);
 				i++;
-				//Log.d(";_;", item);
+				Log.d(";_;", item);
 			}
 		}
 		else

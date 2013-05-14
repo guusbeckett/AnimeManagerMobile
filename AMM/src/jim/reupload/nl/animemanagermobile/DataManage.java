@@ -488,24 +488,52 @@ public class DataManage {
 		return false;
 	}
 	
-	public static int getAID(String show, Activity act) {
+	public static int getID(String show, Activity act, int type) {
 		String[] in = readRegistered(act).split("\n");
+		String mani = "";
+		switch (type) {
+	    	case (1):
+	    		mani = "anime ";
+	    		break;
+	    	case (2):
+	    		mani = "anime ";
+	    		break;
+	    	case (3):
+	    		mani = "manga ";
+	    		break;
+	    	case (4):
+	    		mani = "manga ";
+	    		break;
+		}
 		int i = 0;
 		for (String item : in) {
-			if (getHash(show).equals(item.split(" ")[0]))
-				i = Integer.parseInt(item.split(" ")[1]);
-			else
-				Log.d("reject", item.split(" ")[0] + " is not " + getHash(show));
+			if (item.contains("anime") || item.contains("manga")) {
+				if ((mani+getHash(show)).equals(mani+item.split(" ")[1]))
+					i = Integer.parseInt(item.split(" ")[2]);
+				else
+					Log.d("reject", mani+item.split(" ")[0] + " is not " + mani+getHash(show));
+			}
 		}
 		return i;
 		
 	}
 	
-	public static void register(String show, int id, Activity act) {
+	public static void register(String show, int id, Activity act, int i) {
 		String in = readRegistered(act);
 		Log.d("old registers", in);
+		String type = "anime ";
+		switch (i) {
+			case (1):
+				type = "anime ";
+			case (2):
+				type = "anime ";
+			case (3):
+				type = "manga ";
+			case (4):
+				type = "manga ";
+		}
 		
-		in+="\n" + getHash(show) + " " + id;
+		in+="\n" + type + getHash(show) + " " + id;
 		writeRegistered(in, act);
 		Log.d("new registers", in);
 		Context context = act.getApplicationContext();

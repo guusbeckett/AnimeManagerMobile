@@ -41,13 +41,15 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 	
 	private MediaObject media;
 	private LinearLayout linlay;
-	private int aid;
+	private int id;
 	private ViewPager mViewPager;
 	private TabsAdapter mTabsAdapter;
 	private String[] title;
-	private String[] anidbParse;
+	private String[] metadataParse;
 	private DataManage data;
 	private int point;
+	private int type;
+	private int temptype;
 
 
 	@Override
@@ -56,7 +58,7 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
         data = new DataManage();
         point = getIntent().getIntExtra("point", 0);
         Log.d("chehck", "1");
-        int type = getIntent().getIntExtra("type", 0);
+        type = getIntent().getIntExtra("type", 0);
         switch (type) {
         	case (1):
         		media = data.getAnimeDetails(this, point);
@@ -71,18 +73,29 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
         		media = data.getFullMangaDetails(this, point);
         		break;
         }
-        aid = data.getAID(media.getTitle(), this);
+        id = data.getID(media.getTitle(), this, type);
         DataManage.clearCaches();
         Log.d("chehck", "2");
-        if (aid!=0)
-        	media.setId(aid);
+        if (id!=0)
+        	media.setId(id);
         DataManage.cacheObject(media);
         Log.d("chechk", "3");
-        if (aid != 0) {
-        	if (AniDBWrapper.doesAniDBfileExist(aid, this)){
-        		anidbParse = AniDBWrapper.parseAniDBfile(aid, this);
-        		DataManage.cacheObject2(anidbParse);
+        if (id != 0) {
+        	if (type == 1 || type == 2) {
+	        	if (AniDBWrapper.doesAniDBfileExist(id, this)){
+	        		metadataParse = AniDBWrapper.parseAniDBfile(id, this);
+	        		metadataParse[16]=type+"";
+	        		DataManage.cacheObject2(metadataParse);
+	        	}
         	}
+        	else {
+        		if (MangaUpdatesClient.doesMangaUpdatesfileExist(id, this)){
+	        		metadataParse = MangaUpdatesClient.parseMangaUpdatesfile(id, this);
+	        		metadataParse[16]=type+"";
+	        		DataManage.cacheObject2(metadataParse);
+	        	}
+        	}
+        		
         }
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -113,7 +126,7 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.media_view, menu);
-        if (aid != 0)
+        if (id != 0)
         	menu.add(0, 5, 0, "Unlink Metadata"); 
         menu.add(0, 6, 0, "Delete show"); 
 		return true;
@@ -126,8 +139,21 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
         switch (item.getItemId()) {
             case R.id.fetch_metadata:
                 //newGame();
-            	handleMetadata();
-            	//
+            	switch (type) {
+            		case (1):
+            			handleAnimeMetadata();
+            			break;
+            		case (2):
+            			handleAnimeMetadata();
+            			break;
+            		case (3):
+            			handleMangaMetadata();
+            			break;
+            		case (4):
+            			handleMangaMetadata();
+            			break;
+            	//	
+            	}
                 return true;
             case android.R.id.home:
 	            // app icon in action bar clicked; go home
@@ -147,6 +173,35 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
         }
     }
 
+	private void handleMangaMetadata() {
+		title = MangaUpdatesClient.getMostLikelyID(media.getTitle(), false).toArray(new String[0]);
+		for (String item : title) {
+			Log.d("heh", item);
+		}
+        if (title.length < 1) {
+        	//title = MangaUpdatesClient.getMostLikelyID(media.getTitle(), true).toArray(new String[0]);
+        	int duration = Toast.LENGTH_LONG;
+    		Toast toast = Toast.makeText(this, "Sorry, no metadata found for " + media.getTitle(), duration);
+    		toast.show();
+        }
+        if (title.length == 1) {
+        	if (id == 0)
+        		DataManage.register(media.getTitle(), Integer.parseInt(title[0].split("\\^")[1]), this, 1);
+        	MangaUpdatesClient.grabMangaMetadata(Integer.parseInt(title[0].split("\\^")[1]), this);
+        	this.recreate();
+        }
+        else {
+        	temptype = 1;
+        	DialogFragment newFragment = new ShowPickerDialog();
+        	((ShowPickerDialog) newFragment).setData(title);
+        	((ShowPickerDialog) newFragment).setTitle(media.getTitle());
+            newFragment.show(getSupportFragmentManager(), "show");
+            //this.recreate();
+            
+        }
+		
+	}
+
 	private void destroyMedia() {
 		// TODO Auto-generated method stub
 		data.DeleteAnimeDetails(this, point);
@@ -154,14 +209,14 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 
 	private void destroyMetadata() {
 		// TODO Auto-generated method stub
-		if (aid!=0) {
-			DataManage.deleteExternalFile(this.getExternalFilesDir(null) + "/images/" + anidbParse[10], this);
-			DataManage.deleteExternalFile(this.getExternalFilesDir(null) + "/" + Integer.toString(aid)+".xml", this);
+		if (id!=0) {
+			DataManage.deleteExternalFile(this.getExternalFilesDir(null) + "/images/" + metadataParse[10], this);
+			DataManage.deleteExternalFile(this.getExternalFilesDir(null) + "/" + Integer.toString(id)+".xml", this);
 			DataManage.unregister(media.getTitle(), this);
 		}
 	}
 
-	private void handleMetadata() {
+	private void handleAnimeMetadata() {
 		title = AniDBWrapper.getMostLikelyID(media.getTitle(), false).toArray(new String[0]);
         if (title.length < 1) {
         	title = AniDBWrapper.getMostLikelyID(media.getTitle(), true).toArray(new String[0]);
@@ -170,12 +225,13 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
     		toast.show();*/
         }
         if (title.length == 1) {
-        	if (aid == 0)
-        		DataManage.register(media.getTitle(), Integer.parseInt(title[0].split("\\^")[1]), this);
+        	if (id == 0)
+        		DataManage.register(media.getTitle(), Integer.parseInt(title[0].split("\\^")[1]), this, 0);
         	AniDBWrapper.grabAnimeMetadata(Integer.parseInt(title[0].split("\\^")[1]), this);
         	this.recreate();
         }
         else {
+        	temptype = 0;
         	DialogFragment newFragment = new ShowPickerDialog();
         	((ShowPickerDialog) newFragment).setData(title);
         	((ShowPickerDialog) newFragment).setTitle(media.getTitle());
@@ -189,9 +245,12 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 	@Override
 	public void onSelectedOption(int selectedIndex) {
 		if (selectedIndex != 0) {
-			DataManage.register(media.getTitle(), Integer.parseInt(title[selectedIndex].split("\\^")[1]), this);
-        	AniDBWrapper.grabAnimeMetadata(Integer.parseInt(title[selectedIndex].split("\\^")[1]), this);
-			//this.recreate();
+			DataManage.register(media.getTitle(), Integer.parseInt(title[selectedIndex].split("\\^")[1]), this, temptype);
+			if (temptype == 0)
+				AniDBWrapper.grabAnimeMetadata(Integer.parseInt(title[selectedIndex].split("\\^")[1]), this);
+			else
+				MangaUpdatesClient.grabMangaMetadata(Integer.parseInt(title[0].split("\\^")[1]), this);
+			this.recreate();
         	finish();
 		}
 		Log.d("select", selectedIndex+"");

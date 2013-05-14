@@ -12,14 +12,19 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.ByteArrayBuffer;
 import org.apache.http.util.EntityUtils;
 
@@ -41,7 +46,7 @@ public class AniDBWrapper {
 			else
 				query = URLEncoder.encode("\\"+query, "UTF-8");
 		    String getURL = "http://anisearch.outrance.pl/index.php?task=search&query=" + query + "&langs=" + URLEncoder.encode("x-jat", "UTF-8");
-		    HttpEntity resEntityGet = httpget(getURL);
+		    HttpEntity resEntityGet = httpget(getURL, false);
 		    if (resEntityGet != null) {  
 		        // do something with the response
 		        String[] response = EntityUtils.toString(resEntityGet).split("<anime");
@@ -73,7 +78,7 @@ public class AniDBWrapper {
 	
 	public static void grabAnimeMetadata(int aid, Activity act) {
 		String getURL = "http://api.anidb.net:9001/httpapi?request=anime&client=animemanagermob&clientver=1&protover=1&aid=" + aid;
-	    HttpEntity resEntityGet = httpget(getURL);
+	    HttpEntity resEntityGet = httpget(getURL, false);
 	    String parsed = "";
 	    InputStream ungzip = null;
 	    try {
@@ -97,10 +102,10 @@ public class AniDBWrapper {
 		}
 		parsed = new String(baf.toByteArray());
 	    Log.d("wow", parsed);
-		DataManage.writeToExternal(parsed, aid+".xml", act);
+		DataManage.writeToExternal(parsed, "anime"+aid+".xml", act);
 	}
 	
-	public static HttpEntity httpget(String url) {
+	public static HttpEntity httpget(String url, boolean fakeDesktop) {
 		if (android.os.Build.VERSION.SDK_INT > 9) {
 		      StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 		      StrictMode.setThreadPolicy(policy);
@@ -109,6 +114,8 @@ public class AniDBWrapper {
 		try {
 			HttpClient client = new DefaultHttpClient();  
 		    HttpGet get = new HttpGet(url);
+		    if (fakeDesktop)
+		    	get.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:19.0) Gecko/20100101 Firefox/19.0");
 			responseGet = client.execute(get);
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
@@ -120,14 +127,41 @@ public class AniDBWrapper {
 	    return responseGet.getEntity(); 
 	}
 	
+	public static HttpEntity httpPostBakaUpdates(String url, boolean fakeDesktop, String query) {
+		if (android.os.Build.VERSION.SDK_INT > 9) {
+		      StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+		      StrictMode.setThreadPolicy(policy);
+		    }
+		HttpResponse responseGet = null;
+		try {
+			HttpClient client = new DefaultHttpClient();  
+		    HttpPost post  = new HttpPost(url);
+		    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+		      nameValuePairs.add(new BasicNameValuePair("x","6"));
+		      nameValuePairs.add(new BasicNameValuePair("y","8"));
+		      nameValuePairs.add(new BasicNameValuePair("search",query));
+		      post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+		    if (fakeDesktop)
+		    	post.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:19.0) Gecko/20100101 Firefox/19.0");
+			responseGet = client.execute(post);
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}  
+	    return responseGet.getEntity(); 
+	}
+	
 	public static boolean doesAniDBfileExist(int aid, Activity act) {
-		return DataManage.doesExternalFileExist(aid+".xml", act);
+		return DataManage.doesExternalFileExist("anime"+aid+".xml", act);
 	}
 	
 	public static String[] parseAniDBfile(int aid, Activity act) {
 		if (doesAniDBfileExist(aid, act)) {
-			String stream = DataManage.readFromExternal(aid+".xml", act);
-			String[] data = new String[16];
+			String stream = DataManage.readFromExternal("anime"+aid+".xml", act);
+			String[] data = new String[17];
 			/**
 			 * Explanation for this array:
 			 * I parse the xml per category of data with a total of 15 categories
@@ -182,7 +216,7 @@ public class AniDBWrapper {
 	
 	public static void fetchImage(String filename, Activity act) {
 		String url = "http://img7.anidb.net/pics/anime/" + filename;
-	    HttpEntity resEntityGet = httpget(url);
+	    HttpEntity resEntityGet = httpget(url, false);
 
 	    try {
 			resEntityGet.writeTo(DataManage.openOutputStreamToExternal(new File(act.getExternalFilesDir(null), "/images/"), filename));
@@ -190,6 +224,28 @@ public class AniDBWrapper {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public static String findEpisodeNearestAfterDate(String date, String rawEpisodeList) {
+		String nearest = null;
+		for (String item : rawEpisodeList.split("<episode id")) {
+			if (item.contains("<airdate>") && item.contains("<epno type=\"1\">")) {
+				String itemdate = item.split("<airdate>")[1].split("</airdate>")[0];
+				if ((Integer.parseInt(itemdate.split("-")[0]) >= Integer.parseInt(date.split("-")[0])) && (Integer.parseInt(itemdate.split("-")[1]) >= Integer.parseInt(date.split("-")[1])) && (Integer.parseInt(itemdate.split("-")[2]) >= Integer.parseInt(date.split("-")[2])))  {
+					if (nearest == null) {
+						nearest = item.split("<epno type=\"1\">")[1].split("</epno>")[0] + "^" + itemdate;
+					}
+					else {
+						if (Integer.parseInt(itemdate.split("-")[0]) <= Integer.parseInt(nearest.split("\\^")[1].split("-")[0]) && (Integer.parseInt(itemdate.split("-")[1])) <= Integer.parseInt(nearest.split("\\^")[1].split("-")[0]) && (Integer.parseInt(itemdate.split("-")[2])) <= Integer.parseInt(nearest.split("\\^")[1].split("-")[0])) {
+							nearest = item.split("<epno type=\"1\">")[1].split("</epno>")[0] + "^" + itemdate;
+						}
+					}
+						
+				}
+			}
+		}
+		//TODO do stuff
+		return nearest;
 	}
 	
 	
