@@ -1,6 +1,7 @@
 package jim.reupload.nl.animemanagermobile;
 
 import jim.reupload.nl.animemanagermobile.dialogs.WaitDialog;
+import jim.reupload.nl.animemanagermobile.mangareader.MangaView;
 import jim.reupload.nl.animemanagermobile.releasetracker.ReleaseTrackingService;
 import android.os.Bundle;
 import android.app.Activity;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -52,11 +54,14 @@ public class MainMenu extends Activity {
         }
         else {
 	        final Intent intent1 = new Intent(this, ViewList.class);
-	        //final Intent intent2 = new Intent(this, EditRead.class);
+	        final Intent intent2 = new Intent(this, MangaView.class);
 	        //final Intent intent3 = new Intent(this, SeenList.class);
+	        RelativeLayout rl = (RelativeLayout) findViewById(R.id.main_relative);
 	        final Button editAnimeButton = (Button) findViewById(R.id.button1);
 	        final Button editMangaButton = (Button) findViewById(R.id.button2);
 	        final Button viewListButton = (Button) findViewById(R.id.button3);
+	        Button mangabut = new Button(this);
+	        mangabut.setText("test MangaView");
 	        final Activity act = this;
 	        editAnimeButton.setOnClickListener(new View.OnClickListener() {
 	            public void onClick(View v) {
@@ -76,6 +81,15 @@ public class MainMenu extends Activity {
 	        		startActivity(intent1);
 	        	}
 	        });
+	        mangabut.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View arg0) {
+					startActivity(intent2);
+					
+				}
+			});
+	        rl.addView(mangabut);
         }
         return true;
 

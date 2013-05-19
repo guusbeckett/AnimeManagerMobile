@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen" 
+    android:layout_width="match_parent"
+    android:id="@+id/mangaview"
+    android:layout_height="match_parent" >
+
+    <ImageView
+        android:id="@+id/mangaimage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/ic_action_edit" />
+    
+    <Button
+        android:id="@+id/prevbut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:text="Prev" />
+
+    <Button
+        android:id="@+id/nextbut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="Next" />
+
+    
+
+</RelativeLayout>

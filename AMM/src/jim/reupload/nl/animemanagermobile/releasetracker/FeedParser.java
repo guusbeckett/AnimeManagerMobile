@@ -57,12 +57,15 @@ public class FeedParser {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			Cursor c2 = ammDatabase.query("Registered", new String[]{"Name"}, "Tracking='1' AND Subber='" + c.getString(c.getColumnIndex("Name")) + "'", null, null, null, null);
+			Cursor c2 = ammDatabase.query("Registered", new String[]{"Name", "Keyword"}, "Tracking='1' AND Subber='" + c.getString(c.getColumnIndex("Name")) + "'", null, null, null, null);
 			if (c2.getCount() >= 1) {
 				String[] titles = new String[c2.getCount()];
 				int i = 0;
 				while (c2.moveToNext()) {
-					titles[i] = c2.getString(c.getColumnIndex("Name"));
+					if (!c2.getString(c2.getColumnIndex("Keyword")).equals(""))
+						titles[i] = c2.getString(c2.getColumnIndex("Keyword"));
+					else
+						titles[i] = c2.getString(c2.getColumnIndex("Name"));
 					i++;
 				}
 				parseFeed(feed, c.getString(c.getColumnIndex("Name")), titles, ctx);

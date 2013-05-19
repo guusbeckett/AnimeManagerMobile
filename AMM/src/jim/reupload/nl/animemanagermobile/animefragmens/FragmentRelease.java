@@ -10,10 +10,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.sax.TextElementListener;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -21,6 +24,8 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
@@ -55,7 +60,7 @@ public class FragmentRelease extends Fragment {
         }*/
         SQLiteOpenHelper ammData = new AMMDatabase(this.getActivity());
 		final SQLiteDatabase ammDatabase =  ammData.getWritableDatabase();
-		Cursor c = ammDatabase.query("Registered", new String[]{"Tracking", "Subber"}, "Name='"+ media.getTitle() +"'", null, null, null, null);
+		final Cursor c = ammDatabase.query("Registered", new String[]{"Tracking", "Subber", "Keyword"}, "Name='"+ media.getTitle() +"'", null, null, null, null);
 		Cursor c2 = ammDatabase.query("Subteams", new String[]{"Name"}, null, null, null, null, null);
         
     	//ammDatabase.insert("Registered", null, cv);
@@ -91,12 +96,13 @@ public class FragmentRelease extends Fragment {
 			
 			@Override
 			public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
-				ammDatabase.delete("Registered", "Name='"+ media.getTitle() + "' AND ID=" + media.getId(), null);
 				ContentValues cv = new ContentValues();
 		    	cv.put("Name", media.getTitle());
 		    	cv.put("ID", media.getId());
 		    	cv.put("Tracking", arg1);
 		    	cv.put("Subber", spins[spin.getSelectedItemPosition()]);
+		    	cv.put("Keyword", "");
+		    	ammDatabase.delete("Registered", "Name='"+ media.getTitle() + "' AND ID=" + media.getId(), null);
 				ammDatabase.insert("Registered", null, cv);
 			}
 		});
@@ -108,12 +114,13 @@ public class FragmentRelease extends Fragment {
 					int arg2, long arg3) {
 				// TODO Auto-generated method stub
 				if (cb.isChecked()) {
-					ammDatabase.delete("Registered", "Name='"+ media.getTitle() + "' AND ID=" + media.getId(), null);
 					ContentValues cv = new ContentValues();
 			    	cv.put("Name", media.getTitle());
 			    	cv.put("ID", media.getId());
 			    	cv.put("Tracking", true);
 			    	cv.put("Subber", spins[arg2]);
+			    	cv.put("Keyword", c.getString(c.getColumnIndex("Keyword")));
+			    	ammDatabase.delete("Registered", "Name='"+ media.getTitle() + "' AND ID=" + media.getId(), null);
 					ammDatabase.insert("Registered", null, cv);
 				}
 				
@@ -126,6 +133,26 @@ public class FragmentRelease extends Fragment {
 			}
 		});
 	    
+	    final EditText et = new EditText(this.getActivity());
+	    et.setHint(media.getTitle());
+	    Button but = new Button(this.getActivity());
+	    but.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				ContentValues cv = new ContentValues();
+		    	cv.put("Name", media.getTitle());
+		    	cv.put("ID", media.getId());
+		    	cv.put("Tracking", c.getInt(c.getColumnIndex("Tracking")));
+		    	cv.put("Subber", c.getString(c.getColumnIndex("Subber")));
+		    	cv.put("Keyword", et.getText().toString());
+		    	ammDatabase.delete("Registered", "Name='"+ media.getTitle() + "' AND ID=" + media.getId(), null);
+				ammDatabase.insert("Registered", null, cv);
+				
+			}
+		});
+	    linlay.addView(et);
+	    linlay.addView(but);
 	    linlay.addView(spin);
         
         return v;
