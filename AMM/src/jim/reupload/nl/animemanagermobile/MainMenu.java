@@ -1,9 +1,11 @@
 package jim.reupload.nl.animemanagermobile;
 
 import jim.reupload.nl.animemanagermobile.dialogs.WaitDialog;
+import jim.reupload.nl.animemanagermobile.releasetracker.ReleaseTrackingService;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -25,9 +27,10 @@ public class MainMenu extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+    	startService(new Intent(this, ReleaseTrackingService.class));
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_menu, menu);
-        MangaUpdatesClient.getMostLikelyID("lel", false);
+        //MangaUpdatesClient.getMostLikelyID("lel", false);
      // Restore preferences
         SharedPreferences settings = getSharedPreferences("AMMprefs", 0);
         int storageMethod = settings.getInt("storageMethod", 0);

@@ -1,4 +1,4 @@
-package jim.reupload.nl.animemanagermobile;
+package jim.reupload.nl.animemanagermobile.data;
 
 import java.io.BufferedInputStream;
 import java.io.File;

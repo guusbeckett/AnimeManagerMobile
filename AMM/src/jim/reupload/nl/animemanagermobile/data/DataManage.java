@@ -1,4 +1,4 @@
-package jim.reupload.nl.animemanagermobile;
+package jim.reupload.nl.animemanagermobile.data;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -21,6 +21,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import jim.reupload.nl.animemanagermobile.AnimeObject;
+import jim.reupload.nl.animemanagermobile.MediaObject;
+import jim.reupload.nl.animemanagermobile.R;
+import jim.reupload.nl.animemanagermobile.R.string;
 import jim.reupload.nl.animemanagermobile.skydrive.JsonKeys;
 import jim.reupload.nl.animemanagermobile.skydrive.SkyDriveFile;
 import jim.reupload.nl.animemanagermobile.skydrive.SkyDriveObject;
@@ -444,14 +448,34 @@ public class DataManage {
 			e.printStackTrace();
 		}
 	}
+	
+	public void addNewAnime(Activity act, AnimeObject item) {
+		if (list == null)
+			list = getWatchingAnime(act);
+		AnimeObject[] list2 = new AnimeObject[list.length+1];
+		int i = 0;
+		for (AnimeObject object : list) {
+			list2[i] = object;
+			i++;
+		}
+		list2[list.length] = item;
+		list = list2;
+		try {
+			writeAllAnime(act);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	private void writeAllAnime(Activity act) throws IOException {
 		if (!fslive)
 			iniateFS(act);
+		DbxFile testFile = null;
 		String data = null;
 		switch (act.getSharedPreferences("AMMprefs", 0).getInt("storageMethod", 0)) {
 			case (1):
-				DbxFile testFile = null;
+				
 				try {
 					testFile = dbxFs.open(new DbxPath("watching.txt"));
 				} catch (InvalidPathException e) {
@@ -467,16 +491,19 @@ public class DataManage {
 				break;
 		}
 		if (data!=null) {
+			Log.d("ne", "war");
 			String data2 = data.split("Reading:")[1];
 			data = "Watching:\n";
+			Log.d("ne", "war2");
 			for (AnimeObject item : list) {
 				if (item!=null)
 					data += item.getWriteable() + "\n";
 			}
 			data+="\nReading:"+data2;
-			DbxFile testFile = null;
+			Log.d("ne", "war3");
+			//DbxFile testFile = dbxFs.open(new DbxPath("watching.txt"));
 			testFile.writeString(data);
-			ArrayList<AnimeObject> henk = null;
+			//ArrayList<AnimeObject> henk = null;
 			testFile.close();
 		}
 		
@@ -730,6 +757,7 @@ public class DataManage {
 	 public static Bitmap loadImageFromExternal(String filename, Activity act) {
 	      try {
 	          File f = new File(act.getExternalFilesDir(null)+"/images/", filename);
+	          Log.d("file ", f.toString());
 	          if (!f.exists()) { Log.d("BitMapLoader", "File " + f + " Not Found"); return null; }
 	          Bitmap tmp = BitmapFactory.decodeFile(f.toString());
 	          return tmp;

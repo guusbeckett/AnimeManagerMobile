@@ -7,9 +7,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.VIBRATE" />
 
     <uses-sdk
-        android:minSdkVersion="17"
+        android:minSdkVersion="11"
         android:targetSdkVersion="17" />
 
     <application
@@ -28,6 +29,10 @@
         </activity>
         <activity
             android:name="jim.reupload.nl.animemanagermobile.MediaPage"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="jim.reupload.nl.animemanagermobile.EditMediaObject"
             android:label="@string/app_name" >
         </activity>
         <activity
@@ -54,6 +59,12 @@
 		  android:enabled="true"
 		  android:exported="false"
 		  android:label="Dropbox Sync" />
+		<service
+	     android:name="jim.reupload.nl.animemanagermobile.releasetracker.ReleaseTrackingService"
+	     android:enabled="true"
+	     android:label="AMM Release Tracker" >
+    </service>
+		
     </application>
 
 </manifest>

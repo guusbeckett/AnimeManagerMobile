@@ -2,9 +2,9 @@ package jim.reupload.nl.animemanagermobile.animefragmens;
 
 import java.util.ArrayList;
 
-import jim.reupload.nl.animemanagermobile.DataManage;
 import jim.reupload.nl.animemanagermobile.MediaObject;
 import jim.reupload.nl.animemanagermobile.R;
+import jim.reupload.nl.animemanagermobile.data.DataManage;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

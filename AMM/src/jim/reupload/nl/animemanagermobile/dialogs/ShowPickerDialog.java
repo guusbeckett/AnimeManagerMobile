@@ -1,8 +1,8 @@
 package jim.reupload.nl.animemanagermobile.dialogs;
 
-import jim.reupload.nl.animemanagermobile.AniDBWrapper;
-import jim.reupload.nl.animemanagermobile.DataManage;
 import jim.reupload.nl.animemanagermobile.R;
+import jim.reupload.nl.animemanagermobile.data.AniDBWrapper;
+import jim.reupload.nl.animemanagermobile.data.DataManage;
 import jim.reupload.nl.animemanagermobile.dialogs.ShowPickerDialog.OnDialogSelectorListener;
 import android.app.Activity;
 import android.app.AlertDialog;

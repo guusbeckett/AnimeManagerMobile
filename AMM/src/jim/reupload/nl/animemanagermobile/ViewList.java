@@ -1,7 +1,8 @@
 package jim.reupload.nl.animemanagermobile;
 
 
-import jim.reupload.nl.animemanagermobile.DataManage.skydrive;
+import jim.reupload.nl.animemanagermobile.data.DataManage;
+import jim.reupload.nl.animemanagermobile.data.DataManage.skydrive;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
@@ -85,6 +86,9 @@ public class ViewList extends Activity implements OnItemClickListener, skydrive 
 	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 	            startActivity(intent);
 	            return true;
+	        case R.id.menu_add:
+	        	Intent intent2 = new Intent(this, EditMediaObject.class);
+	        	startActivity(intent2);
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }

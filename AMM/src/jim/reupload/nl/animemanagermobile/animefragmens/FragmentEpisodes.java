@@ -2,9 +2,13 @@ package jim.reupload.nl.animemanagermobile.animefragmens;
 
 import java.util.ArrayList;
 
-import jim.reupload.nl.animemanagermobile.DataManage;
 import jim.reupload.nl.animemanagermobile.MediaObject;
 import jim.reupload.nl.animemanagermobile.R;
+import jim.reupload.nl.animemanagermobile.data.AMMDatabase;
+import jim.reupload.nl.animemanagermobile.data.DataManage;
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -34,7 +38,6 @@ public class FragmentEpisodes extends Fragment {
         linlay = new LinearLayout(this.getActivity());
         view.addView(linlay);
         linlay.setOrientation(LinearLayout.VERTICAL);
-        
         TextView eps = new TextView(this.getActivity());
         if (metadata != null) {
 			String[][] cars = parseEps(metadata[15]); 

@@ -7,7 +7,11 @@ import jim.reupload.nl.animemanagermobile.animefragmens.FragmentCharacters;
 import jim.reupload.nl.animemanagermobile.animefragmens.FragmentDescription;
 import jim.reupload.nl.animemanagermobile.animefragmens.FragmentEpisodes;
 import jim.reupload.nl.animemanagermobile.animefragmens.FragmentGeneral;
+import jim.reupload.nl.animemanagermobile.animefragmens.FragmentRelease;
 import jim.reupload.nl.animemanagermobile.animefragmens.FragmentTags;
+import jim.reupload.nl.animemanagermobile.data.AniDBWrapper;
+import jim.reupload.nl.animemanagermobile.data.DataManage;
+import jim.reupload.nl.animemanagermobile.data.MangaUpdatesClient;
 import jim.reupload.nl.animemanagermobile.dialogs.ShowPickerDialog;
 import jim.reupload.nl.animemanagermobile.dialogs.ShowPickerDialog.OnDialogSelectorListener;
 
@@ -74,7 +78,7 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
         		media = data.getFullMangaDetails(this, point);
         		break;
         }
-        id = data.getID(media.getTitle(), this, type);
+        id = DataManage.getID(media.getTitle(), this, type);
         DataManage.clearCaches();
         Log.d("chehck", "2");
         if (id!=0)
@@ -121,6 +125,8 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
         		FragmentTags.class, null);
         mTabsAdapter.addTab(actionBar.newTab().setText(R.string.frag_eps),
         		FragmentEpisodes.class, null);
+        mTabsAdapter.addTab(actionBar.newTab().setText("Releases"),
+        		FragmentRelease.class, null);
 	}
 	
 	@Override
@@ -175,10 +181,10 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 
 	private void handleMangaMetadata() {
 		AlertDialog mInitializeDialog = ProgressDialog.show(this, "", "Fetching metadata. Please wait...", true);
-		if (id == 0)
+		if (media.getId() == 0)
 			title = MangaUpdatesClient.getMostLikelyID(media.getTitle(), false).toArray(new String[0]);
 		else
-			title = new String[]{id+""};
+			title = new String[]{media.getTitle()+"^"+id};
 		for (String item : title) {
 			Log.d("heh", item);
 		}
@@ -190,7 +196,9 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
     		mInitializeDialog.dismiss();
         }
         else if (title.length == 1) {
-        	if (id == 0)
+        	Log.d("new", "ling 21");
+        	Log.d("nya", title[0]);
+        	if (media.getId() == 0)
         		DataManage.register(media.getTitle(), Integer.parseInt(title[0].split("\\^")[1]), this, 1);
         	MangaUpdatesClient.grabMangaMetadata(Integer.parseInt(title[0].split("\\^")[1]), this);
         	mInitializeDialog.dismiss();

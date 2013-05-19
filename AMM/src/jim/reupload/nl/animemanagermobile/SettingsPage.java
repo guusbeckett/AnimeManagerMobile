@@ -1,6 +1,7 @@
 package jim.reupload.nl.animemanagermobile;
 
 import jim.reupload.nl.animemanagermobile.optionfragments.FileLocationFrag;
+import jim.reupload.nl.animemanagermobile.optionfragments.MangaSelectionFragment;
 import jim.reupload.nl.animemanagermobile.optionfragments.MetadataFragment;
 import jim.reupload.nl.animemanagermobile.optionfragments.SubbersFragment;
 import android.annotation.TargetApi;
@@ -40,6 +41,8 @@ public class SettingsPage extends FragmentActivity {
         		SubbersFragment.class, null);
         mTabsAdapter.addTab(actionBar.newTab().setText(R.string.meta_storage),
         		MetadataFragment.class, null);
+        mTabsAdapter.addTab(actionBar.newTab().setText("Manga Storage"),
+        		MangaSelectionFragment.class, null);
 	}
 	
 	public boolean onOptionsItemSelected(MenuItem item) {

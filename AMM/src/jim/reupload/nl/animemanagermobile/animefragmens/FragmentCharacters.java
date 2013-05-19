@@ -2,12 +2,18 @@ package jim.reupload.nl.animemanagermobile.animefragmens;
 
 import java.util.ArrayList;
 
-import jim.reupload.nl.animemanagermobile.DataManage;
 import jim.reupload.nl.animemanagermobile.MediaObject;
 import jim.reupload.nl.animemanagermobile.R;
+import jim.reupload.nl.animemanagermobile.data.DataManage;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,8 +42,6 @@ public class FragmentCharacters extends Fragment {
         linlay.setOrientation(LinearLayout.VERTICAL);
         
         
-        
-		
 		
 		if (metadata != null) {
 			String[][] chara;

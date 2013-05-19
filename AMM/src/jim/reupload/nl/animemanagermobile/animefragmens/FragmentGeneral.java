@@ -2,12 +2,12 @@ package jim.reupload.nl.animemanagermobile.animefragmens;
 
 import java.util.Calendar;
 
-import jim.reupload.nl.animemanagermobile.AniDBWrapper;
 import jim.reupload.nl.animemanagermobile.AnimeObject;
-import jim.reupload.nl.animemanagermobile.DataManage;
-import jim.reupload.nl.animemanagermobile.MangaUpdatesClient;
 import jim.reupload.nl.animemanagermobile.MediaObject;
 import jim.reupload.nl.animemanagermobile.R;
+import jim.reupload.nl.animemanagermobile.data.AniDBWrapper;
+import jim.reupload.nl.animemanagermobile.data.DataManage;
+import jim.reupload.nl.animemanagermobile.data.MangaUpdatesClient;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -63,18 +63,20 @@ public class FragmentGeneral extends Fragment {
         	Bitmap bm = null;
         	type = Integer.parseInt(metadata[16]);
         	if (type == 1 || type == 2) {
-        		if (DataManage.doesExternalFileExist(this.getActivity().getExternalFilesDir(null) + "/image/" + metadata[10], this.getActivity())) {
+        		if (DataManage.doesExternalFileExist("/images/" + metadata[10], this.getActivity())) {
         			bm = DataManage.loadImageFromExternal(metadata[10], this.getActivity());
+        			
             	}
         		else {
             		AniDBWrapper.fetchImage(metadata[10], this.getActivity());
             		bm = DataManage.loadImageFromExternal(metadata[10], this.getActivity());
+            		//Log.d("hai", "FnF");
         		}
             	
         	}
         	else if (type != 0) {
-        		if (DataManage.doesExternalFileExist(this.getActivity().getExternalFilesDir(null) + "/image/" + metadata[10].split("/")[metadata[10].split("/").length-1], this.getActivity())) {
-        			bm = DataManage.loadImageFromExternal(metadata[10], this.getActivity());
+        		if (DataManage.doesExternalFileExist("/images/" + metadata[10].split("/")[metadata[10].split("/").length-1], this.getActivity())) {
+        			bm = DataManage.loadImageFromExternal(metadata[10].split("/")[metadata[10].split("/").length-1], this.getActivity());
             	}
         		else {
         			MangaUpdatesClient.fetchImage(metadata[10], this.getActivity());
@@ -85,7 +87,6 @@ public class FragmentGeneral extends Fragment {
         	img.setImageBitmap(bm);
         	
         	linlay.addView(img);
-        	
         }
         else {
         	TextView nometa = new TextView(this.getActivity());
@@ -115,17 +116,17 @@ public class FragmentGeneral extends Fragment {
 
         	  @Override
         	  public void onClick(View v) {
-        	    NumberPicker numpick = new NumberPicker(act);
-        	    numpick.setMinValue(0);
-        	    numpick.setMaxValue(maxValue);
-        	    numpick.setOnClickListener(new OnClickListener() {
-					
-					@Override
-					public void onClick(View v) {
-						// TODO Auto-generated method stub
-						
-					}
-				});
+//        	    NumberPicker numpick = new NumberPicker(act);
+//        	    numpick.setMinValue(0);
+//        	    numpick.setMaxValue(maxValue);
+//        	    numpick.setOnClickListener(new OnClickListener() {
+////					
+//					@Override
+//					public void onClick(View v) {
+//						// TODO Auto-generated method stub
+//						
+//					}
+//				});
         	    AlertDialog.Builder alert = new AlertDialog.Builder(act);
 
                 alert.setTitle("Select the value: ");
@@ -135,8 +136,8 @@ public class FragmentGeneral extends Fragment {
                 np.setMaxValue(maxValue);
                 np.setWrapSelectorWheel(false);
                 //np.setDisplayedValues(nums);
-                //np.setValue(50);
-
+                np.setValue(media.getProgress());
+                alert.setView(np);
                 alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                   // Do something with value!
@@ -148,6 +149,7 @@ public class FragmentGeneral extends Fragment {
                     // Cancel.
                   }
                 });
+                alert.show();
         	  }
 
         	});
