@@ -11,7 +11,7 @@ public class MangaReadManage {
 	
 	private String path;
 	private int point;
-
+	
 	public MangaReadManage(String string) {
 		// TODO Auto-generated constructor stub
 		path = string;

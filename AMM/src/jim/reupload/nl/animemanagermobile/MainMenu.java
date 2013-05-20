@@ -54,15 +54,11 @@ public class MainMenu extends Activity {
         }
         else {
 	        final Intent intent1 = new Intent(this, ViewList.class);
-	        final Intent intent2 = new Intent(this, MangaView.class);
 	        //final Intent intent3 = new Intent(this, SeenList.class);
 	        RelativeLayout rl = (RelativeLayout) findViewById(R.id.main_relative);
 	        final Button editAnimeButton = (Button) findViewById(R.id.button1);
 	        final Button editMangaButton = (Button) findViewById(R.id.button2);
 	        final Button viewListButton = (Button) findViewById(R.id.button3);
-	        Button mangabut = new Button(this);
-	        mangabut.setText("test MangaView");
-	        final Activity act = this;
 	        editAnimeButton.setOnClickListener(new View.OnClickListener() {
 	            public void onClick(View v) {
 	            	intent1.putExtra("type", 1);
@@ -81,15 +77,6 @@ public class MainMenu extends Activity {
 	        		startActivity(intent1);
 	        	}
 	        });
-	        mangabut.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View arg0) {
-					startActivity(intent2);
-					
-				}
-			});
-	        rl.addView(mangabut);
         }
         return true;
 

@@ -2,6 +2,7 @@ package jim.reupload.nl.animemanagermobile.mangareader;
 
 import jim.reupload.nl.animemanagermobile.R;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Base64;
@@ -26,13 +27,17 @@ public class MangaView extends Activity {
                                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.manga_view);
-        final MangaReadManage mang = new MangaReadManage("/storage/sdcard0/.searchmanga/Waratte Sotomura San/1/");
+        Intent intent = this.getIntent();
+        String title = intent.getStringExtra("title");
+        int chap = intent.getIntExtra("chapter", 0);
+        final MangaReadManage mang = new MangaReadManage("/storage/sdcard0/.searchmanga/"+ title +"/" + chap + "/");
         String file64 = new String(Base64.encode(("000" + mang.getPoint()).getBytes(), Base64.NO_WRAP));
         Log.d("heh", file64);
         Bitmap img = mang.loadImageFromExternal(file64+".jpg", this);
         RelativeLayout rl = (RelativeLayout) findViewById(R.id.mangaview);
         final ImageView iv = (ImageView) findViewById(R.id.mangaimage);
         iv.setImageBitmap(img);
+        
         iv.setOnTouchListener(new ding());
         Button next = (Button) findViewById(R.id.nextbut);
         Button prev = (Button) findViewById(R.id.prevbut);

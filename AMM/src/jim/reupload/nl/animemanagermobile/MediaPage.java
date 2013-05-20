@@ -7,6 +7,7 @@ import jim.reupload.nl.animemanagermobile.animefragmens.FragmentCharacters;
 import jim.reupload.nl.animemanagermobile.animefragmens.FragmentDescription;
 import jim.reupload.nl.animemanagermobile.animefragmens.FragmentEpisodes;
 import jim.reupload.nl.animemanagermobile.animefragmens.FragmentGeneral;
+import jim.reupload.nl.animemanagermobile.animefragmens.FragmentMangaRead;
 import jim.reupload.nl.animemanagermobile.animefragmens.FragmentRelease;
 import jim.reupload.nl.animemanagermobile.animefragmens.FragmentTags;
 import jim.reupload.nl.animemanagermobile.data.AniDBWrapper;
@@ -121,12 +122,18 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
         		FragmentCharacters.class, null);
         mTabsAdapter.addTab(actionBar.newTab().setText(R.string.frag_cats),
         		FragmentCategories.class, null);
-        mTabsAdapter.addTab(actionBar.newTab().setText(R.string.frag_tags),
-        		FragmentTags.class, null);
-        mTabsAdapter.addTab(actionBar.newTab().setText(R.string.frag_eps),
-        		FragmentEpisodes.class, null);
-        mTabsAdapter.addTab(actionBar.newTab().setText("Releases"),
-        		FragmentRelease.class, null);
+        if (type == 1 || type == 2) {
+        	mTabsAdapter.addTab(actionBar.newTab().setText(R.string.frag_tags),
+            		FragmentTags.class, null);
+            mTabsAdapter.addTab(actionBar.newTab().setText(R.string.frag_eps),
+            		FragmentEpisodes.class, null);
+            if (type == 1)
+        	mTabsAdapter.addTab(actionBar.newTab().setText("Releases"),
+        			FragmentRelease.class, null);
+        }
+        else if (type == 3 || type == 4)
+        	mTabsAdapter.addTab(actionBar.newTab().setText("Manga Reader"),
+        			FragmentMangaRead.class, null);
 	}
 	
 	@Override
