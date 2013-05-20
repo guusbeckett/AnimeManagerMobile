@@ -31,9 +31,8 @@ public class MangaView extends Activity {
         String title = intent.getStringExtra("title");
         int chap = intent.getIntExtra("chapter", 0);
         final MangaReadManage mang = new MangaReadManage("/storage/sdcard0/.searchmanga/"+ title +"/" + chap + "/");
-        String file64 = new String(Base64.encode(("000" + mang.getPoint()).getBytes(), Base64.NO_WRAP));
-        Log.d("heh", file64);
-        Bitmap img = mang.loadImageFromExternal(file64+".jpg", this);
+        
+        Bitmap img = mang.loadImageFromExternal(getSearchManga(mang.getPoint())+".jpg", this);
         RelativeLayout rl = (RelativeLayout) findViewById(R.id.mangaview);
         final ImageView iv = (ImageView) findViewById(R.id.mangaimage);
         iv.setImageBitmap(img);
@@ -50,8 +49,7 @@ public class MangaView extends Activity {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				mang.nextImage();
-				String file64 = new String(Base64.encode(("000" + mang.getPoint()).getBytes(), Base64.NO_WRAP));
-		        Bitmap img = mang.loadImageFromExternal(file64+".jpg", act);
+		        Bitmap img = mang.loadImageFromExternal(getSearchManga(mang.getPoint())+".jpg", act);
 		        iv.setImageBitmap(img);
 		        iv.invalidate();
 			}
@@ -62,11 +60,20 @@ public class MangaView extends Activity {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				mang.prevImage();
-				String file64 = new String(Base64.encode(("000" + mang.getPoint()).getBytes(), Base64.NO_WRAP));
-		        Bitmap img = mang.loadImageFromExternal(file64+".jpg", act);
+		        Bitmap img = mang.loadImageFromExternal(getSearchManga(mang.getPoint())+".jpg", act);
 		        iv.setImageBitmap(img);
 		        iv.invalidate();
 			}
 		});
     }
+	
+	public String getSearchManga(int i) {
+		String file64 = null;
+		if (i<10)
+			file64 = new String(Base64.encode(("000" + i).getBytes(), Base64.NO_WRAP));
+		else if (i>9 && i<100)
+			file64 = new String(Base64.encode(("00" + i).getBytes(), Base64.NO_WRAP));
+        Log.d("heh", file64);
+        return file64;
+	}
 }

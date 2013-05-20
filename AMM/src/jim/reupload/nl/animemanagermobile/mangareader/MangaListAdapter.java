@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.content.ClipData.Item;
 import android.content.ContentValues;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,9 +38,10 @@ public class MangaListAdapter extends BaseAdapter {
     
     public void checkExistence() {
     	existence = new boolean[total];
-    	for (int o=0;o<total-1;o++) {
-    		File f = new File("/storage/sdcard0/.searchmanga/"+title+"/"+o+1+"/");
+    	for (int o=0;o<total;o++) { 
+    		File f = new File("/storage/sdcard0/.searchmanga/"+title+"/"+(o+1)+"/");
     		existence[o] = f.exists();
+    		Log.d("exist", f.toString()+f.exists());
     	}
     }
  

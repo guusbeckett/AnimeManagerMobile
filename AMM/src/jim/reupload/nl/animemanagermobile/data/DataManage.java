@@ -912,6 +912,29 @@ public class DataManage {
 			deleteExternalFile(file.toString(), activ);
 		}
 	}
+
+
+	public static int getMangaChapters(String title) {
+		File f = new File("/storage/sdcard0/.searchmanga/"+title+"/");
+		int max = 0;
+		if (f.exists())
+		{
+			
+			for (File files : f.listFiles()) {
+				Log.d("test", files.toString());
+				 try  
+				  {  
+					 int l = Integer.parseInt(files.toString().split("/")[files.toString().split("/").length-1]);
+						if (l>max)
+							max=l;
+				  }  
+				  catch(NumberFormatException nfe)  
+				  {  
+				  }  
+			}
+		}
+		return max;
+	}
 	
 	
 	

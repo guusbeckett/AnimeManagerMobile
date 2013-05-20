@@ -45,7 +45,7 @@ public class FragmentMangaRead extends Fragment {
         //linlay.setOrientation(LinearLayout.VERTICAL);
         
         ListView lv = new ListView(this.getActivity());
-        MangaListAdapter adapt = new MangaListAdapter(getActivity(), media.getTitle(), 5);
+        MangaListAdapter adapt = new MangaListAdapter(getActivity(), media.getTitle(), DataManage.getMangaChapters(media.getTitle()));
         lv.setAdapter(adapt);
         lv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         lv.setOnItemClickListener(new OnItemClickListener() {
