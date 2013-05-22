@@ -59,6 +59,7 @@ public class MainMenu extends Activity {
 	        final Button editAnimeButton = (Button) findViewById(R.id.button1);
 	        final Button editMangaButton = (Button) findViewById(R.id.button2);
 	        final Button viewListButton = (Button) findViewById(R.id.button3);
+	        final Button viewReadManga = (Button) findViewById(R.id.button4);
 	        editAnimeButton.setOnClickListener(new View.OnClickListener() {
 	            public void onClick(View v) {
 	            	intent1.putExtra("type", 1);
@@ -74,6 +75,12 @@ public class MainMenu extends Activity {
 	        viewListButton.setOnClickListener(new View.OnClickListener() {
 	        	public void onClick(View v) {
 	        		intent1.putExtra("type", 2);
+	        		startActivity(intent1);
+	        	}
+	        });
+	        viewReadManga.setOnClickListener(new View.OnClickListener() {
+	        	public void onClick(View v) {
+	        		intent1.putExtra("type", 4);
 	        		startActivity(intent1);
 	        	}
 	        });

@@ -53,6 +53,8 @@ public class ReleaseTrackingService extends Service {
       }
   }
   
+  
+  
   public void toastDone() {
 	  Toast.makeText(this, "service looped", Toast.LENGTH_SHORT).show();
   }

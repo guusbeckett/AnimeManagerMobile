@@ -36,5 +36,14 @@
         android:layout_below="@+id/button2"
         android:gravity="left"
         android:text="@string/view_list" />
+   
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/button2"
+        android:layout_below="@+id/button3"
+        android:gravity="left"
+        android:text="View read manga" />
 
 </RelativeLayout>

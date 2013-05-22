@@ -881,8 +881,46 @@ public class DataManage {
 
 
 	public MediaObject[] getReadManga(Activity activ) {
-		// TODO Auto-generated method stub
-		return null;
+		if (!fslive) {
+			Log.d("what", fslive+"");
+			iniateFS(activ);
+		}
+		ArrayList<AnimeObject> henk = null;
+		switch (activ.getSharedPreferences("AMMprefs", 0).getInt("storageMethod", 0)) {
+			case (1):
+				DbxFile testFile = null;
+				try {
+					testFile = dbxFs.open(new DbxPath("seen.txt"));
+				} catch (InvalidPathException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (DbxException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				try {
+					henk = formatArray(testFile.readString(), 4);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				testFile.close();
+				break;
+			case (2):
+				if (file == null) {
+					Log.d("AMM", "file is NULL");
+					//openSkyDriveFile(folderId2, "watching.txt", activ);
+				}
+				else {
+					Log.d("AMM", "file is not NULL");
+					Log.d("amm", file.getLink());
+				}
+				break;
+		}
+		if (henk != null)
+			return henk.toArray(new AnimeObject[0]);
+		else
+			return new AnimeObject[] {new AnimeObject("no items")};
 	}
 
 
