@@ -1,6 +1,5 @@
 package animemanagermobile.reupload.nl.mangareader;
 
-import jim.reupload.nl.animemanagermobile.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -15,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import animemanagermobile.reupload.nl.R;
 
 public class MangaView extends Activity {
 	private MangaView act;

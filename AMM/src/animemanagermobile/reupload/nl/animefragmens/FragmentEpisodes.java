@@ -2,7 +2,6 @@ package animemanagermobile.reupload.nl.animefragmens;
 
 import java.util.ArrayList;
 
-import jim.reupload.nl.animemanagermobile.R;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -17,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import animemanagermobile.reupload.nl.MediaObject;
+import animemanagermobile.reupload.nl.R;
 import animemanagermobile.reupload.nl.data.AMMDatabase;
 import animemanagermobile.reupload.nl.data.DataManage;
 

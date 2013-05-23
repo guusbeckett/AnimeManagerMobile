@@ -1,11 +1,11 @@
 package animemanagermobile.reupload.nl.dialogs;
 
-import jim.reupload.nl.animemanagermobile.R;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import animemanagermobile.reupload.nl.R;
 
 public class WaitDialog extends DialogFragment {
     @Override

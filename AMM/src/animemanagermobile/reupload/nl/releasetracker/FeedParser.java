@@ -8,7 +8,6 @@ import java.util.Random;
 import org.apache.http.ParseException;
 import org.apache.http.util.EntityUtils;
 
-import jim.reupload.nl.animemanagermobile.R;
 import android.app.NotificationManager;
 import android.content.ContentValues;
 import android.content.Context;
@@ -22,6 +21,7 @@ import android.renderscript.RenderScript.Priority;
 import android.support.v4.app.NotificationCompat;
 import android.util.Base64;
 import android.util.Log;
+import animemanagermobile.reupload.nl.R;
 import animemanagermobile.reupload.nl.data.AMMDatabase;
 import animemanagermobile.reupload.nl.data.AniDBWrapper;
 

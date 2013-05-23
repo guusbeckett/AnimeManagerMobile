@@ -2,7 +2,6 @@ package animemanagermobile.reupload.nl.animefragmens;
 
 import java.util.Calendar;
 
-import jim.reupload.nl.animemanagermobile.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -25,6 +24,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import animemanagermobile.reupload.nl.AnimeObject;
 import animemanagermobile.reupload.nl.MediaObject;
+import animemanagermobile.reupload.nl.R;
 import animemanagermobile.reupload.nl.data.AniDBWrapper;
 import animemanagermobile.reupload.nl.data.DataManage;
 import animemanagermobile.reupload.nl.data.MangaUpdatesClient;

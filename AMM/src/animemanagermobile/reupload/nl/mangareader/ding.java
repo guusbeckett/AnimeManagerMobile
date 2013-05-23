@@ -1,5 +1,4 @@
 package animemanagermobile.reupload.nl.mangareader;
-import jim.reupload.nl.animemanagermobile.R;
 import android.app.Activity;
 import android.graphics.Matrix;
 import android.graphics.PointF;
@@ -10,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
+import animemanagermobile.reupload.nl.R;
 
 public class ding extends Activity implements OnTouchListener 
 {

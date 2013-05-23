@@ -21,9 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-import jim.reupload.nl.animemanagermobile.R;
-import jim.reupload.nl.animemanagermobile.R.string;
-
 import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -41,6 +38,7 @@ import android.util.Log;
 import android.widget.Toast;
 import animemanagermobile.reupload.nl.AnimeObject;
 import animemanagermobile.reupload.nl.MediaObject;
+import animemanagermobile.reupload.nl.R;
 import animemanagermobile.reupload.nl.skydrive.JsonKeys;
 import animemanagermobile.reupload.nl.skydrive.SkyDriveFile;
 import animemanagermobile.reupload.nl.skydrive.SkyDriveObject;

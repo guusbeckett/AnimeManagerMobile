@@ -1,7 +1,5 @@
 package animemanagermobile.reupload.nl.optionfragments;
 
-import jim.reupload.nl.animemanagermobile.R;
-import jim.reupload.nl.animemanagermobile.R.layout;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -25,6 +23,7 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import animemanagermobile.reupload.nl.MediaObject;
+import animemanagermobile.reupload.nl.R;
 import animemanagermobile.reupload.nl.data.AMMDatabase;
 import animemanagermobile.reupload.nl.data.DataManage;
 

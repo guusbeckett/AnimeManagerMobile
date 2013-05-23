@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import jim.reupload.nl.animemanagermobile.R;
- 
 import android.app.Activity;
 import android.content.ClipData.Item;
 import android.content.ContentValues;
@@ -17,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import animemanagermobile.reupload.nl.R;
  
 public class MangaListAdapter extends BaseAdapter {
  

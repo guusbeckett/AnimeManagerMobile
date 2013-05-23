@@ -1,6 +1,5 @@
 package animemanagermobile.reupload.nl.animefragmens;
 
-import jim.reupload.nl.animemanagermobile.R;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -28,6 +27,7 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import animemanagermobile.reupload.nl.MediaObject;
+import animemanagermobile.reupload.nl.R;
 import animemanagermobile.reupload.nl.data.AMMDatabase;
 import animemanagermobile.reupload.nl.data.DataManage;
 

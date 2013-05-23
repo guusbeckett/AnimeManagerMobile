@@ -1,6 +1,5 @@
 package animemanagermobile.reupload.nl.animefragmens;
 
-import jim.reupload.nl.animemanagermobile.R;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import animemanagermobile.reupload.nl.MediaObject;
+import animemanagermobile.reupload.nl.R;
 import animemanagermobile.reupload.nl.data.DataManage;
 
 public class FragmentDescription extends Fragment {

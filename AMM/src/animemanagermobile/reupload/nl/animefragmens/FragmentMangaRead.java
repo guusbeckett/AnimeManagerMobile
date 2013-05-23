@@ -1,6 +1,5 @@
 package animemanagermobile.reupload.nl.animefragmens;
 
-import jim.reupload.nl.animemanagermobile.R;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -20,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import animemanagermobile.reupload.nl.MediaObject;
+import animemanagermobile.reupload.nl.R;
 import animemanagermobile.reupload.nl.data.DataManage;
 import animemanagermobile.reupload.nl.mangareader.MangaListAdapter;
 import animemanagermobile.reupload.nl.mangareader.MangaView;

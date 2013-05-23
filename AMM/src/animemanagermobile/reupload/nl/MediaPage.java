@@ -2,8 +2,6 @@ package animemanagermobile.reupload.nl;
 
 import java.util.ArrayList;
 
-import jim.reupload.nl.animemanagermobile.R;
-
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;

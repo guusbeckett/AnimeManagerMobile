@@ -1,6 +1,5 @@
 package animemanagermobile.reupload.nl.dialogs;
 
-import jim.reupload.nl.animemanagermobile.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;

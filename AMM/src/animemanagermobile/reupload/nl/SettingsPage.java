@@ -1,6 +1,5 @@
 package animemanagermobile.reupload.nl;
 
-import jim.reupload.nl.animemanagermobile.R;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
