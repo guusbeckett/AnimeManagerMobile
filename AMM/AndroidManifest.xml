@@ -19,7 +19,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="jim.reupload.nl.animemanagermobile.MainMenu"
+            android:name="animemanagermobile.reupload.nl.MainMenu"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,23 +28,23 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="jim.reupload.nl.animemanagermobile.MediaPage"
+            android:name="animemanagermobile.reupload.nl.MediaPage"
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name="jim.reupload.nl.animemanagermobile.EditMediaObject"
+            android:name="animemanagermobile.reupload.nl.EditMediaObject"
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name="jim.reupload.nl.animemanagermobile.ViewList"
+            android:name="animemanagermobile.reupload.nl.ViewList"
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name="jim.reupload.nl.animemanagermobile.mangareader.MangaView"
+            android:name="animemanagermobile.reupload.nl.mangareader.MangaView"
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name="jim.reupload.nl.animemanagermobile.SettingsPage"
+            android:name="animemanagermobile.reupload.nl.SettingsPage"
             android:label="@string/app_name" >
         </activity>
         <activity android:name="com.dropbox.sync.android.DbxAuthActivity" />
@@ -64,7 +64,7 @@
 		  android:exported="false"
 		  android:label="Dropbox Sync" />
 		<service
-	     android:name="jim.reupload.nl.animemanagermobile.releasetracker.ReleaseTrackingService"
+	     android:name="animemanager.reupload.nl.releasetracker.ReleaseTrackingService"
 	     android:enabled="true"
 	     android:label="AMM Release Tracker" >
     </service>
