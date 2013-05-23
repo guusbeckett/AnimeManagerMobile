@@ -8,7 +8,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -23,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -55,6 +58,7 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 	private int point;
 	private int type;
 	private int temptype;
+	private String term;
 
 
 	@Override
@@ -117,8 +121,6 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
                 FragmentGeneral.class, null);
         mTabsAdapter.addTab(actionBar.newTab().setText(R.string.frag_desc),
         		FragmentDescription.class, null);
-        mTabsAdapter.addTab(actionBar.newTab().setText(R.string.frag_chars),
-        		FragmentCharacters.class, null);
         mTabsAdapter.addTab(actionBar.newTab().setText(R.string.frag_cats),
         		FragmentCategories.class, null);
         if (type == 1 || type == 2) {
@@ -126,6 +128,8 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
             		FragmentTags.class, null);
             mTabsAdapter.addTab(actionBar.newTab().setText(R.string.frag_eps),
             		FragmentEpisodes.class, null);
+            mTabsAdapter.addTab(actionBar.newTab().setText(R.string.frag_chars),
+            		FragmentCharacters.class, null);
             if (type == 1)
         	mTabsAdapter.addTab(actionBar.newTab().setText("Releases"),
         			FragmentRelease.class, null);
@@ -144,6 +148,7 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
         	menu.add(0, 5, 0, "Unlink Metadata"); 
         }
         menu.add(0, 6, 0, "Delete series"); 
+        menu.add(0, 8, 0, "Search custom"); 
 		return true;
 
     }
@@ -156,16 +161,16 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
                 //newGame();
             	switch (type) {
             		case (1):
-            			handleAnimeMetadata();
+            			handleAnimeMetadata(null);
             			break;
             		case (2):
-            			handleAnimeMetadata();
+            			handleAnimeMetadata(null);
             			break;
             		case (3):
-            			handleMangaMetadata();
+            			handleMangaMetadata(null);
             			break;
             		case (4):
-            			handleMangaMetadata();
+            			handleMangaMetadata(null);
             			break;
             	}
                 return true;
@@ -186,27 +191,75 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
             	switch (type) {
 	        		case (1):
 	        			AniDBWrapper.grabAnimeMetadata(id, this);
+	        			recreate();
 	        			break;
 	        		case (2):
 	        			AniDBWrapper.grabAnimeMetadata(id, this);
+	        			recreate();
 	        			break;
 	        		case (3):
 	        			MangaUpdatesClient.grabMangaMetadata(id, this);
+	        			recreate();
 	        			break;
 	        		case (4):
 	        			MangaUpdatesClient.grabMangaMetadata(id, this);
+	        			recreate();
 	        			break;
             	}
+            	return true;
+            case 8:
+            	term = null;
+            	AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            	alert.setTitle("Insert a searchterm: ");
+
+                LinearLayout ll = new LinearLayout(this);
+        	    ll.setOrientation(LinearLayout.VERTICAL);
+        	    final EditText et1 = new EditText(this);
+        	    et1.setHint("term");
+        	    ll.addView(et1);
+                alert.setView(ll);
+                alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                      term = et1.getText().toString();
+                      if (term != null) {
+      	            	switch (type) {
+      		        		case (1):
+      		        			handleAnimeMetadata(term);
+      		        			break;
+      		        		case (2):
+      		        			handleAnimeMetadata(term);
+      		        			break;
+      		        		case (3):
+      		        			handleMangaMetadata(term);
+      		        			break;
+      		        		case (4):
+      		        			handleMangaMetadata(term);
+      		        			break;
+      	            	}
+                      }
+                      }
+                    });
+
+                    alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                      public void onClick(DialogInterface dialog, int whichButton) {
+                        // Cancel.
+                      }
+                    });
+                alert.show();
+               
             	return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-	private void handleMangaMetadata() {
+	private void handleMangaMetadata(String term) {
 		AlertDialog mInitializeDialog = ProgressDialog.show(this, "", "Fetching metadata. Please wait...", true);
 		if (media.getId() == 0)
-			title = MangaUpdatesClient.getMostLikelyID(media.getTitle(), false).toArray(new String[0]);
+			if (term == null)
+				title = MangaUpdatesClient.getMostLikelyID(media.getTitle(), false).toArray(new String[0]);
+			else
+				title = MangaUpdatesClient.getMostLikelyID(term, false).toArray(new String[0]);
 		else
 			title = new String[]{media.getTitle()+"^"+id};
 		for (String item : title) {
@@ -255,8 +308,11 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 		}
 	}
 
-	private void handleAnimeMetadata() {
-		title = AniDBWrapper.getMostLikelyID(media.getTitle(), false).toArray(new String[0]);
+	private void handleAnimeMetadata(String term) {
+		if (term == null)
+			title = AniDBWrapper.getMostLikelyID(media.getTitle(), false).toArray(new String[0]);
+		else
+			title = AniDBWrapper.getMostLikelyID(term, false).toArray(new String[0]);
         if (title.length < 1) {
         	title = AniDBWrapper.getMostLikelyID(media.getTitle(), true).toArray(new String[0]);
         	/*int duration = Toast.LENGTH_LONG;

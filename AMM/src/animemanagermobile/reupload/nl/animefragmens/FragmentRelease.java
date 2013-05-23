@@ -135,6 +135,16 @@ public class FragmentRelease extends Fragment {
 	    
 	    final EditText et = new EditText(this.getActivity());
 	    et.setHint(media.getTitle());
+	    if (c.getCount() > 0) {
+	    	int select = 0;
+	    	for (String item : spins) {
+	    		if (item.equals(c.getString(c.getColumnIndex("Subber"))))
+	    			break;
+	    		select++;
+	    	}
+	    	spin.setSelection(select);
+	    	et.setText(c.getString(c.getColumnIndex("Keyword")));
+	    }
 	    Button but = new Button(this.getActivity());
 	    but.setOnClickListener(new OnClickListener() {
 			

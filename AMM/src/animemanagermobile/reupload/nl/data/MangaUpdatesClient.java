@@ -125,7 +125,7 @@ public class MangaUpdatesClient {
 		XML+="\n<scanlators>"+parsed.split("<b>Groups Scanlating</b>")[1].split("<div class=\"sContent\"")[1].split(">")[1].split("</div")[0]+"</scanlators>";
 		XML+="\n<picture>"+parsed.split("<b>Image</b>")[1].split("<div class=\"sContent\"")[1].split("src=\'")[1].split("\'")[0]+"</picture>";
 		XML+="\n<genre>"+parsed.split("<b>Genre</b>")[1].split("<div class=\"sContent\"")[1].split(">")[1].split("</div")[0]+"</genre>";
-		XML+="\n<catagories>"+parsed.split("<b>Categories</b>")[1].split("<div class=\"sContent\"")[1].split(">")[1].split("</div")[0]+"</catagories>";
+		XML+="\n<categories>"+parsed.split("<b>Categories</b>")[1].split("<div class=\"sContent\"")[1].split(">")[1].split("</div")[0]+"</categories>";
 		//XML+="\n<catagories>"+parsed.split("<b>Categories</b>")[1].split("<div class=\"sContent\"")[1].split(">")[1].split("</div")[0]+"</catagories>";
 		//Log.d("lel", parsed.split("<b>Author")[1]);
 		return XML;
@@ -179,7 +179,10 @@ public class MangaUpdatesClient {
 			Log.d("check", "4");
 			data[10] = stream.split("<picture>")[1].split("</picture>")[0];
 			Log.d("check", "5");
-			data[11] = stream.split("<catagories>")[1].split("</catagories>")[0];
+			if (stream.contains("<categories>"))
+				data[11] = stream.split("<categories>")[1].split("</categories>")[0];
+			else
+				data[11] = "No content";
 			//data[12] = stream.split("<resources>")[1].split("</resources>")[0];
 			//data[13] = stream.split("<tags>")[1].split("</tags>")[0];
 			data[13] = "";
