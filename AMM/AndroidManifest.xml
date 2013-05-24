@@ -64,7 +64,7 @@
 		  android:exported="false"
 		  android:label="Dropbox Sync" />
 		<service
-	     android:name="animemanager.reupload.nl.releasetracker.ReleaseTrackingService"
+	     android:name="animemanagermobile.reupload.nl.releasetracker.ReleaseTrackingService"
 	     android:enabled="true"
 	     android:label="AMM Release Tracker" >
     </service>
