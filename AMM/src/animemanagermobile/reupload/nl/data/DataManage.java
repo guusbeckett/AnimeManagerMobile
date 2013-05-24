@@ -42,6 +42,8 @@ import animemanagermobile.reupload.nl.R;
 import animemanagermobile.reupload.nl.skydrive.JsonKeys;
 import animemanagermobile.reupload.nl.skydrive.SkyDriveFile;
 import animemanagermobile.reupload.nl.skydrive.SkyDriveObject;
+import animemanagermobile.reupload.nl.storages.DropboxFS;
+import animemanagermobile.reupload.nl.storages.FileSystem;
 
 import com.dropbox.sync.android.DbxAccountManager;
 import com.dropbox.sync.android.DbxException;
@@ -63,25 +65,13 @@ import com.microsoft.live.LiveStatus;
 public class DataManage {
 
 	
+	private FileSystem fs;
 	private static Object cached;
-	private DbxAccountManager mDbxAcctMgr;
-	private LiveConnectClient mClient;
 	private static boolean fslive;
-	private final String live_client_id = "000000004C0EC966";
 	private static Object cached2;
 	private static Object cached3;
-	private DbxFileSystem dbxFs;
 	private AnimeObject[] list;
-	private static final String HOME_FOLDER = "me/skydrive";
 	private boolean writePos;
-	private LiveAuthClient mAuthClient;
-	private int connect;
-	protected LiveConnectSession livesession;
-	protected ArrayList<SkyDriveObject> skydriveO;
-	private Object mInitializeDialog;
-	private skydrive skydrivelisten;
-	protected SkyDriveFile file;
-	protected String folderId2;
 	
 	public DataManage() {
 		fslive = false;
@@ -96,261 +86,35 @@ public class DataManage {
         	case (0):
         		break;
         	case (1):
-        		mDbxAcctMgr = DbxAccountManager.getInstance(activ.getApplicationContext(), activ.getString(R.string.DROPBOX_APP_KEY), activ.getString(R.string.DROPBOX_APP_SECRET));
-				try {
-					dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-				} catch (Unauthorized e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+        		fs = new DropboxFS(activ);
 				fslive = true;
         		break;
         	case (2):
-        		skyDriveInit(activ);
-        		skydrivelisten = (skydrive) activ;
-        		
-        		fslive = true;
-        		/*if (connect == 1) {
-	        		((Dialog) mInitializeDialog).dismiss();
-	        		Log.d("fs start", "sky client open");
-	        		mClient = new LiveConnectClient(livesession);
-	        		Log.d("fs start", "sky client live");
-	        		openSkydriveFolder(HOME_FOLDER, activ);
-	        		Log.d("fs start", "sky folder read");
-	        	}*/
-	        	Log.d("fs start", "sky authed");
+//        		skyDriveInit(activ);
+//        		skydrivelisten = (skydrive) activ;
+//        		
+//        		fslive = true;
+//        		/*if (connect == 1) {
+//	        		((Dialog) mInitializeDialog).dismiss();
+//	        		Log.d("fs start", "sky client open");
+//	        		mClient = new LiveConnectClient(livesession);
+//	        		Log.d("fs start", "sky client live");
+//	        		openSkydriveFolder(HOME_FOLDER, activ);
+//	        		Log.d("fs start", "sky folder read");
+//	        	}*/
+//	        	Log.d("fs start", "sky authed");
+        		//TODO fix skydrive
         		break;
         }
         
 	}
-	public boolean isAsync(Activity activ) {
-		int type = activ.getSharedPreferences("AMMprefs", 0).getInt("storageMethod", 0);
-		if (type == 2) {
-			return true;
-		}
-		else
-			return false;
-	}
 	
-	public void findWatchingFile (Activity activ) {
-		openSkydriveFolder(folderId2, activ, 1);
-	}
-	
-	public void openSkyDriveFile (String folder, final String name, final Activity activ) {
-		mClient.getAsync(folder + name, new LiveOperationListener() {
-			@Override
-             public void onComplete(LiveOperation operation) {
-                JSONObject result = operation.getResult();
-                if (result.has(JsonKeys.ERROR)) {
-                    JSONObject error = result.optJSONObject(JsonKeys.ERROR);
-                    String message = error.optString(JsonKeys.MESSAGE);
-                    String code = error.optString(JsonKeys.CODE);
-                    Toast.makeText(activ, code + ": " + message, Toast.LENGTH_LONG).show();
-                    boolean exist = false;
-                    return;
-                }
-
-                file = null;
-                JSONArray data = result.optJSONArray(JsonKeys.DATA);
-                for (int i = 0; i < data.length(); i++) {
-                	if (SkyDriveObject.create(data.optJSONObject(i)).getName().equals(name)) {
-                		file = (SkyDriveFile) SkyDriveObject.create(data.optJSONObject(i));
-                	}
-                }
-                skydrivelisten.fileReady();
-
-            }
-            @Override
-            public void onError(LiveOperationException exception, LiveOperation operation) {
-            	Toast.makeText(activ, exception.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-	}
-	
-	public void openSkydriveFolder(String folderId, final Activity activ, int i) {
-		mClient.getAsync(folderId + "/files", new LiveOperationListener() {
-            private ArrayList<SkyDriveObject> skyDriveObjs = new ArrayList<SkyDriveObject>();
-			@Override
-            public void onComplete(LiveOperation operation) {
-                JSONObject result = operation.getResult();
-                if (result.has(JsonKeys.ERROR)) {
-                    JSONObject error = result.optJSONObject(JsonKeys.ERROR);
-                    String message = error.optString(JsonKeys.MESSAGE);
-                    String code = error.optString(JsonKeys.CODE);
-                    Toast.makeText(activ, code + ": " + message, Toast.LENGTH_LONG).show();
-                    
-                    return;
-                }
-
-                
-                
-                JSONArray data = result.optJSONArray(JsonKeys.DATA);
-                for (int i = 0; i < data.length(); i++) {
-                    SkyDriveObject skyDriveObj = SkyDriveObject.create(data.optJSONObject(i));
-                    skyDriveObjs.add(skyDriveObj);
-                    switch (1) {
-                    	case (0):
-		                    if (skyDriveObj.getName().contains("AMM"))
-		                    	folderId2 = skyDriveObj.getId();
-                    		break;
-                    	case (1):
-                    		if (skyDriveObj.getName().contains("watching.txt"))
-                    			skydrivelisten.filefound(skyDriveObj.getId());
-                    }
-                    Log.d("skydrive", skyDriveObj.getName() + " & " + skyDriveObj.getId());
-                }
-                
-                boolean exist = false;
-                if (connect == 1) {
-                	if (skydriveO != null) {
-                		exist = true;
-	        		}
-	        		if (!exist) {
-		        		Map<String, String> folder = new HashMap<String, String>();
-						folder.put(JsonKeys.NAME, "AMM");
-						folder.put(JsonKeys.DESCRIPTION, "This the folder where your Anime Manager Mobile files will be stored");
-	
-						/*final ProgressDialog progressDialog = showProgressDialog(
-								"", "Saving. Please wait...", true);
-						progressDialog.show();
-						*/
-						mClient.postAsync(HOME_FOLDER, new JSONObject(
-								folder), new LiveOperationListener() {
-							@Override
-							public void onError(
-									LiveOperationException exception,
-									LiveOperation operation) {
-								Log.d("skydrive makefolder", "Something went horribly wrong");
-							}
-	
-							@Override
-							public void onComplete(LiveOperation operation) {
-								JSONObject result = operation.getResult();
-								if (result.has(JsonKeys.ERROR)) {
-									JSONObject error = result
-											.optJSONObject(JsonKeys.ERROR);
-									String message = error
-											.optString(JsonKeys.MESSAGE);
-									String code = error
-											.optString(JsonKeys.CODE);
-									Log.d("skydrive makefolder", "Something went horribly wrong here as well");
-								} else {
-									Log.d("skydrive makefolder", "Something went pretty good");
-								}
-							}
-						});
-	        		}
-	        		else
-	        			Log.d("skydrive folder check", "AMM exists");
-	        		
-                }
-               	skydriveO = skyDriveObjs;
-
-            }
-            @Override
-            public void onError(LiveOperationException exception, LiveOperation operation) {
-            	Toast.makeText(activ, exception.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-	}
-	
-	public interface skydrive {
-		public void initdone();
-		public void fileReady();
-		public void filefound(String fileid);
-	}
-	
-	public void skyDriveInit(final Activity activ) {
-		Log.d("fs start", "sky init");
-		mAuthClient = new LiveAuthClient(activ.getApplication(), live_client_id);
-		Log.d("fs start", "sky login");
-		final String[] scopes = new String[] {"wl.basic", "wl.offline_access", "wl.skydrive", "wl.skydrive_update"};
-		connect = 0;
-		Toast.makeText(activ, "Live connect complete", Toast.LENGTH_LONG).show();
-		mInitializeDialog = ProgressDialog.show(activ, "", "Initializing. Please wait...", true);
-    	mAuthClient.initialize(Arrays.asList(scopes), new LiveAuthListener() {
-
-			@Override
-            public void onAuthError(LiveAuthException exception, Object userState) {
-				((Dialog) mInitializeDialog).dismiss();
-				Log.d("fs start", "sky client died");
-            	//Toast.makeText(activ, exception.getMessage(), Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onAuthComplete(LiveStatus status,
-                                       LiveConnectSession session,
-                                       Object userState) {
-            	((Dialog) mInitializeDialog).dismiss();
-                if (status == LiveStatus.CONNECTED) {
-                	connect = 1;
-                	livesession = session;
-                	Log.d("fs start", "sky client connect");
-                	fslive = true;
-                	mClient = new LiveConnectClient(livesession);
-	        		Log.d("fs start", "sky client live");
-	        		openSkydriveFolder(HOME_FOLDER, activ, 0);
-	        		boolean exist = false;
-	        		Log.d("fs start", "sky client sky");
-	        		skydrivelisten.initdone();
-					
-                	//Toast.makeText(activ, "Live connect complete", Toast.LENGTH_LONG).show();
-                } else {
-                	Log.d("fs start", "sky connect failure");
-                	connect = 2;
-                   // Toast.makeText(activ, "Live connect fail", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-    	/*while (connect==0) {
-    		try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        	Log.d("waiting", "nothing yet");
-    	}
-    	*/
-	}
-
 	public AnimeObject[] getWatchingAnime(Activity activ) {
 		if (!fslive) {
 			Log.d("what", fslive+"");
 			iniateFS(activ);
 		}
-		ArrayList<AnimeObject> henk = null;
-		switch (activ.getSharedPreferences("AMMprefs", 0).getInt("storageMethod", 0)) {
-			case (1):
-				DbxFile testFile = null;
-				try {
-					testFile = dbxFs.open(new DbxPath("watching.txt"));
-				} catch (InvalidPathException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (DbxException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				try {
-					henk = formatArray(testFile.readString(), 1);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				testFile.close();
-				break;
-			case (2):
-				if (file == null) {
-					Log.d("AMM", "file is NULL");
-					//openSkyDriveFile(folderId2, "watching.txt", activ);
-				}
-				else {
-					Log.d("AMM", "file is not NULL");
-					Log.d("amm", file.getLink());
-				}
-				break;
-		}
+		ArrayList<AnimeObject> henk = formatArray(fs.readStringFromFile("watching.txt"),1);
 		if (henk != null)
 			return henk.toArray(new AnimeObject[0]);
 		else
@@ -442,9 +206,9 @@ public class DataManage {
 		try {
 			writeAllAnime(act);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		//TODO handle exceptions
 	}
 	
 	public void addNewAnime(Activity act, AnimeObject item) {
@@ -461,7 +225,7 @@ public class DataManage {
 		try {
 			writeAllAnime(act);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			// TODO handle exceptions
 			e.printStackTrace();
 		}
 	}
@@ -469,25 +233,7 @@ public class DataManage {
 	private void writeAllAnime(Activity act) throws IOException {
 		if (!fslive)
 			iniateFS(act);
-		DbxFile testFile = null;
-		String data = null;
-		switch (act.getSharedPreferences("AMMprefs", 0).getInt("storageMethod", 0)) {
-			case (1):
-				
-				try {
-					testFile = dbxFs.open(new DbxPath("watching.txt"));
-				} catch (InvalidPathException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (DbxException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				data = testFile.readString();
-				break;
-			case (2):
-				break;
-		}
+		String data = fs.readStringFromFile("seen.txt");
 		if (data!=null) {
 			Log.d("ne", "war");
 			String data2 = data.split("Reading:")[1];
@@ -499,10 +245,7 @@ public class DataManage {
 			}
 			data+="\nReading:"+data2;
 			Log.d("ne", "war3");
-			//DbxFile testFile = dbxFs.open(new DbxPath("watching.txt"));
-			testFile.writeString(data);
-			//ArrayList<AnimeObject> henk = null;
-			testFile.close();
+			fs.writeStringToFile(data, "seen.txt");
 		}
 		
 	}
@@ -773,24 +516,8 @@ public class DataManage {
 	public AnimeObject[] getSeenAnime(Activity activ) {
 		if (!fslive)
 			iniateFS(activ);
-		DbxFile testFile = null;
-		try {
-			testFile = dbxFs.open(new DbxPath("seen.txt"));
-		} catch (InvalidPathException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (DbxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		ArrayList<AnimeObject> henk = null;
-		try {
-			henk = formatArray(testFile.readString(), 2);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		testFile.close();
+		henk = formatArray("seen.txt", 2);
 		if (henk != null)
 			return henk.toArray(new AnimeObject[0]);
 		else
@@ -836,41 +563,9 @@ public class DataManage {
 
 	public MediaObject[] getReadingManga(Activity activ) {
 		if (!fslive) {
-			Log.d("what", fslive+"");
 			iniateFS(activ);
 		}
-		ArrayList<AnimeObject> henk = null;
-		switch (activ.getSharedPreferences("AMMprefs", 0).getInt("storageMethod", 0)) {
-			case (1):
-				DbxFile testFile = null;
-				try {
-					testFile = dbxFs.open(new DbxPath("watching.txt"));
-				} catch (InvalidPathException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (DbxException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				try {
-					henk = formatArray(testFile.readString(), 3);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				testFile.close();
-				break;
-			case (2):
-				if (file == null) {
-					Log.d("AMM", "file is NULL");
-					//openSkyDriveFile(folderId2, "watching.txt", activ);
-				}
-				else {
-					Log.d("AMM", "file is not NULL");
-					Log.d("amm", file.getLink());
-				}
-				break;
-		}
+		ArrayList<AnimeObject> henk = formatArray(fs.readStringFromFile("watching.txt"), 3);
 		if (henk != null)
 			return henk.toArray(new AnimeObject[0]);
 		else
@@ -880,41 +575,9 @@ public class DataManage {
 
 	public MediaObject[] getReadManga(Activity activ) {
 		if (!fslive) {
-			Log.d("what", fslive+"");
 			iniateFS(activ);
 		}
-		ArrayList<AnimeObject> henk = null;
-		switch (activ.getSharedPreferences("AMMprefs", 0).getInt("storageMethod", 0)) {
-			case (1):
-				DbxFile testFile = null;
-				try {
-					testFile = dbxFs.open(new DbxPath("seen.txt"));
-				} catch (InvalidPathException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (DbxException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				try {
-					henk = formatArray(testFile.readString(), 4);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				testFile.close();
-				break;
-			case (2):
-				if (file == null) {
-					Log.d("AMM", "file is NULL");
-					//openSkyDriveFile(folderId2, "watching.txt", activ);
-				}
-				else {
-					Log.d("AMM", "file is not NULL");
-					Log.d("amm", file.getLink());
-				}
-				break;
-		}
+		ArrayList<AnimeObject> henk = formatArray(fs.readStringFromFile("seen.txt"), 4);
 		if (henk != null)
 			return henk.toArray(new AnimeObject[0]);
 		else

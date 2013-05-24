@@ -32,6 +32,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import animemanagermobile.reupload.nl.R;
+import animemanagermobile.reupload.nl.keysnstuff.KeysNStuff;
 
 public class FileLocationFrag extends Fragment implements OnItemSelectedListener {
 
@@ -76,7 +77,7 @@ public class FileLocationFrag extends Fragment implements OnItemSelectedListener
         int storageMethod = settings.getInt("storageMethod", 0);
 	    spinner.setSelection(storageMethod);
 	    masll.addView(ll);
-	    mDbxAcctMgr = DbxAccountManager.getInstance(getActivity().getApplicationContext(), this.getString(R.string.DROPBOX_APP_KEY), this.getString(R.string.DROPBOX_APP_SECRET));
+	    mDbxAcctMgr = DbxAccountManager.getInstance(getActivity().getApplicationContext(), KeysNStuff.Drbxkey, KeysNStuff.Drbxsecret);
         return v;
     }
 
@@ -210,6 +211,7 @@ public class FileLocationFrag extends Fragment implements OnItemSelectedListener
 				tv2.setText("Google Drive");
 				ll.removeAllViews();
 				ll.addView(tv2);
+				
 				break;
 		}
 		editor.commit();

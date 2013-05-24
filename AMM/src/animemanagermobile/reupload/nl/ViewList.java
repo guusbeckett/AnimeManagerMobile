@@ -17,9 +17,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import animemanagermobile.reupload.nl.data.DataManage;
-import animemanagermobile.reupload.nl.data.DataManage.skydrive;
 
-public class ViewList extends Activity implements OnItemClickListener, skydrive {
+public class ViewList extends Activity implements OnItemClickListener {
 
 	private DataManage data;
 	private MediaObject[] lel;
@@ -32,24 +31,19 @@ public class ViewList extends Activity implements OnItemClickListener, skydrive 
         setContentView(R.layout.activity_edit_anime);
         int typeList = this.getIntent().getIntExtra("type", 0);
         data = new DataManage();
-        if (data.isAsync(this)) {
-        	data.iniateFS(this);
-        }
-        else {
-        	switch (typeList) {
-        		case (1):
-        			lel = data.getWatchingAnime(this);
-        			break;
-        		case (2):
-        			lel = data.getSeenAnime(this);
-        			break;
-        		case (3):
-        			lel = data.getReadingManga(this);
-        			break;
-        		case (4):
-        			lel = data.getReadManga(this);
-        			break;
-        	}
+        switch (typeList) {
+        	case (1):
+        		lel = data.getWatchingAnime(this);
+        		break;
+        	case (2):
+        		lel = data.getSeenAnime(this);
+        		break;
+        	case (3):
+        		lel = data.getReadingManga(this);
+        		break;
+        	case (4):
+        		lel = data.getReadManga(this);
+        		break;
         }
         RelativeLayout rl = (RelativeLayout) findViewById(R.id.anime_relative);
         if (lel == null) {
@@ -103,24 +97,4 @@ public class ViewList extends Activity implements OnItemClickListener, skydrive 
 		startActivity(intent);
 	}
 
-	@Override
-	public void initdone() {
-		
-		//data.getWatchingAnime(this);
-		data.findWatchingFile(this);
-		
-	}
-
-	@Override
-	public void fileReady() {
-		
-		//lel = data.getWatchingAnime(this);
-	}
-
-	@Override
-	public void filefound(String fileid) {
-		Log.d("ohowo", fileid);
-		
-	}
-	
 }
