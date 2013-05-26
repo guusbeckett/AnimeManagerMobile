@@ -36,6 +36,7 @@ public class FragmentGeneral extends Fragment {
 	private MediaObject media;
 	private DataManage data;
 	private int maxValue ;
+	private int type;
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,7 +59,7 @@ public class FragmentGeneral extends Fragment {
     	linlay.addView(title);
     	final Activity act = this.getActivity();
     	Log.d("lel", "2");
-    	int type = 0 ;
+    	type = 0;
         if (metadata != null) {
         	Bitmap bm = null;
         	type = Integer.parseInt(metadata[16]);
@@ -100,12 +101,14 @@ public class FragmentGeneral extends Fragment {
         String regState = "This show has no registered AID";*/
         TextView prog1 = new TextView(this.getActivity());
         if (metadata != null) {
-        	prog1.setText("Progress: "+media.getProgress() + "/" + metadata[1]);
+        	if (type == 1 || type == 3)
+        		prog1.setText("Progress: "+media.getProgress() + "/" + metadata[1]);
         	//maxValue = Integer.parseInt(metadata[1]);
         	maxValue = 0;
         }
         else {
-        	prog1.setText("Progress: "+media.getProgress() + "/" + media.getTotal());
+        	if (type == 1 || type == 3)
+        		prog1.setText("Progress: "+media.getProgress() + "/" + media.getTotal());
         	maxValue = media.getTotal();
         }
         if (maxValue == 0) {
