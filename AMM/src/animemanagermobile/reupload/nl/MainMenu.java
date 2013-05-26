@@ -17,6 +17,7 @@ import android.widget.TextView;
 import animemanagermobile.reupload.nl.dialogs.WaitDialog;
 import animemanagermobile.reupload.nl.mangareader.MangaView;
 import animemanagermobile.reupload.nl.releasetracker.ReleaseTrackingService;
+import animemanagermobile.reupload.nl.storages.SkyDriveFS;
 
 public class MainMenu extends Activity {
 
@@ -32,10 +33,15 @@ public class MainMenu extends Activity {
     	startService(new Intent(this, ReleaseTrackingService.class));
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_menu, menu);
-        //MangaUpdatesClient.getMostLikelyID("lel", false);
-     // Restore preferences
         SharedPreferences settings = getSharedPreferences("AMMprefs", 0);
         int storageMethod = settings.getInt("storageMethod", 0);
+        if (storageMethod == 2) {
+	        SkyDriveFS lel = new SkyDriveFS(this);
+	        lel.trulyInit();
+        }
+        //lel.findWatchingFile(this);
+        //MangaUpdatesClient.getMostLikelyID("lel", false);
+     // Restore preferences
         if (storageMethod == 0) {
         	RelativeLayout rl = (RelativeLayout) findViewById(R.id.main_relative);
         	rl.removeAllViews();

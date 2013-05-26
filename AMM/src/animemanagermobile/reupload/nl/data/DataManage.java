@@ -44,6 +44,7 @@ import animemanagermobile.reupload.nl.skydrive.SkyDriveFile;
 import animemanagermobile.reupload.nl.skydrive.SkyDriveObject;
 import animemanagermobile.reupload.nl.storages.DropboxFS;
 import animemanagermobile.reupload.nl.storages.FileSystem;
+import animemanagermobile.reupload.nl.storages.SkyDriveFS;
 
 import com.dropbox.sync.android.DbxAccountManager;
 import com.dropbox.sync.android.DbxException;
@@ -70,8 +71,11 @@ public class DataManage {
 	private static boolean fslive;
 	private static Object cached2;
 	private static Object cached3;
+	private static Object session;
 	private AnimeObject[] list;
 	private boolean writePos;
+	private static String watchingfileLocation;
+	private static String seenfileLocation;
 	
 	public DataManage() {
 		fslive = false;
@@ -90,6 +94,9 @@ public class DataManage {
 				fslive = true;
         		break;
         	case (2):
+        		fs = new SkyDriveFS(activ);
+        		((SkyDriveFS) fs).trulyInit();
+        		fslive = true;
 //        		skyDriveInit(activ);
 //        		skydrivelisten = (skydrive) activ;
 //        		
@@ -638,6 +645,36 @@ public class DataManage {
 			}
 		}
 		return max;
+	}
+
+
+	public static String getWatchingfileLocation() {
+		return watchingfileLocation;
+	}
+
+
+	public static void setWatchingfileLocation(String watchingfileLocation) {
+		DataManage.watchingfileLocation = watchingfileLocation;
+	}
+
+
+	public static String getSeenfileLocation() {
+		return seenfileLocation;
+	}
+
+
+	public static void setSeenfileLocation(String seenfileLocation) {
+		DataManage.seenfileLocation = seenfileLocation;
+	}
+
+
+	public static Object getSession() {
+		return session;
+	}
+
+
+	public static void setSession(Object session) {
+		DataManage.session = session;
 	}
 	
 	
