@@ -119,7 +119,7 @@ public class MangaUpdatesClient {
 		parsed = parsed.split("<span class=\"releasestitle tabletitle\">")[1].split("<!-- End:Series Info-->")[0];
 		parsed.replace("\n", "");
 		XML+="<title>"+parsed.split("</span>")[0]+"</title>";
-		XML+="\n<description>"+parsed.split("Description")[1].split("<div class=\"sContent\"")[1].split(">")[1].split("</div")[0]+"</description>";
+		XML+="\n<description>"+parsed.split("Description")[1].split("<div class=\"sContent\"")[1].split(">")[1].split("</div>")[0]+"</description>";
 		XML+="\n<type>"+parsed.split("<b>Type</b>")[1].split("<div class=\"sContent\"")[1].split(">")[1].split("</div")[0]+"</type>";
 		XML+="\n<titles>"+parsed.split("<b>Associated Names</b>")[1].split("<div class=\"sContent\"")[1].split(">")[1].split("</div")[0]+"</titles>";
 		XML+="\n<scanlators>"+parsed.split("<b>Groups Scanlating</b>")[1].split("<div class=\"sContent\"")[1].split(">")[1].split("</div")[0]+"</scanlators>";

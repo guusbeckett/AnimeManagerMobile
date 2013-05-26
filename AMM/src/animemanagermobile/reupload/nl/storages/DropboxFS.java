@@ -3,6 +3,7 @@ package animemanagermobile.reupload.nl.storages;
 import java.io.IOException;
 
 import android.app.Activity;
+import android.util.Log;
 import animemanagermobile.reupload.nl.keysnstuff.KeysNStuff;
 
 import com.dropbox.sync.android.DbxAccountManager;
@@ -34,15 +35,18 @@ public class DropboxFS extends FileSystem {
 	@Override
 	public String readStringFromFile(String filename) {
 		DbxFile file = openFile(filename);
-		String content ="";
-		try {
-			content  = file.readString();
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (file != null) {
+			String content ="";
+			try {
+				content  = file.readString();
+			} catch (IOException e) {
+				content = null;
+			}
+			//TODO handle exceptions
+			file.close();
+			return content;
 		}
-		//TODO handle exceptions
-		file.close();
-		return content;
+		else return null;
 	}
 	
 	public DbxFile openFile(String path) {
@@ -50,9 +54,9 @@ public class DropboxFS extends FileSystem {
 		try {
 			testFile = dbxFs.open(new DbxPath(path));
 		} catch (InvalidPathException e) {
-			e.printStackTrace();
+			return null;
 		} catch (DbxException e) {
-			e.printStackTrace();
+			return null;
 		}
 		//TODO handle exceptions properly
 		return testFile;

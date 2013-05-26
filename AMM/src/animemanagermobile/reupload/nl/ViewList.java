@@ -21,7 +21,7 @@ import animemanagermobile.reupload.nl.data.DataManage;
 public class ViewList extends Activity implements OnItemClickListener {
 
 	private DataManage data;
-	private MediaObject[] lel;
+	private MediaObject[] lel = null;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,14 +52,21 @@ public class ViewList extends Activity implements OnItemClickListener {
         	tv.setText("No items found");
         }
         else {
-        	Log.d("SUCCESS", "media succesfully read");
-        	ArrayAdapter adapter = new ArrayAdapter<String>(this, 
-                    android.R.layout.simple_list_item_1, MediaObject.convertMediaObjectArrayToStringArray(lel));
-        	ListView listView = new ListView(this);
-        	listView.setAdapter(adapter);
-        	rl.addView(listView);
-        	//listView.setOnItemSelectedListener(this);
-        	listView.setOnItemClickListener(this);
+        	if (lel.length > 1) {
+	        	Log.d("SUCCESS", "media succesfully read");
+	        	ArrayAdapter adapter = new ArrayAdapter<String>(this, 
+	                    android.R.layout.simple_list_item_1, MediaObject.convertMediaObjectArrayToStringArray(lel));
+	        	ListView listView = new ListView(this);
+	        	listView.setAdapter(adapter);
+	        	rl.addView(listView);
+	        	//listView.setOnItemSelectedListener(this);
+	        	listView.setOnItemClickListener(this);
+        	}
+        	else {
+	        	Log.d("SEVERE", "getAnime returned empty list");
+	        	TextView tv = new TextView(this);
+	        	tv.setText("No items found");
+        	}
         }
         
     }

@@ -302,8 +302,15 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 	private void destroyMetadata() {
 		// TODO Auto-generated method stub
 		if (id!=0) {
-			DataManage.deleteExternalFile(this.getExternalFilesDir(null) + "/images/" + metadataParse[10], this);
-			DataManage.deleteExternalFile(this.getExternalFilesDir(null) + "/" + Integer.toString(id)+".xml", this);
+			if (type == 1 || type == 2) {
+				DataManage.deleteExternalFile(this.getExternalFilesDir(null) + "/images/" + metadataParse[10], this);
+				DataManage.deleteExternalFile(this.getExternalFilesDir(null) + "/anime" + media.getId()+".xml", this);
+			}
+			else {
+				DataManage.deleteExternalFile(this.getExternalFilesDir(null) + "/images/" + metadataParse[10].split("/")[metadataParse[10].split("/").length-1], this);
+				DataManage.deleteExternalFile(this.getExternalFilesDir(null) + "/manga" + media.getId()+".xml", this);
+			}
+			
 			DataManage.unregister(media.getTitle(), this);
 		}
 	}

@@ -122,68 +122,73 @@ public class DataManage {
 	}
 
 	public ArrayList<AnimeObject> formatArray(String lel, int i) {
-		ArrayList<AnimeObject> list = new ArrayList<AnimeObject>();
-		switch (i) {
-			case (1):
-				for (String nya : lel.split("Reading:")[0].split("Watching:")[1].split("\n")) {
-					if (!nya.isEmpty())
-					{
-						String prog = nya.split(" ep ")[1].split("\\.")[0];
-						if (prog.length() == 1) {
-							list.add(new AnimeObject(nya.split(" ep ")[0], Integer.parseInt(prog)));
+		ArrayList<AnimeObject> list = null;
+		if (lel != null) {
+			if (lel.contains("Read")) {
+				list = new ArrayList<AnimeObject>();
+				switch (i) {
+					case (1):
+						for (String nya : lel.split("Reading:")[0].split("Watching:")[1].split("\n")) {
+							if (!nya.isEmpty())
+							{
+								String prog = nya.split(" ep ")[1].split("\\.")[0];
+								if (prog.length() == 1) {
+									list.add(new AnimeObject(nya.split(" ep ")[0], Integer.parseInt(prog)));
+								}
+								else {
+									list.add(new AnimeObject(nya.split(" ep ")[0], 0));
+								}
+							}
+								
 						}
-						else {
-							list.add(new AnimeObject(nya.split(" ep ")[0], 0));
+						break;
+					case (2):
+						for (String nya : lel.split("Read:")[0].split("Seen:")[1].split("\n")) {
+							if (!nya.isEmpty())
+							{
+								String prog = nya;
+								if (prog.length() == 1) {
+									list.add(new AnimeObject(prog));
+								}
+								else {
+									list.add(new AnimeObject(prog));
+								}
+							}
+								
 						}
-					}
-						
+						break;
+					case (3):
+						for (String nya : lel.split("Reading:")[1].split("\n")) {
+							if (!nya.isEmpty())
+							{
+								String prog = nya.split(" ch ")[1].split("\\.")[0];
+								if (prog.length() == 1) {
+									list.add(new AnimeObject(nya.split(" ch ")[0], Integer.parseInt(prog)));
+								}
+								else {
+									list.add(new AnimeObject(nya.split(" ch ")[0], 0));
+								}
+							}
+								
+						}
+						break;
+					case (4):
+						for (String nya : lel.split("Read:")[1].split("\n")) {
+							if (!nya.isEmpty())
+							{
+								String prog = nya;
+								
+								if (prog.length() == 1) {
+									list.add(new AnimeObject(prog));
+								}
+								else {
+									list.add(new AnimeObject(prog));
+								}
+							}
+								
+						}
 				}
-				break;
-			case (2):
-				for (String nya : lel.split("Read:")[0].split("Seen:")[1].split("\n")) {
-					if (!nya.isEmpty())
-					{
-						String prog = nya;
-						if (prog.length() == 1) {
-							list.add(new AnimeObject(prog));
-						}
-						else {
-							list.add(new AnimeObject(prog));
-						}
-					}
-						
-				}
-				break;
-			case (3):
-				for (String nya : lel.split("Reading:")[1].split("\n")) {
-					if (!nya.isEmpty())
-					{
-						String prog = nya.split(" ch ")[1].split("\\.")[0];
-						if (prog.length() == 1) {
-							list.add(new AnimeObject(nya.split(" ch ")[0], Integer.parseInt(prog)));
-						}
-						else {
-							list.add(new AnimeObject(nya.split(" ch ")[0], 0));
-						}
-					}
-						
-				}
-				break;
-			case (4):
-				for (String nya : lel.split("Read:")[1].split("\n")) {
-					if (!nya.isEmpty())
-					{
-						String prog = nya;
-						
-						if (prog.length() == 1) {
-							list.add(new AnimeObject(prog));
-						}
-						else {
-							list.add(new AnimeObject(prog));
-						}
-					}
-						
-				}
+			}
 		}
 		
 		return list;
@@ -516,8 +521,7 @@ public class DataManage {
 	public AnimeObject[] getSeenAnime(Activity activ) {
 		if (!fslive)
 			iniateFS(activ);
-		ArrayList<AnimeObject> henk = null;
-		henk = formatArray("seen.txt", 2);
+		ArrayList<AnimeObject> henk = formatArray(fs.readStringFromFile("seen.txt"), 2);
 		if (henk != null)
 			return henk.toArray(new AnimeObject[0]);
 		else
@@ -542,12 +546,13 @@ public class DataManage {
 		
 	}
 
-	public static void unregister(String name, Activity act) {
+	public static void unregister(String title, Activity act) {
 		String wow = "";
 		for (String item :readRegistered(act).split("\n")) {
-			if (!item.contains(getHash(name)))
+			if (!item.contains(getHash(title)))
 				wow+=item+"\n";
 		}
+		writeRegistered(wow, act);
 	}
 	
 	public void DeleteAnimeDetails(Activity act, int point) {
