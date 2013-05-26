@@ -35,6 +35,7 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import animemanagermobile.reupload.nl.MediaObject;
 import animemanagermobile.reupload.nl.R;
+import animemanagermobile.reupload.nl.animefragmens.listadapters.CharacterListAdapter;
 import animemanagermobile.reupload.nl.data.AniDBWrapper;
 import animemanagermobile.reupload.nl.data.DataManage;
 import animemanagermobile.reupload.nl.data.MangaUpdatesClient;
@@ -73,8 +74,6 @@ public class FragmentCharacters extends Fragment {
 				public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 						long arg3) {
 					AlertDialog.Builder alert = new AlertDialog.Builder(act);
-//	            	alert.setTitle("Add a fansubber: ");
-
 	                LinearLayout ll = new LinearLayout(getActivity());
 	        	    ll.setOrientation(LinearLayout.VERTICAL);
 	                alert.setView(ll);
