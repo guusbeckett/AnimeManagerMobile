@@ -32,7 +32,7 @@ import animemanagermobile.reupload.nl.data.MangaUpdatesClient;
 public class FragmentGeneral extends Fragment {
 
 	private LinearLayout linlay;
-	private int aid;
+	private int id;
 	private MediaObject media;
 	private DataManage data;
 	private int maxValue ;
@@ -101,8 +101,12 @@ public class FragmentGeneral extends Fragment {
         String regState = "This show has no registered AID";*/
         TextView prog1 = new TextView(this.getActivity());
         if (metadata != null) {
-        	if (type == 1 || type == 3)
-        		prog1.setText("Progress: "+media.getProgress() + "/" + metadata[1]);
+        	if (type == 1 || type == 3) {
+        		if (metadata[1] != null)
+        			prog1.setText("Progress: "+media.getProgress() + "/" + metadata[1]);
+        		else
+        			prog1.setText("Progress: "+media.getProgress() + "/unknown");
+        	}
         	//maxValue = Integer.parseInt(metadata[1]);
         	maxValue = 0;
         }
@@ -114,7 +118,7 @@ public class FragmentGeneral extends Fragment {
         if (maxValue == 0) {
         	maxValue = 99;
         }
-        aid = media.getId();
+        id = media.getId();
         prog1.setOnClickListener(new View.OnClickListener() {
 
         	  @Override
@@ -185,7 +189,7 @@ public class FragmentGeneral extends Fragment {
        // Button but = new Button(this.getActivity());
         //but.setText("+");
         Log.d("lel", "5");
-        Log.d("aid", aid+"");
+        Log.d("aid", id+"");
         //data = new DataManage();
        /* final Activity act = this.getActivity();
         but.setOnClickListener(new View.OnClickListener() {
