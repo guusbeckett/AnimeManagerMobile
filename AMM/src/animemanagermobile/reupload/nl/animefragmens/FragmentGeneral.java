@@ -69,7 +69,7 @@ public class FragmentGeneral extends Fragment {
         			
             	}
         		else {
-            		AniDBWrapper.fetchImage(metadata[10], this.getActivity());
+            		AniDBWrapper.fetchImage(metadata[10], this.getActivity(), "");
             		bm = DataManage.loadImageFromExternal(metadata[10], this.getActivity());
             		//Log.d("hai", "FnF");
         		}
@@ -85,6 +85,7 @@ public class FragmentGeneral extends Fragment {
         		}
         	}
         	ImageView img = new ImageView(this.getActivity());
+        	img.setMinimumWidth(linlay.getWidth());
         	img.setImageBitmap(bm);
         	
         	linlay.addView(img);

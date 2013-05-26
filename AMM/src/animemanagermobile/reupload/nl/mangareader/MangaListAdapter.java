@@ -35,7 +35,7 @@ public class MangaListAdapter extends BaseAdapter {
         checkExistence();
     }
     
-    public void checkExistence() {
+	public void checkExistence() {
     	existence = new boolean[total];
     	for (int o=0;o<total;o++) { 
     		File f = new File("/storage/sdcard0/.searchmanga/"+title+"/"+(o+1)+"/");
@@ -61,8 +61,8 @@ public class MangaListAdapter extends BaseAdapter {
         if(convertView==null)
             vi = inflater.inflate(R.layout.manga_item, null);
  
-        TextView title = (TextView)vi.findViewById(R.id.manga_chapter); // title
-        TextView available = (TextView)vi.findViewById(R.id.manga_available); // artist name
+        TextView title = (TextView)vi.findViewById(R.id.character_title); // title
+        TextView available = (TextView)vi.findViewById(R.id.character_type); // artist name
         TextView local = (TextView)vi.findViewById(R.id.manga_local); // duration
  
         // Setting all values in listview

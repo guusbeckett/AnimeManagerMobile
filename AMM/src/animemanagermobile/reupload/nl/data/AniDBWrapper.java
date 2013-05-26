@@ -214,12 +214,12 @@ public class AniDBWrapper {
 			return null;
 	}
 	
-	public static void fetchImage(String filename, Activity act) {
+	public static void fetchImage(String filename, Activity act, String string) {
 		String url = "http://img7.anidb.net/pics/anime/" + filename;
 	    HttpEntity resEntityGet = httpget(url, false);
 
 	    try {
-			resEntityGet.writeTo(DataManage.openOutputStreamToExternal(new File(act.getExternalFilesDir(null), "/images/"), filename));
+			resEntityGet.writeTo(DataManage.openOutputStreamToExternal(new File(act.getExternalFilesDir(null), "/images/" + string), filename));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
