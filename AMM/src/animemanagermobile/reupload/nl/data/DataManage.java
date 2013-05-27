@@ -32,6 +32,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Environment;
 import android.provider.OpenableColumns;
 import android.util.Log;
@@ -361,6 +363,43 @@ public class DataManage {
 		
 	}
 	
+	public static void writeToCache(String stream, String filename, Activity act) {
+		FileOutputStream fos;
+		try {
+			File file = new File(act.getCacheDir(), filename.replace(filename.split("/")[filename.split("/").length-1], ""));
+			if (!file.exists()) {
+				file.mkdirs();
+			}
+			fos = new FileOutputStream(new File(act.getCacheDir(), filename));
+			fos.write(stream.getBytes());
+			fos.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static String readFromCache(String filename, Activity act) {
+		BufferedInputStream buf;
+		ByteArrayBuffer baf = null;
+		 try {
+			buf = new BufferedInputStream(new FileInputStream(new File(act.getCacheDir(), filename)));
+			int current = 0;
+			baf = new ByteArrayBuffer(1024);
+			while ((current = buf.read()) != -1)  {
+			    baf.append((byte) current);
+			}
+		} catch (FileNotFoundException e) {
+			return null;
+		} catch (IOException e) {
+			return null;
+		}
+		 return new String(baf.toByteArray());
+	}
+	
 	public static String getHash (String in) {
 		try {
 			in = URLEncoder.encode(in, "UTF-8");
@@ -677,6 +716,13 @@ public class DataManage {
 		DataManage.session = session;
 	}
 	
+	
+	public static boolean isConnected(Activity act) {
+		ConnectivityManager connectivityManager 
+		     = (ConnectivityManager) act.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+	}
 	
 	
 	

@@ -71,17 +71,37 @@ public class SkyDriveFS extends FileSystem {
 		Log.d("request", filename);
 		//Log.d("request", DataManage.getWatchingfileLocation());
 		if (filename.equals("watching.txt")) {
-			Log.d("e", "fal");
-			return openSkyDriveFile(DataManage.getWatchingfileLocation(), "", activ);
+			if (DataManage.isConnected(activ)) {
+				String stream = openSkyDriveFile(DataManage.getWatchingfileLocation(), "", activ);
+				DataManage.writeToCache(stream, "/skydrive_cache/watching.txt", activ);
+				return stream;
+			}
+			else {
+				String read = null;
+				read = DataManage.readFromCache("/skydrive_cache/watching.txt", activ);
+				if (read != null)
+					return read;
+				else return null;
+			}
 		}
 		else if (filename.equals("seen.txt")) {
-			Log.d("e", "fal");
-			return openSkyDriveFile(DataManage.getSeenfileLocation(), "", activ);
+			if (DataManage.isConnected(activ)) {
+				String stream = openSkyDriveFile(DataManage.getSeenfileLocation(), "", activ);
+				DataManage.writeToCache(stream, "/skydrive_cache/seen.txt", activ);
+				return stream;
+			}
+			else {
+				String read = null;
+				read = DataManage.readFromCache("/skydrive_cache/seen.txt", activ);
+				if (read != null)
+					return read;
+				else return null;
+			}
 		}
 		else
 			return null;
 	}
-
+	
 	@Override
 	public boolean isOnline() {
 		return !waitingForResponse;
