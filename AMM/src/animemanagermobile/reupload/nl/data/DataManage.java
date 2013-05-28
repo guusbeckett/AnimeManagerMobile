@@ -79,6 +79,11 @@ public class DataManage {
 	private static String watchingfileLocation;
 	private static String seenfileLocation;
 	
+	public static final int NoFS = 0;
+	public static final int DropboxFS = 1;
+	public static final int SkyDriveFS = 2;
+	public static final int LocalFS = 5;
+	
 	public DataManage() {
 		fslive = false;
 	}
@@ -89,13 +94,13 @@ public class DataManage {
 		SharedPreferences settings = activ.getSharedPreferences("AMMprefs", 0);
         int storageMethod = settings.getInt("storageMethod", 0);
         switch (storageMethod) {
-        	case (0):
+        	case (NoFS):
         		break;
-        	case (1):
+        	case (DropboxFS):
         		fs = new DropboxFS(activ);
 				fslive = true;
         		break;
-        	case (2):
+        	case (SkyDriveFS):
         		fs = new SkyDriveFS(activ);
         		((SkyDriveFS) fs).trulyInit();
         		fslive = true;
@@ -113,6 +118,10 @@ public class DataManage {
 //	        	}*/
 //	        	Log.d("fs start", "sky authed");
         		//TODO fix skydrive
+        		break;
+        	case (LocalFS):
+        		fs = new animemanagermobile.reupload.nl.storages.LocalFS(activ);
+				fslive = true;
         		break;
         }
         

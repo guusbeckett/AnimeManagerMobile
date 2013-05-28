@@ -213,6 +213,13 @@ public class FileLocationFrag extends Fragment implements OnItemSelectedListener
 				ll.addView(tv2);
 				
 				break;
+			case (5):
+				TextView tv3 = new TextView(getActivity());
+				tv3.setText("Local Storage\n\nNothing going on here really");
+				ll.removeAllViews();
+				ll.addView(tv3);
+			
+				break;
 		}
 		editor.commit();
 		

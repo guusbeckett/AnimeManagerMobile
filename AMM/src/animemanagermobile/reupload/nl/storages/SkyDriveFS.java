@@ -58,7 +58,6 @@ public class SkyDriveFS extends FileSystem {
 	private boolean waitingForResponse = true;
 	private ReentrantLock lock = new ReentrantLock();
 	private Condition condition = lock.newCondition();
-	private Object object;
 
 	@Override
 	public boolean writeStringToFile(String data, String filename) {
@@ -71,7 +70,7 @@ public class SkyDriveFS extends FileSystem {
 		Log.d("request", filename);
 		//Log.d("request", DataManage.getWatchingfileLocation());
 		if (filename.equals("watching.txt")) {
-			if (DataManage.isConnected(activ)) {
+			if (DataManage.isConnected(activ) && isOnline()) {
 				String stream = openSkyDriveFile(DataManage.getWatchingfileLocation(), "", activ);
 				DataManage.writeToCache(stream, "/skydrive_cache/watching.txt", activ);
 				return stream;
@@ -85,7 +84,7 @@ public class SkyDriveFS extends FileSystem {
 			}
 		}
 		else if (filename.equals("seen.txt")) {
-			if (DataManage.isConnected(activ)) {
+			if (DataManage.isConnected(activ) && isOnline()) {
 				String stream = openSkyDriveFile(DataManage.getSeenfileLocation(), "", activ);
 				DataManage.writeToCache(stream, "/skydrive_cache/seen.txt", activ);
 				return stream;
