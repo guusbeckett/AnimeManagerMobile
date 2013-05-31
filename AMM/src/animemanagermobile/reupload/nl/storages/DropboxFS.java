@@ -22,6 +22,8 @@ public class DropboxFS extends FileSystem {
 	
 	@Override
 	public boolean writeStringToFile(String data, String filename) {
+		
+		
 		DbxFile file = openFile(filename);
 		try {
 			file.writeString(data);
@@ -52,6 +54,17 @@ public class DropboxFS extends FileSystem {
 	}
 	
 	public DbxFile openFile(String path) {
+		try {
+			if (!dbxFs.exists(new DbxPath(path)))
+				dbxFs.create(new DbxPath(path));
+			
+		} catch (InvalidPathException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (DbxException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		DbxFile testFile = null;
 		try {
 			testFile = dbxFs.open(new DbxPath(path));

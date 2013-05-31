@@ -80,7 +80,7 @@ public class SkyDriveFS extends FileSystem {
 				read = DataManage.readFromCache("/skydrive_cache/watching.txt", activ);
 				if (read != null)
 					return read;
-				else return null;
+				else return "";
 			}
 		}
 		else if (filename.equals("seen.txt")) {
@@ -94,11 +94,11 @@ public class SkyDriveFS extends FileSystem {
 				read = DataManage.readFromCache("/skydrive_cache/seen.txt", activ);
 				if (read != null)
 					return read;
-				else return null;
+				else return "";
 			}
 		}
 		else
-			return null;
+			return "";
 	}
 	
 	@Override

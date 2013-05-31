@@ -243,7 +243,7 @@ public class DataManage {
 			done = true;
 		}
 		String data = fs.readStringFromFile(fname);
-		if (data!=null) {
+		if (!data.equals("")) {
 			Log.d("ne", "war");
 			if (manga) {
 				String data2 = data.split(split1)[0];

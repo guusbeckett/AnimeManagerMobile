@@ -54,13 +54,13 @@ public class LocalFS extends FileSystem {
 				    baf.append((byte) current);
 				}
 			} catch (FileNotFoundException e) {
-				return null;
+				return "";
 			} catch (IOException e) {
-				return null;
+				return "";
 			}
 			 return new String(baf.toByteArray());
 		}
-		else return null;
+		else return "";
 	}
 
 	@Override

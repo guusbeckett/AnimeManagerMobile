@@ -100,7 +100,7 @@ public class ViewList extends Activity implements OnItemClickListener {
 //	        	intent2.putExtra("type", typeList);
 //	        	startActivity(intent2);
 	        	AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            	alert.setTitle("Add a fansubber: ");
+            	alert.setTitle("Add a series: ");
 
                 LinearLayout ll = new LinearLayout(this);
         	    ll.setOrientation(LinearLayout.VERTICAL);
