@@ -297,7 +297,7 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 
 	private void destroyMedia() {
 		// TODO Auto-generated method stub
-		data.DeleteAnimeDetails(this, point);
+		data.DeleteSeriesDetails(this, point, type);
 	}
 
 	private void destroyMetadata() {

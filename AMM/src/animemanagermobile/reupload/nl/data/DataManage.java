@@ -247,7 +247,7 @@ public class DataManage {
 			Log.d("ne", "war");
 			if (manga) {
 				String data2 = data.split(split1)[0];
-				data = split1+"\n";
+				data = split2+"\n"+split1+"\n";
 				Log.d("ne", "war2");
 				for (MediaObject item : list) {
 					if (item!=null)
@@ -269,20 +269,20 @@ public class DataManage {
 		else {
 			Log.d("datadump", "null");
 			if (manga) {
-				data = split1+"\n";
+				data = split2+"\n"+split1+"\n";
 				for (MediaObject item : list) {
 					if (item!=null)
 						data += item.getWriteable(done, manga) + "\n";
 				}
-				data="\n"+data;
 			}
 			else {
 				data = split2+"\n";
 				for (MediaObject item : list) {
+					Log.d("le", "lel");
 					if (item!=null)
 						data += item.getWriteable(done, manga) + "\n";
 				}
-				data+=split2+"\n"+split1+"\n";
+				data+=split1+"\n";
 			}
 		} 
 		Log.d("writing",fs.writeStringToFile(data, fname)+"");
@@ -650,10 +650,10 @@ public class DataManage {
 		ammDatabase.delete("Registered", "Name='"+ title + "' AND Type='" + type + "'", null);
 	}
 	
-	public void DeleteAnimeDetails(Activity act, int point) {
+	public void DeleteSeriesDetails(Activity act, int point, int type) {
 		list[point] = null;
 		try {
-			writeAlltoFile(act, 1);
+			writeAlltoFile(act, type);
 		} catch (IOException e) {
 			// TODO handle exception
 			e.printStackTrace();

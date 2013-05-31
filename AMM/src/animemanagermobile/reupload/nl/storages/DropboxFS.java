@@ -30,10 +30,10 @@ public class DropboxFS extends FileSystem {
 			file.close();
 			return true;
 		} catch (IOException e) {
-			e.printStackTrace();
+			file.close();
+			return false;
 		}
-		file.close();
-		return false;
+		
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class DropboxFS extends FileSystem {
 			file.close();
 			return content;
 		}
-		else return null;
+		else return "";
 	}
 	
 	public DbxFile openFile(String path) {
