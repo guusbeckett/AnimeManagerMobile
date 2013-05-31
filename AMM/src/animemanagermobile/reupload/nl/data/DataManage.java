@@ -17,8 +17,12 @@ import java.util.ArrayList;
 import org.apache.http.util.ByteArrayBuffer;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
@@ -284,14 +288,19 @@ public class DataManage {
 		Log.d("writing",fs.writeStringToFile(data, fname)+"");
 	}
 	
-	public static boolean isRegistered(String show, Activity act) {
-		String in = readRegistered(act);
+	public static boolean isRegistered(String show, int type, Activity act) {
+		/*String in = readRegistered(act);
 	       //TODO fix
-		return false;
+		return false;*/
+		SQLiteOpenHelper ammData = new AMMDatabase(act);
+		SQLiteDatabase ammDatabase =  ammData.getWritableDatabase();
+		Cursor c = ammDatabase.query("Registered", new String[]{"ID"}, "Name='"+ show +"' AND Type='"+ type +"'", null, null, null, null);
+		
+		return (c.getCount() > 0);
 	}
 	
 	public static int getID(String show, Activity act, int type) {
-		String[] in = readRegistered(act).split("\n");
+		/*String[] in = readRegistered(act).split("\n");
 		String mani = "";
 		switch (type) {
 	    	case (1):
@@ -316,54 +325,69 @@ public class DataManage {
 					Log.d("reject", mani+item.split(" ")[0] + " is not " + mani+getHash(show));
 			}
 		}
-		return i;
+		return i;*/
+		
+		SQLiteOpenHelper ammData = new AMMDatabase(act);
+		SQLiteDatabase ammDatabase =  ammData.getWritableDatabase();
+		Cursor c = ammDatabase.query("Registered", new String[]{"ID"}, "Name='"+ show +"' AND Type='"+ type +"'", null, null, null, null);
+		
+		
+		if (c.getCount() > 0) {
+			c.moveToFirst();
+			return c.getInt(c.getColumnIndex("ID"));
+		}
+		else
+			return 0;
 		
 	}
 	
 	public static void register(String show, int id, Activity act, int i) {
-		String in = readRegistered(act);
-		Log.d("old registers", in);
-		String type = "anime ";
-		switch (i) {
-			case (1):
-				type = "anime ";
-			case (2):
-				type = "anime ";
-			case (3):
-				type = "manga ";
-			case (4):
-				type = "manga ";
-		}
+//		String in = readRegistered(act);
+//		Log.d("old registers", in);
+//		String type = "anime ";
+//		switch (i) {
+//			case (1):
+//				type = "anime ";
+//			case (2):
+//				type = "anime ";
+//			case (3):
+//				type = "manga ";
+//			case (4):
+//				type = "manga ";
+//		}
+//		
+//		in+="\n" + type + getHash(show) + " " + id;
+//		writeRegistered(in, act);
+//		Log.d("new registers", in);
+//		Context context = act.getApplicationContext();
+//		CharSequence text = "Registered " + show + " with id " + id;
+//		int duration = Toast.LENGTH_SHORT;
+//		
+//		Toast toast = Toast.makeText(context, text, duration);
+//		toast.show();
+		SQLiteOpenHelper ammData = new AMMDatabase(act);
+		SQLiteDatabase ammDatabase =  ammData.getWritableDatabase();
+		Cursor c = ammDatabase.query("Registered", new String[]{"Tracking", "Subber", "Keyword"}, "Name='"+ show +"' AND Type='"+ i +"' AND ID='" + id + "'", null, null, null, null);
 		
-		in+="\n" + type + getHash(show) + " " + id;
-		writeRegistered(in, act);
-		Log.d("new registers", in);
-		Context context = act.getApplicationContext();
-		CharSequence text = "Registered " + show + " with id " + id;
-		int duration = Toast.LENGTH_SHORT;
+		ContentValues cv = new ContentValues();
+    	cv.put("Name", show);
+    	cv.put("Type", i);
+    	cv.put("ID", id);
 		
-		Toast toast = Toast.makeText(context, text, duration);
-		toast.show();
-	}
-	
-	public static String readRegistered(Activity act) {
-		BufferedInputStream buf;
-		ByteArrayBuffer baf = null;
-		 try {
-			buf = new BufferedInputStream(new FileInputStream(new File(act.getFilesDir(), "registered")));
-			int current = 0;
-			baf = new ByteArrayBuffer(1024);
-			while ((current = buf.read()) != -1)  {
-			    baf.append((byte) current);
-			}
-		} catch (FileNotFoundException e) {
-			Log.e("internal error", "Register file does not exist");
-			return "";
-		} catch (IOException e) {
-			// TODO handle exception
-			e.printStackTrace();
+		if (c.getCount() > 0) {
+			c.moveToFirst();
+			cv.put("Tracking", c.getInt(c.getColumnIndex("Tracking")));
+	    	cv.put("Subber", c.getString(c.getColumnIndex("Subber")));
+	    	cv.put("Keyword", c.getString(c.getColumnIndex("Keyword")));
 		}
-		 return new String(baf.toByteArray());
+		cv.put("Tracking", false);
+    	cv.put("Subber", "");
+    	cv.put("Keyword", "");
+		
+		
+    	
+    	ammDatabase.delete("Registered", "Name='"+ show + "' AND ID=" + id + " AND Type='"+i+"'", null);
+		ammDatabase.insert("Registered", null, cv);
 	}
 	
 	public static void writeRegistered(String stream, Activity act) {
@@ -614,13 +638,16 @@ public class DataManage {
 		
 	}
 
-	public static void unregister(String title, Activity act) {
-		String wow = "";
+	public static void unregister(String title, int type, Activity act) {
+		/*String wow = "";
 		for (String item :readRegistered(act).split("\n")) {
 			if (!item.contains(getHash(title)))
 				wow+=item+"\n";
 		}
-		writeRegistered(wow, act);
+		writeRegistered(wow, act);*/
+		SQLiteOpenHelper ammData = new AMMDatabase(act);
+		SQLiteDatabase ammDatabase =  ammData.getWritableDatabase();
+		ammDatabase.delete("Registered", "Name='"+ title + "' AND Type='" + type + "'", null);
 	}
 	
 	public void DeleteAnimeDetails(Activity act, int point) {

@@ -312,7 +312,7 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 				DataManage.deleteExternalFile(this.getExternalFilesDir(null) + "/manga" + media.getId()+".xml", this);
 			}
 			
-			DataManage.unregister(media.getTitle(), this);
+			DataManage.unregister(media.getTitle(), type, this);
 		}
 	}
 
@@ -329,7 +329,7 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
         }
         if (title.length == 1) {
         	if (id == 0)
-        		DataManage.register(media.getTitle(), Integer.parseInt(title[0].split("\\^")[1]), this, 0);
+        		DataManage.register(media.getTitle(), Integer.parseInt(title[0].split("\\^")[1]), this, type);
         	AniDBWrapper.grabAnimeMetadata(Integer.parseInt(title[0].split("\\^")[1]), this);
         	this.recreate();
         }

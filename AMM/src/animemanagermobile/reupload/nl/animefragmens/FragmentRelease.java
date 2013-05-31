@@ -60,7 +60,7 @@ public class FragmentRelease extends Fragment {
         }*/
         SQLiteOpenHelper ammData = new AMMDatabase(this.getActivity());
 		final SQLiteDatabase ammDatabase =  ammData.getWritableDatabase();
-		final Cursor c = ammDatabase.query("Registered", new String[]{"Tracking", "Subber", "Keyword"}, "Name='"+ media.getTitle() +"'", null, null, null, null);
+		final Cursor c = ammDatabase.query("Registered", new String[]{"Tracking", "Subber", "Keyword"}, "Name='"+ media.getTitle() +"' AND Type='1'", null, null, null, null);
 		Cursor c2 = ammDatabase.query("Subteams", new String[]{"Name"}, null, null, null, null, null);
         
     	//ammDatabase.insert("Registered", null, cv);
@@ -98,11 +98,12 @@ public class FragmentRelease extends Fragment {
 			public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
 				ContentValues cv = new ContentValues();
 		    	cv.put("Name", media.getTitle());
+		    	cv.put("Type", 1);
 		    	cv.put("ID", media.getId());
 		    	cv.put("Tracking", arg1);
 		    	cv.put("Subber", spins[spin.getSelectedItemPosition()]);
 		    	cv.put("Keyword", "");
-		    	ammDatabase.delete("Registered", "Name='"+ media.getTitle() + "' AND ID=" + media.getId(), null);
+		    	ammDatabase.delete("Registered", "Name='"+ media.getTitle() + "' AND ID=" + media.getId() + " AND Type='1'", null);
 				ammDatabase.insert("Registered", null, cv);
 			}
 		});
@@ -116,11 +117,12 @@ public class FragmentRelease extends Fragment {
 				if (cb.isChecked()) {
 					ContentValues cv = new ContentValues();
 			    	cv.put("Name", media.getTitle());
+			    	cv.put("Type", 1);
 			    	cv.put("ID", media.getId());
 			    	cv.put("Tracking", true);
 			    	cv.put("Subber", spins[arg2]);
 			    	cv.put("Keyword", c.getString(c.getColumnIndex("Keyword")));
-			    	ammDatabase.delete("Registered", "Name='"+ media.getTitle() + "' AND ID=" + media.getId(), null);
+			    	ammDatabase.delete("Registered", "Name='"+ media.getTitle() + "' AND ID=" + media.getId() + " AND Type='1'", null);
 					ammDatabase.insert("Registered", null, cv);
 				}
 				
@@ -152,11 +154,12 @@ public class FragmentRelease extends Fragment {
 			public void onClick(View arg0) {
 				ContentValues cv = new ContentValues();
 		    	cv.put("Name", media.getTitle());
+		    	cv.put("Type", 1);
 		    	cv.put("ID", media.getId());
 		    	cv.put("Tracking", c.getInt(c.getColumnIndex("Tracking")));
 		    	cv.put("Subber", c.getString(c.getColumnIndex("Subber")));
 		    	cv.put("Keyword", et.getText().toString());
-		    	ammDatabase.delete("Registered", "Name='"+ media.getTitle() + "' AND ID=" + media.getId(), null);
+		    	ammDatabase.delete("Registered", "Name='"+ media.getTitle() + "' AND ID=" + media.getId() + " AND Type='1'", null);
 				ammDatabase.insert("Registered", null, cv);
 				
 			}

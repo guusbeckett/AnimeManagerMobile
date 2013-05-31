@@ -21,7 +21,7 @@ public class AMMDatabase extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(DICTIONARY_TABLE_CREATE);
-        db.execSQL("CREATE TABLE IF NOT EXISTS Registered (Name TEXT, ID INTEGER, Tracking BOOLEAN, Subber TEXT, Keyword TEXT);");
+        db.execSQL("CREATE TABLE IF NOT EXISTS Registered (Name TEXT, Type INTEGER, ID INTEGER, Tracking BOOLEAN, Subber TEXT, Keyword TEXT);");
     }
 
 	@Override
