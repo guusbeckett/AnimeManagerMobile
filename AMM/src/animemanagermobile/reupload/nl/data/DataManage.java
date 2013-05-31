@@ -39,8 +39,9 @@ public class DataManage {
 	private static boolean fslive;
 	private static Object cached2;
 	private static Object cached3;
+	private static Object cached4;
 	private static Object session;
-	private MediaObject[] list;
+	private static MediaObject[] list;
 	private boolean writePos;
 	private static String watchingfileLocation;
 	private static String seenfileLocation;
@@ -108,8 +109,9 @@ public class DataManage {
 							if (!nya.isEmpty())
 							{
 								String prog = nya.split(" ep ")[1].split("\\.")[0];
+								int progs =Integer.parseInt(prog);
 								if (prog.length() == 1) {
-									list.add(new MediaObject(nya.split(" ep ")[0], Integer.parseInt(prog)));
+									list.add(new MediaObject(nya.split(" ep ")[0], progs));
 								}
 								else {
 									list.add(new MediaObject(nya.split(" ep ")[0], 0));
@@ -184,10 +186,10 @@ public class DataManage {
 		
 	}
 	
-	public void writeAnimeDetails(Activity act, MediaObject item, int point) {
+	public void writeSeriesDetails(Activity act, MediaObject item, int point, int type) {
 		list[point] = item;
 		try {
-			writeAlltoFile(act, 1);
+			writeAlltoFile(act, type);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -225,59 +227,6 @@ public class DataManage {
 		String split2 = null;
 		boolean manga=(type==3||type==4);
 		boolean done = false;
-		//		if (type == 1 || type == 3) {
-//			String data = fs.readStringFromFile("watching.txt");
-//			if (data!=null) {
-//				Log.d("ne", "war");
-//				String data2 = data.split("Reading:")[1];
-//				data = "Watching:\n";
-//				Log.d("ne", "war2");
-//				for (MediaObject item : list) {
-//					if (item!=null)
-//						data += item.getWriteable() + "\n";
-//				}
-//				data+="\nReading:"+data2;
-//				Log.d("ne", "war3");
-//				fs.writeStringToFile(data, "seen.txt");
-//			}
-//			else {
-//				Log.d("datadump", "null");
-//				data = "Watching:\n";
-//				for (MediaObject item : list) {
-//					if (item!=null)
-//						data += item.getWriteable() + "\n";
-//				}
-//				data+="\nReading:\n";
-//				Log.d("writing",fs.writeStringToFile(data, "watching.txt")+"");
-//			} 
-//		}
-//		else if (type == 2 || type == 4) {
-//			String data = fs.readStringFromFile("seen.txt");
-//			if (data!=null) {
-//				Log.d("ne", "war");
-//				String data2 = data.split("Read:")[1];
-//				data = "Seen:\n";
-//				Log.d("ne", "war2");
-//				for (MediaObject item : list) {
-//					if (item!=null)
-//						data += item.getWriteable() + "\n";
-//				}
-//				data+="\nRead:"+data2;
-//				Log.d("ne", "war3");
-//				fs.writeStringToFile(data, "seen.txt");
-//			}
-//			else {
-//				Log.d("datadump", "null");
-//				data = "Watching:\n";
-//				for (MediaObject item : list) {
-//					if (item!=null)
-//						data += item.getWriteable() + "\n";
-//				}
-//				data+="\nReading:\n";
-//				Log.d("writing",fs.writeStringToFile(data, "seen.txt")+"");
-//			} 
-//		}
-//	
 		if (type == 1 || type == 3) {
 			fname = "watching.txt";
 			split1 = "Reading:";
@@ -799,6 +748,22 @@ public class DataManage {
 		     = (ConnectivityManager) act.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+	}
+
+
+	public static Object getCached4() {
+		return cached4;
+	}
+
+
+	public static void setCached4(Object cached4) {
+		DataManage.cached4 = cached4;
+	}
+
+
+	public void setList(MediaObject[] list2) {
+		this.list = list2;
+		
 	}
 	
 	

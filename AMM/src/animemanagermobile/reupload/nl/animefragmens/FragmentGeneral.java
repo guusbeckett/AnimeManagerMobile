@@ -37,6 +37,7 @@ public class FragmentGeneral extends Fragment {
 	private DataManage data;
 	private int maxValue ;
 	private int type;
+	private MediaObject[] list;
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,6 +45,9 @@ public class FragmentGeneral extends Fragment {
         // Inflate the layout for this fragment
 		View v = inflater.inflate(R.layout.anime_fragment_page , container, false);
 		media = (MediaObject) DataManage.getCached();
+		data = new DataManage();
+		final int point = (Integer) DataManage.getCached4();
+        Log.d("chehck", "1");
 		String[] metadata = null;
 		if (DataManage.isCached2())
 			metadata = (String[]) DataManage.getCached2();
@@ -124,22 +128,11 @@ public class FragmentGeneral extends Fragment {
 
         	  @Override
         	  public void onClick(View v) {
-//        	    NumberPicker numpick = new NumberPicker(act);
-//        	    numpick.setMinValue(0);
-//        	    numpick.setMaxValue(maxValue);
-//        	    numpick.setOnClickListener(new OnClickListener() {
-////					
-//					@Override
-//					public void onClick(View v) {
-//						// TODO Auto-generated method stub
-//						
-//					}
-//				});
         	    AlertDialog.Builder alert = new AlertDialog.Builder(act);
 
                 alert.setTitle("Select the value: ");
 
-                NumberPicker np = new NumberPicker(act);
+                final NumberPicker np = new NumberPicker(act);
                 np.setMinValue(0);
                 np.setMaxValue(maxValue);
                 np.setWrapSelectorWheel(false);
@@ -147,9 +140,11 @@ public class FragmentGeneral extends Fragment {
                 np.setValue(media.getProgress());
                 alert.setView(np);
                 alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                  // Do something with value!
-                  }
+                	public void onClick(DialogInterface dialog, int whichButton) {
+                		media.setProgress(np.getValue());
+                		data.writeSeriesDetails(act, media, point, type);
+                		act.recreate();
+                	}
                 });
 
                 alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

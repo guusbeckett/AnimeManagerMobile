@@ -110,6 +110,7 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
         actionBar.setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.slider);
         Log.d("chehck", "5");
+        DataManage.setCached4(point);
         mViewPager = new ViewPager(this);
         mViewPager.setId(R.id.pager);
         setContentView(mViewPager);

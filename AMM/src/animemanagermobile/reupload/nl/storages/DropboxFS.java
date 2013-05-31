@@ -25,10 +25,12 @@ public class DropboxFS extends FileSystem {
 		DbxFile file = openFile(filename);
 		try {
 			file.writeString(data);
+			file.close();
 			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		file.close();
 		return false;
 	}
 

@@ -2,6 +2,8 @@ package animemanagermobile.reupload.nl;
 
 import java.io.Serializable;
 
+import android.util.Log;
+
 public class MediaObject implements Serializable {
 
 	/**
@@ -12,6 +14,7 @@ public class MediaObject implements Serializable {
 	private int progress;
 	private int total;
 	private int id;
+	private int type;
 
 	public MediaObject(String title, int progress, int total) {
 		this.title = title;
@@ -51,6 +54,7 @@ public class MediaObject implements Serializable {
 	}
 
 	public int getProgress() {
+		Log.d("prog", progress+"");
 		return progress;
 	}
 
@@ -59,7 +63,10 @@ public class MediaObject implements Serializable {
 	}
 	
 	public void setProgress(int i) {
+		Log.d("prog", i+"");
+		
 		progress = i;
+		Log.d("prog", progress+"");
 	}
 	
 	public void setTotal(int i) {
@@ -77,5 +84,13 @@ public class MediaObject implements Serializable {
 	public String getWriteable(boolean done, boolean manga) {
 		// TODO Auto-generated method stub
 		return getTitle() + ((done)?"":((manga)?" ch ":" ep ") + getProgress() + "...");
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
 	}
 }
