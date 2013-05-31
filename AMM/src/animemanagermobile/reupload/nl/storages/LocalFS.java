@@ -30,8 +30,10 @@ public class LocalFS extends FileSystem {
 				fos.close();
 				return true;
 			} catch (FileNotFoundException e) {
+				e.printStackTrace();
 				return false;
 			} catch (IOException e) {
+				e.printStackTrace();
 				return false;
 			}
 		}
@@ -64,7 +66,7 @@ public class LocalFS extends FileSystem {
 	@Override
 	public boolean isOnline() {
 		// TODO Auto-generated method stub
-		return (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED);
+		return (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()));
 	}
 	
 	public LocalFS(Activity activ) {

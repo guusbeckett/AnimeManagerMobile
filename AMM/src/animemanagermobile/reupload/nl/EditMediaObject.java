@@ -73,8 +73,9 @@ public class EditMediaObject extends Activity {
 	            case R.id.media_add:
 	                //newGame();
 	            	DataManage data = new DataManage();
-	            	AnimeObject lel = new AnimeObject(et1.getText().toString(), Integer.valueOf(et2.getText().toString()), Integer.valueOf(et3.getText().toString()));
-	            	data.addNewAnime(this, lel);
+	            	MediaObject lel = new MediaObject(et1.getText().toString(), Integer.valueOf(et2.getText().toString()), Integer.valueOf(et3.getText().toString()));
+	            	data.addNewSeries(this, lel, this.getIntent().getIntExtra("type", 0));
+	            	this.finish();
 	                return true;
 	            default:
 	                return super.onOptionsItemSelected(item);

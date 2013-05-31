@@ -12,22 +12,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
 
 import org.apache.http.util.ByteArrayBuffer;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -35,35 +24,12 @@ import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
-import android.provider.OpenableColumns;
 import android.util.Log;
 import android.widget.Toast;
-import animemanagermobile.reupload.nl.AnimeObject;
 import animemanagermobile.reupload.nl.MediaObject;
-import animemanagermobile.reupload.nl.R;
-import animemanagermobile.reupload.nl.skydrive.JsonKeys;
-import animemanagermobile.reupload.nl.skydrive.SkyDriveFile;
-import animemanagermobile.reupload.nl.skydrive.SkyDriveObject;
 import animemanagermobile.reupload.nl.storages.DropboxFS;
 import animemanagermobile.reupload.nl.storages.FileSystem;
 import animemanagermobile.reupload.nl.storages.SkyDriveFS;
-
-import com.dropbox.sync.android.DbxAccountManager;
-import com.dropbox.sync.android.DbxException;
-import com.dropbox.sync.android.DbxException.Unauthorized;
-import com.dropbox.sync.android.DbxFile;
-import com.dropbox.sync.android.DbxFileSystem;
-import com.dropbox.sync.android.DbxPath;
-import com.dropbox.sync.android.DbxPath.InvalidPathException;
-import com.microsoft.live.LiveAuthClient;
-import com.microsoft.live.LiveAuthException;
-import com.microsoft.live.LiveAuthListener;
-import com.microsoft.live.LiveConnectClient;
-import com.microsoft.live.LiveConnectSession;
-import com.microsoft.live.LiveOperation;
-import com.microsoft.live.LiveOperationException;
-import com.microsoft.live.LiveOperationListener;
-import com.microsoft.live.LiveStatus;
 
 public class DataManage {
 
@@ -74,7 +40,7 @@ public class DataManage {
 	private static Object cached2;
 	private static Object cached3;
 	private static Object session;
-	private AnimeObject[] list;
+	private MediaObject[] list;
 	private boolean writePos;
 	private static String watchingfileLocation;
 	private static String seenfileLocation;
@@ -104,20 +70,6 @@ public class DataManage {
         		fs = new SkyDriveFS(activ);
         		((SkyDriveFS) fs).trulyInit();
         		fslive = true;
-//        		skyDriveInit(activ);
-//        		skydrivelisten = (skydrive) activ;
-//        		
-//        		fslive = true;
-//        		/*if (connect == 1) {
-//	        		((Dialog) mInitializeDialog).dismiss();
-//	        		Log.d("fs start", "sky client open");
-//	        		mClient = new LiveConnectClient(livesession);
-//	        		Log.d("fs start", "sky client live");
-//	        		openSkydriveFolder(HOME_FOLDER, activ);
-//	        		Log.d("fs start", "sky folder read");
-//	        	}*/
-//	        	Log.d("fs start", "sky authed");
-        		//TODO fix skydrive
         		break;
         	case (LocalFS):
         		fs = new animemanagermobile.reupload.nl.storages.LocalFS(activ);
@@ -127,38 +79,45 @@ public class DataManage {
         
 	}
 	
-	public AnimeObject[] getWatchingAnime(Activity activ) {
+	public MediaObject[] getWatchingAnime(Activity activ) {
 		if (!fslive) {
 			Log.d("what", fslive+"");
 			iniateFS(activ);
 		}
-		ArrayList<AnimeObject> henk = formatArray(fs.readStringFromFile("watching.txt"),1);
-		if (henk != null)
-			return henk.toArray(new AnimeObject[0]);
+		Log.d("what", "lel");
+		ArrayList<MediaObject> henk = formatArray(fs.readStringFromFile("watching.txt"),1);
+		if (henk != null) {
+			list = henk.toArray(new MediaObject[0]);
+			return list;
+		}
 		else
-			return new AnimeObject[] {new AnimeObject("no items")};
+			return null;
 	}
 
-	public ArrayList<AnimeObject> formatArray(String lel, int i) {
-		ArrayList<AnimeObject> list = null;
+	public ArrayList<MediaObject> formatArray(String lel, int i) {
+		ArrayList<MediaObject> list = null;
 		if (lel != null) {
-			if (lel.contains("Read")) {
-				list = new ArrayList<AnimeObject>();
+			if (lel.contains("Seen:") || lel.contains("Watching:")) {
+				Log.d("lel", "I decided it contains this");
+				Log.d("lel", lel);
+				list = new ArrayList<MediaObject>();
 				switch (i) {
 					case (1):
 						for (String nya : lel.split("Reading:")[0].split("Watching:")[1].split("\n")) {
+							Log.d("what", nya);
 							if (!nya.isEmpty())
 							{
 								String prog = nya.split(" ep ")[1].split("\\.")[0];
 								if (prog.length() == 1) {
-									list.add(new AnimeObject(nya.split(" ep ")[0], Integer.parseInt(prog)));
+									list.add(new MediaObject(nya.split(" ep ")[0], Integer.parseInt(prog)));
 								}
 								else {
-									list.add(new AnimeObject(nya.split(" ep ")[0], 0));
+									list.add(new MediaObject(nya.split(" ep ")[0], 0));
 								}
 							}
 								
 						}
+					Log.d("what", "bye");
 						break;
 					case (2):
 						for (String nya : lel.split("Read:")[0].split("Seen:")[1].split("\n")) {
@@ -166,10 +125,10 @@ public class DataManage {
 							{
 								String prog = nya;
 								if (prog.length() == 1) {
-									list.add(new AnimeObject(prog));
+									list.add(new MediaObject(prog));
 								}
 								else {
-									list.add(new AnimeObject(prog));
+									list.add(new MediaObject(prog));
 								}
 							}
 								
@@ -181,10 +140,10 @@ public class DataManage {
 							{
 								String prog = nya.split(" ch ")[1].split("\\.")[0];
 								if (prog.length() == 1) {
-									list.add(new AnimeObject(nya.split(" ch ")[0], Integer.parseInt(prog)));
+									list.add(new MediaObject(nya.split(" ch ")[0], Integer.parseInt(prog)));
 								}
 								else {
-									list.add(new AnimeObject(nya.split(" ch ")[0], 0));
+									list.add(new MediaObject(nya.split(" ch ")[0], 0));
 								}
 							}
 								
@@ -197,22 +156,23 @@ public class DataManage {
 								String prog = nya;
 								
 								if (prog.length() == 1) {
-									list.add(new AnimeObject(prog));
+									list.add(new MediaObject(prog));
 								}
 								else {
-									list.add(new AnimeObject(prog));
+									list.add(new MediaObject(prog));
 								}
 							}
 								
 						}
+						break;
 				}
 			}
 		}
-		
+		Log.d("what", "ending");
 		return list;
 	}
 	
-	public void setWatchingAnime(Activity activ, AnimeObject[] animu) {
+	public void setWatchingAnime(Activity activ, MediaObject[] animu) {
 		if (!fslive)
 			iniateFS(activ);
 	}
@@ -224,58 +184,160 @@ public class DataManage {
 		
 	}
 	
-	public void writeAnimeDetails(Activity act, AnimeObject item, int point) {
+	public void writeAnimeDetails(Activity act, MediaObject item, int point) {
 		list[point] = item;
 		try {
-			writeAllAnime(act);
+			writeAlltoFile(act, 1);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		//TODO handle exceptions
 	}
 	
-	public void addNewAnime(Activity act, AnimeObject item) {
+	public void addNewSeries(Activity act, MediaObject item, int j) {
+//		switch (j) {
+//			case (1):
+//				
+//		}
 		if (list == null)
-			list = getWatchingAnime(act);
-		AnimeObject[] list2 = new AnimeObject[list.length+1];
+			list = new MediaObject[0];
+		MediaObject[] list2 = new MediaObject[list.length+1];
 		int i = 0;
-		for (AnimeObject object : list) {
+		for (MediaObject object : list) {
 			list2[i] = object;
 			i++;
 		}
-		list2[list.length] = item;
+		list2[list.length] = (MediaObject) item;
 		list = list2;
 		try {
-			writeAllAnime(act);
+			writeAlltoFile(act, j);
 		} catch (IOException e) {
 			// TODO handle exceptions
 			e.printStackTrace();
 		}
 	}
 
-	private void writeAllAnime(Activity act) throws IOException {
+	private void writeAlltoFile(Activity act, int type) throws IOException {
 		if (!fslive)
 			iniateFS(act);
-		String data = fs.readStringFromFile("seen.txt");
+		String fname = null;
+		String split1 = null;
+		String split2 = null;
+		boolean manga=(type==3||type==4);
+		boolean done = false;
+		//		if (type == 1 || type == 3) {
+//			String data = fs.readStringFromFile("watching.txt");
+//			if (data!=null) {
+//				Log.d("ne", "war");
+//				String data2 = data.split("Reading:")[1];
+//				data = "Watching:\n";
+//				Log.d("ne", "war2");
+//				for (MediaObject item : list) {
+//					if (item!=null)
+//						data += item.getWriteable() + "\n";
+//				}
+//				data+="\nReading:"+data2;
+//				Log.d("ne", "war3");
+//				fs.writeStringToFile(data, "seen.txt");
+//			}
+//			else {
+//				Log.d("datadump", "null");
+//				data = "Watching:\n";
+//				for (MediaObject item : list) {
+//					if (item!=null)
+//						data += item.getWriteable() + "\n";
+//				}
+//				data+="\nReading:\n";
+//				Log.d("writing",fs.writeStringToFile(data, "watching.txt")+"");
+//			} 
+//		}
+//		else if (type == 2 || type == 4) {
+//			String data = fs.readStringFromFile("seen.txt");
+//			if (data!=null) {
+//				Log.d("ne", "war");
+//				String data2 = data.split("Read:")[1];
+//				data = "Seen:\n";
+//				Log.d("ne", "war2");
+//				for (MediaObject item : list) {
+//					if (item!=null)
+//						data += item.getWriteable() + "\n";
+//				}
+//				data+="\nRead:"+data2;
+//				Log.d("ne", "war3");
+//				fs.writeStringToFile(data, "seen.txt");
+//			}
+//			else {
+//				Log.d("datadump", "null");
+//				data = "Watching:\n";
+//				for (MediaObject item : list) {
+//					if (item!=null)
+//						data += item.getWriteable() + "\n";
+//				}
+//				data+="\nReading:\n";
+//				Log.d("writing",fs.writeStringToFile(data, "seen.txt")+"");
+//			} 
+//		}
+//	
+		if (type == 1 || type == 3) {
+			fname = "watching.txt";
+			split1 = "Reading:";
+			split2 = "Watching:";
+		}
+		else if (type == 2 || type == 4) {
+			fname = "seen.txt";
+			split1 = "Read:";
+			split2 = "Seen:";
+			done = true;
+		}
+		String data = fs.readStringFromFile(fname);
 		if (data!=null) {
 			Log.d("ne", "war");
-			String data2 = data.split("Reading:")[1];
-			data = "Watching:\n";
-			Log.d("ne", "war2");
-			for (AnimeObject item : list) {
-				if (item!=null)
-					data += item.getWriteable() + "\n";
+			if (manga) {
+				String data2 = data.split(split1)[0];
+				data = split1+"\n";
+				Log.d("ne", "war2");
+				for (MediaObject item : list) {
+					if (item!=null)
+						data += item.getWriteable(done, manga) + "\n";
+				}
+				data=data2+"\n"+data;
 			}
-			data+="\nReading:"+data2;
-			Log.d("ne", "war3");
-			fs.writeStringToFile(data, "seen.txt");
+			else {
+				String data2 = data.split(split1)[1];
+				data = split2+"\n";
+				Log.d("ne", "war2");
+				for (MediaObject item : list) {
+					if (item!=null)
+						data += item.getWriteable(done, manga) + "\n";
+				}
+				data+="\n"+split1+data2;
+			}
 		}
-		
+		else {
+			Log.d("datadump", "null");
+			if (manga) {
+				data = split1+"\n";
+				for (MediaObject item : list) {
+					if (item!=null)
+						data += item.getWriteable(done, manga) + "\n";
+				}
+				data="\n"+data;
+			}
+			else {
+				data = split2+"\n";
+				for (MediaObject item : list) {
+					if (item!=null)
+						data += item.getWriteable(done, manga) + "\n";
+				}
+				data+=split2+"\n"+split1+"\n";
+			}
+		} 
+		Log.d("writing",fs.writeStringToFile(data, fname)+"");
 	}
 	
 	public static boolean isRegistered(String show, Activity act) {
 		String in = readRegistered(act);
-	       
+	       //TODO fix
 		return false;
 	}
 	
@@ -349,7 +411,7 @@ public class DataManage {
 			Log.e("internal error", "Register file does not exist");
 			return "";
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			// TODO handle exception
 			e.printStackTrace();
 		}
 		 return new String(baf.toByteArray());
@@ -363,10 +425,10 @@ public class DataManage {
 			fos.write(stream.getBytes());
 			fos.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+			// TODO handle exception
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			// TODO handle exception
 			e.printStackTrace();
 		}
 		
@@ -383,10 +445,10 @@ public class DataManage {
 			fos.write(stream.getBytes());
 			fos.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+			// TODO handle exception
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			// TODO handle exception
 			e.printStackTrace();
 		}
 	}
@@ -413,7 +475,7 @@ public class DataManage {
 		try {
 			in = URLEncoder.encode(in, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
+			// TODO handle exception
 			e.printStackTrace();
 		}
 		return in;
@@ -546,7 +608,7 @@ public class DataManage {
 				try {
 					fos = new FileOutputStream(new File(externalFilesDir, filename));
 				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
+					// TODO handle exception
 					e.printStackTrace();
 				}
 			return fos;
@@ -573,12 +635,14 @@ public class DataManage {
 		 cached2=null;
 	 }
 
-	public AnimeObject[] getSeenAnime(Activity activ) {
+	public MediaObject[] getSeenAnime(Activity activ) {
 		if (!fslive)
 			iniateFS(activ);
-		ArrayList<AnimeObject> henk = formatArray(fs.readStringFromFile("seen.txt"), 2);
-		if (henk != null)
-			return henk.toArray(new AnimeObject[0]);
+		ArrayList<MediaObject> henk = formatArray(fs.readStringFromFile("seen.txt"), 2);
+		if (henk != null) {
+			list = henk.toArray(new MediaObject[0]);
+			return list;
+		}
 		else
 			return null;
 	}
@@ -613,9 +677,9 @@ public class DataManage {
 	public void DeleteAnimeDetails(Activity act, int point) {
 		list[point] = null;
 		try {
-			writeAllAnime(act);
+			writeAlltoFile(act, 1);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			// TODO handle exception
 			e.printStackTrace();
 		}
 	}
@@ -625,11 +689,13 @@ public class DataManage {
 		if (!fslive) {
 			iniateFS(activ);
 		}
-		ArrayList<AnimeObject> henk = formatArray(fs.readStringFromFile("watching.txt"), 3);
-		if (henk != null)
-			return henk.toArray(new AnimeObject[0]);
+		ArrayList<MediaObject> henk = formatArray(fs.readStringFromFile("watching.txt"), 3);
+		if (henk != null) {
+			list = henk.toArray(new MediaObject[0]);
+			return list;
+		}
 		else
-			return new AnimeObject[] {new AnimeObject("no items")};
+			return null;
 	}
 
 
@@ -637,22 +703,24 @@ public class DataManage {
 		if (!fslive) {
 			iniateFS(activ);
 		}
-		ArrayList<AnimeObject> henk = formatArray(fs.readStringFromFile("seen.txt"), 4);
-		if (henk != null)
-			return henk.toArray(new AnimeObject[0]);
+		ArrayList<MediaObject> henk = formatArray(fs.readStringFromFile("seen.txt"), 4);
+		if (henk != null) {
+			list = henk.toArray(new MediaObject[0]);
+			return list;
+		}
 		else
-			return new AnimeObject[] {new AnimeObject("no items")};
+			return null;
 	}
 
 
 	public MediaObject getMangaDetails(Activity activ, int point) {
-		list = (AnimeObject[]) getReadingManga(activ);
+		list = (MediaObject[]) getReadingManga(activ);
 		return list[point];
 	}
 
 
 	public MediaObject getFullMangaDetails(Activity activ, int point) {
-		list = (AnimeObject[]) getReadManga(activ);
+		list = (MediaObject[]) getReadManga(activ);
 		return list[point];
 	}
 

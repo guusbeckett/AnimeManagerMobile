@@ -19,6 +19,18 @@ public class MediaObject implements Serializable {
 		this.total = total;
 	}
 
+	public MediaObject(String string) {
+		this.title = string;
+		this.progress = 0;
+		this.total = 0;
+	}
+	
+	public MediaObject(String string, int i) {
+		this.title = string;
+		this.progress = i;
+		this.total = 0;
+	}
+
 	public String getTitle() {
 		return title;
 	}
@@ -60,5 +72,10 @@ public class MediaObject implements Serializable {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	public String getWriteable(boolean done, boolean manga) {
+		// TODO Auto-generated method stub
+		return getTitle() + ((done)?"":((manga)?" ch ":" ep ") + getProgress() + "...");
 	}
 }
