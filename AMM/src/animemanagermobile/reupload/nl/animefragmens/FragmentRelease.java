@@ -103,7 +103,7 @@ public class FragmentRelease extends Fragment {
 		    	cv.put("Tracking", arg1);
 		    	cv.put("Subber", spins[spin.getSelectedItemPosition()]);
 		    	cv.put("Keyword", "");
-		    	ammDatabase.delete("Registered", "Name='"+ media.getTitle() + "' AND ID=" + media.getId() + " AND Type='1'", null);
+		    	ammDatabase.delete("Registered", "Name='"+ media.getTitle() + " AND Type='1'", null);
 				ammDatabase.insert("Registered", null, cv);
 			}
 		});
@@ -122,7 +122,7 @@ public class FragmentRelease extends Fragment {
 			    	cv.put("Tracking", true);
 			    	cv.put("Subber", spins[arg2]);
 			    	cv.put("Keyword", c.getString(c.getColumnIndex("Keyword")));
-			    	ammDatabase.delete("Registered", "Name='"+ media.getTitle() + "' AND ID=" + media.getId() + " AND Type='1'", null);
+			    	ammDatabase.delete("Registered", "Name='"+ media.getTitle() +  " AND Type='1'", null);
 					ammDatabase.insert("Registered", null, cv);
 				}
 				
@@ -144,7 +144,8 @@ public class FragmentRelease extends Fragment {
 	    			break;
 	    		select++;
 	    	}
-	    	spin.setSelection(select);
+	    	if (select < spins.length)
+	    		spin.setSelection(select);
 	    	et.setText(c.getString(c.getColumnIndex("Keyword")));
 	    }
 	    Button but = new Button(this.getActivity());
@@ -159,7 +160,7 @@ public class FragmentRelease extends Fragment {
 		    	cv.put("Tracking", c.getInt(c.getColumnIndex("Tracking")));
 		    	cv.put("Subber", c.getString(c.getColumnIndex("Subber")));
 		    	cv.put("Keyword", et.getText().toString());
-		    	ammDatabase.delete("Registered", "Name='"+ media.getTitle() + "' AND ID=" + media.getId() + " AND Type='1'", null);
+		    	ammDatabase.delete("Registered", "Name='"+ media.getTitle() + " AND Type='1'", null);
 				ammDatabase.insert("Registered", null, cv);
 				
 			}
