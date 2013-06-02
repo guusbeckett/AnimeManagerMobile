@@ -365,29 +365,31 @@ public class DataManage {
 //		
 //		Toast toast = Toast.makeText(context, text, duration);
 //		toast.show();
-		SQLiteOpenHelper ammData = new AMMDatabase(act);
-		SQLiteDatabase ammDatabase =  ammData.getWritableDatabase();
-		Cursor c = ammDatabase.query("Registered", new String[]{"Tracking", "Subber", "Keyword"}, "Name='"+ show +"' AND Type='"+ i +"' AND ID='" + id + "'", null, null, null, null);
-		
-		ContentValues cv = new ContentValues();
-    	cv.put("Name", show);
-    	cv.put("Type", i);
-    	cv.put("ID", id);
-		
-		if (c.getCount() > 0) {
-			c.moveToFirst();
-			cv.put("Tracking", c.getInt(c.getColumnIndex("Tracking")));
-	    	cv.put("Subber", c.getString(c.getColumnIndex("Subber")));
-	    	cv.put("Keyword", c.getString(c.getColumnIndex("Keyword")));
+		if (i > 0 && i < 5) {
+			SQLiteOpenHelper ammData = new AMMDatabase(act);
+			SQLiteDatabase ammDatabase =  ammData.getWritableDatabase();
+			Cursor c = ammDatabase.query("Registered", new String[]{"Tracking", "Subber", "Keyword"}, "Name='"+ show +"' AND Type='"+ i +"' AND ID='" + id + "'", null, null, null, null);
+			
+			ContentValues cv = new ContentValues();
+	    	cv.put("Name", show);
+	    	cv.put("Type", i);
+	    	cv.put("ID", id);
+			
+			if (c.getCount() > 0) {
+				c.moveToFirst();
+				cv.put("Tracking", c.getInt(c.getColumnIndex("Tracking")));
+		    	cv.put("Subber", c.getString(c.getColumnIndex("Subber")));
+		    	cv.put("Keyword", c.getString(c.getColumnIndex("Keyword")));
+			}
+			cv.put("Tracking", false);
+	    	cv.put("Subber", "");
+	    	cv.put("Keyword", "");
+			
+			
+	    	
+	    	ammDatabase.delete("Registered", "Name='"+ show + "' AND ID=" + id + " AND Type='"+i+"'", null);
+			ammDatabase.insert("Registered", null, cv);
 		}
-		cv.put("Tracking", false);
-    	cv.put("Subber", "");
-    	cv.put("Keyword", "");
-		
-		
-    	
-    	ammDatabase.delete("Registered", "Name='"+ show + "' AND ID=" + id + " AND Type='"+i+"'", null);
-		ammDatabase.insert("Registered", null, cv);
 	}
 	
 	public static void writeRegistered(String stream, Activity act) {

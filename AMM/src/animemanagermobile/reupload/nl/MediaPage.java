@@ -82,6 +82,7 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
         		media = data.getFullMangaDetails(this, point);
         		break;
         }
+        media.setType(type);
         id = DataManage.getID(media.getTitle(), this, type);
         DataManage.clearCaches();
         Log.d("chehck", "2");
@@ -162,16 +163,16 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
                 //newGame();
             	switch (type) {
             		case (1):
-            			handleAnimeMetadata(null);
+            			handleAnimeMetadata(null, type);
             			break;
             		case (2):
-            			handleAnimeMetadata(null);
+            			handleAnimeMetadata(null, type);
             			break;
             		case (3):
-            			handleMangaMetadata(null);
+            			handleMangaMetadata(null, type);
             			break;
             		case (4):
-            			handleMangaMetadata(null);
+            			handleMangaMetadata(null, type);
             			break;
             	}
                 return true;
@@ -225,16 +226,16 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
                       if (term != null) {
       	            	switch (type) {
       		        		case (1):
-      		        			handleAnimeMetadata(term);
+      		        			handleAnimeMetadata(term, type);
       		        			break;
       		        		case (2):
-      		        			handleAnimeMetadata(term);
+      		        			handleAnimeMetadata(term, type);
       		        			break;
       		        		case (3):
-      		        			handleMangaMetadata(term);
+      		        			handleMangaMetadata(term, type);
       		        			break;
       		        		case (4):
-      		        			handleMangaMetadata(term);
+      		        			handleMangaMetadata(term, type);
       		        			break;
       	            	}
                       }
@@ -254,7 +255,7 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
         }
     }
 
-	private void handleMangaMetadata(String term) {
+	private void handleMangaMetadata(String term, int type) {
 		AlertDialog mInitializeDialog = ProgressDialog.show(this, "", "Fetching metadata. Please wait...", true);
 		if (media.getId() == 0)
 			if (term == null)
@@ -277,7 +278,7 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
         	Log.d("new", "ling 21");
         	Log.d("nya", title[0]);
         	if (media.getId() == 0)
-        		DataManage.register(media.getTitle(), Integer.parseInt(title[0].split("\\^")[1]), this, 1);
+        		DataManage.register(media.getTitle(), Integer.parseInt(title[0].split("\\^")[1]), this, type);
         	MangaUpdatesClient.grabMangaMetadata(Integer.parseInt(title[0].split("\\^")[1]), this);
         	mInitializeDialog.dismiss();
         	this.recreate();
@@ -316,7 +317,7 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 		}
 	}
 
-	private void handleAnimeMetadata(String term) {
+	private void handleAnimeMetadata(String term, int type2) {
 		if (term == null)
 			title = AniDBWrapper.getMostLikelyID(media.getTitle(), false).toArray(new String[0]);
 		else
@@ -329,7 +330,7 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
         }
         if (title.length == 1) {
         	if (id == 0)
-        		DataManage.register(media.getTitle(), Integer.parseInt(title[0].split("\\^")[1]), this, type);
+        		DataManage.register(media.getTitle(), Integer.parseInt(title[0].split("\\^")[1]), this, type2);
         	AniDBWrapper.grabAnimeMetadata(Integer.parseInt(title[0].split("\\^")[1]), this);
         	this.recreate();
         }

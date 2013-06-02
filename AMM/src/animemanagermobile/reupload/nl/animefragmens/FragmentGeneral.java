@@ -107,18 +107,24 @@ public class FragmentGeneral extends Fragment {
         TextView prog1 = new TextView(this.getActivity());
         if (metadata != null) {
         	if (type == 1 || type == 3) {
-        		if (metadata[1] != null)
+        		if (metadata[1] != null) {
         			prog1.setText("Progress: "+media.getProgress() + "/" + metadata[1]);
-        		else
+        			maxValue = Integer.parseInt(metadata[1]);
+        		}
+        		else {
         			prog1.setText("Progress: "+media.getProgress() + "/unknown");
+        			maxValue = 0;
+        		}
         	}
-        	//maxValue = Integer.parseInt(metadata[1]);
-        	maxValue = 0;
+        	//
+        	
         }
         else {
-        	if (type == 1 || type == 3)
+        	if (media.getType() == 1 || media.getType() == 3) {
         		prog1.setText("Progress: "+media.getProgress() + "/" + media.getTotal());
-        	maxValue = media.getTotal();
+        		maxValue = 0;
+        	}
+        	Log.d("tpye", media.getType()+"");
         }
         if (maxValue == 0) {
         	maxValue = 99;
