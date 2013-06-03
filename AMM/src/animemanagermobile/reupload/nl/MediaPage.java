@@ -149,6 +149,20 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
         	menu.add(0, 7, 0, "Refresh Metadata");
         	menu.add(0, 5, 0, "Unlink Metadata"); 
         }
+        switch (type) {
+			case (1):
+				menu.add(0, 9, 0, "Move to seen");
+				break;
+			case (2):
+				menu.add(0, 9, 0, "Move to watching");
+				break;
+			case (3):
+				menu.add(0, 9, 0, "Move to read");
+				break;
+			case (4):
+				menu.add(0, 9, 0, "Move to seen reading");
+				break;
+        }
         menu.add(0, 6, 0, "Delete series"); 
         menu.add(0, 8, 0, "Search custom"); 
 		return true;
@@ -250,8 +264,12 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
                 alert.show();
                
             	return true;
+            case (9):
+            	MoveToOtherList();
+            	return true;
             default:
                 return super.onOptionsItemSelected(item);
+            
         }
     }
 
@@ -299,6 +317,34 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 	private void destroyMedia() {
 		// TODO Auto-generated method stub
 		data.DeleteSeriesDetails(this, point, type);
+		finish();
+	}
+	private void MoveToOtherList() {
+		// TODO Auto-generated method stub
+		data.DeleteSeriesDetails(this, point, type);
+		switch (type) {
+			case (1):
+				data.getSeenAnime(this);
+				data.addNewSeries(this, media, 2);
+				data.getWatchingAnime(this);
+				break;
+			case (2):
+				data.getWatchingAnime(this);
+				data.addNewSeries(this, media, 1);
+				data.getSeenAnime(this);
+			break;
+			case (3):
+				data.getReadManga(this);
+				data.addNewSeries(this, media, 4);
+				data.getReadingManga(this);
+			break;
+			case (4):
+				data.getReadingManga(this);
+				data.addNewSeries(this, media, 3);
+				data.getReadManga(this);
+			break;
+		}
+		finish();
 	}
 
 	private void destroyMetadata() {
