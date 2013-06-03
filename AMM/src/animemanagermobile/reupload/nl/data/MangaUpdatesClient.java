@@ -85,30 +85,7 @@ public class MangaUpdatesClient {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	    /*InputStream ungzip = null;
-	    try {
-			ungzip = AndroidHttpClient.getUngzippedContent(resEntityGet);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	    BufferedInputStream buf;
-		ByteArrayBuffer baf = null;
-		 try {
-			buf = new BufferedInputStream(ungzip);
-			int current = 0;
-			baf = new ByteArrayBuffer(1024);
-			while ((current = buf.read()) != -1)  {
-			    baf.append((byte) current);
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		//parsed = new String(baf.toByteArray());
-	    
 	    parsed = convertHTMLToXML(parsed);
-	    //Log.d("lel", parsed);
 		DataManage.writeToExternal(parsed, "manga"+id+".xml", activ);
 		
 	}
@@ -209,5 +186,10 @@ public class MangaUpdatesClient {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public static void getMangaReleaseInfo(int id) {
+		String getURL = "http://www.mangaupdates.com/releases.html?search="+id+"&stype=series&perpage=100";
+	    HttpEntity resEntityGet = AniDBWrapper.httpget(getURL, true);
 	}
 }
