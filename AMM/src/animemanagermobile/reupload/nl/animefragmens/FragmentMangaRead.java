@@ -1,7 +1,9 @@
 package animemanagermobile.reupload.nl.animefragmens;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -18,15 +20,20 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 import animemanagermobile.reupload.nl.MediaObject;
 import animemanagermobile.reupload.nl.R;
+import animemanagermobile.reupload.nl.asynctasks.FetchMangaSources;
+import animemanagermobile.reupload.nl.asynctasks.FetchMangaSources.fetchManga;
 import animemanagermobile.reupload.nl.data.DataManage;
 import animemanagermobile.reupload.nl.mangareader.MangaListAdapter;
 import animemanagermobile.reupload.nl.mangareader.MangaView;
+import animemanagermobile.reupload.nl.mangareader.sources.MangaUpdatesSource;
 
-public class FragmentMangaRead extends Fragment {
+public class FragmentMangaRead extends Fragment implements fetchManga {
 
 	private MediaObject media;
+	private ListView lv;
 	//private LinearLayout linlay;
 
 	@Override
@@ -44,8 +51,8 @@ public class FragmentMangaRead extends Fragment {
 		final FragmentActivity activ = this.getActivity();
         //linlay.setOrientation(LinearLayout.VERTICAL);
         
-        ListView lv = new ListView(this.getActivity());
-        MangaListAdapter adapt = new MangaListAdapter(getActivity(), media.getTitle(), DataManage.getMangaChapters(media.getTitle()));
+        lv = new ListView(this.getActivity());
+        final MangaListAdapter adapt = new MangaListAdapter(getActivity(), media.getTitle(), DataManage.getMangaChapters(media.getTitle()));
         lv.setAdapter(adapt);
         lv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         lv.setOnItemClickListener(new OnItemClickListener() {
@@ -53,15 +60,34 @@ public class FragmentMangaRead extends Fragment {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				// TODO Auto-generated method stub
-				Intent intent = new Intent(activ, MangaView.class);
-				intent.putExtra("title", media.getTitle());
-				intent.putExtra("chapter", arg2+1);
-				startActivity(intent);
-				Log.d("start", media.getTitle());
+				if (adapt.checkExistenceOf(arg2)) {
+					Intent intent = new Intent(activ, MangaView.class);
+					intent.putExtra("title", media.getTitle());
+					intent.putExtra("chapter", arg2+1);
+					startActivity(intent);
+					Log.d("start", media.getTitle());
+				}
+				else {
+					Toast toast = Toast.makeText(activ, "Sorry, not implemented yet :(", Toast.LENGTH_SHORT);
+					toast.show();
+				}
 				
 			}
 		});
         view.addView(lv);
+        if (media.getId() != 0 && !DataManage.doesExternalFileExist("/mangareleases/"+DataManage.getHash(media.getTitle())+".xml", this.getActivity())) {
+        	AsyncTask<String, Integer, Long> fetches = new FetchMangaSources(this.getActivity());
+        	((FetchMangaSources) fetches).setFetchListener(this);
+        	fetches.execute(new String[]{media.getTitle()});
+        }
         return v;
     }
+
+	@Override
+	public void isDone() {
+		// TODO Auto-generated method stub
+		MangaListAdapter adapt = new MangaListAdapter(getActivity(), media.getTitle(), DataManage.getMangaChapters(media.getTitle()));
+        lv.setAdapter(adapt);
+        lv.invalidate();
+	}
 }

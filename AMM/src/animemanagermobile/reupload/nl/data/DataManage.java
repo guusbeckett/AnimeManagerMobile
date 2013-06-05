@@ -473,6 +473,9 @@ public class DataManage {
 		if (Environment.MEDIA_MOUNTED.equals(state)) {
 		    // We can read and write the media
 			File approot = act.getExternalFilesDir(null);
+			File dir = new File(approot, filename.replace(filename.split("/")[filename.split("/").length-1], ""));
+			if (!dir.exists())
+				dir.mkdirs();
 			FileOutputStream fos;
 			try {
 				fos = new FileOutputStream(new File(approot, filename));

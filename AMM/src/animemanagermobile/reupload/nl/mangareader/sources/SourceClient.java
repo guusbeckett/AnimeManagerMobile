@@ -18,11 +18,23 @@ public abstract class SourceClient {
 	}
 	public abstract boolean isAvailable();
 	public abstract boolean[] availableFor();
-	public abstract void fetchFromSource();
+	public abstract void makeXML(String[][] xml);
 	public Activity getAct() {
 		return act;
 	}
 	public void setAct(Activity act) {
 		this.act = act;
 	}
+	public void fetchFromSource(Integer chap) {
+		String url = getScannerByChapter(chap);
+		if (url.contains("mangaupdates"))
+			url = getActualURL(url);
+		url = getDownloadPageFromScannerSite(url);
+		url = getFileURLFromDownloadPage(url);
+	}
+	
+	public abstract String getScannerByChapter(Integer chap);
+	public abstract String getActualURL(String url);
+	public abstract String getDownloadPageFromScannerSite(String url);
+	public abstract String getFileURLFromDownloadPage(String url);
 }

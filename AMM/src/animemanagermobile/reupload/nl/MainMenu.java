@@ -14,8 +14,10 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import animemanagermobile.reupload.nl.data.MangaUpdatesClient;
 import animemanagermobile.reupload.nl.dialogs.WaitDialog;
 import animemanagermobile.reupload.nl.mangareader.MangaView;
+import animemanagermobile.reupload.nl.mangareader.sources.MangaUpdatesSource;
 import animemanagermobile.reupload.nl.releasetracker.ReleaseTrackingService;
 import animemanagermobile.reupload.nl.storages.SkyDriveFS;
 

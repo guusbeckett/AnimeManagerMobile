@@ -3,6 +3,8 @@ package animemanagermobile.reupload.nl.mangareader;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 import android.app.Activity;
 import android.content.ClipData.Item;
@@ -16,6 +18,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import animemanagermobile.reupload.nl.R;
+import animemanagermobile.reupload.nl.data.DataManage;
  
 public class MangaListAdapter extends BaseAdapter {
  
@@ -25,16 +28,36 @@ public class MangaListAdapter extends BaseAdapter {
     private int i;
     private boolean[] existence;
     private int total;
+    private Map<String, String> sources;
  
     public MangaListAdapter(Activity a, String title, int total) {
+    	sources = new HashMap<String, String>();
         activity = a;
         i=1;
         this.total = total;
         this.title = title;
         inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         checkExistence();
+        checkSourcesFound();
     }
     
+	private void checkSourcesFound() {
+		if (new File(activity.getExternalFilesDir(null), "/mangareleases/"+DataManage.getHash(title)+".xml").exists()) {
+			String raw = DataManage.readFromExternal("/mangareleases/"+DataManage.getHash(title)+".xml", activity);
+			for (String item : raw.split("<release>")) {
+				if (item.contains("<chapter>")) {
+					sources.put(item.split("<chapter>")[1].split("</chapter>")[0], item.split("<releasername>")[1].split("</releasername>")[0]);
+					try {
+						int ch = Integer.parseInt(item.split("<chapter>")[1].split("</chapter>")[0]);
+						if (ch > total)
+							total = ch;
+					} catch (Exception e) {}
+				}
+			}
+		}
+		
+	}
+
 	public void checkExistence() {
     	existence = new boolean[total];
     	for (int o=0;o<total;o++) { 
@@ -67,8 +90,21 @@ public class MangaListAdapter extends BaseAdapter {
  
         // Setting all values in listview
         title.setText(this.title + " ch " + (position+1));
-        available.setText("no sources");
-        local.setText((existence[position])?"available":"not available");
+        try {
+        	available.setText(sources.get(position+1+""));
+        } catch (Exception e) {available.setText("no sources");}
+        	
+        try {
+        	local.setText((existence[position])?"available":"not available");
+        } catch (Exception e) {local.setText("not available");}
         return vi;
     }
+
+	public boolean checkExistenceOf(int chap) {
+		try {
+			return existence[chap-1];
+		} catch (Exception e) {return false;}
+				
+	}
+
 }

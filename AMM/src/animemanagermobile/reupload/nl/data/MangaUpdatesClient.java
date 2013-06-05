@@ -6,9 +6,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.ParseException;
+import org.apache.http.entity.HttpEntityWrapper;
 import org.apache.http.util.ByteArrayBuffer;
 import org.apache.http.util.EntityUtils;
 
@@ -188,8 +191,41 @@ public class MangaUpdatesClient {
 		}
 	}
 
-	public static void getMangaReleaseInfo(int id) {
+	public static String[][] getMangaReleaseInfo(int id) {
+		ArrayList<String[]> list = new ArrayList<String[]>();
 		String getURL = "http://www.mangaupdates.com/releases.html?search="+id+"&stype=series&perpage=100";
 	    HttpEntity resEntityGet = AniDBWrapper.httpget(getURL, true);
+	    try {
+			String toParse = EntityUtils.toString(resEntityGet).split("<!-- End:Center Content -->")[0].split("<!-- Start:Center Content -->")[1];
+			for (String item : toParse.split("<tr>")) {
+				if (item.contains("Group Info")) {
+					for (String part : item.split("<tr >")) {
+						String[] release = new String[5];
+						int i = 0;
+						for (String line : part.split("\n")) {
+							if (line.contains("<td")) {
+								try {
+									release[i] = line.split("<td")[1].split(" >")[1].split("</td>")[0];
+								} catch (Exception e) {
+									
+								}
+								i++;
+							}
+						}
+						list.add(release);
+					}
+				}
+			}
+			//Pattern.compile("<tag>(.+?)</tag>").matcher(toParse).find();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    
+	    return list.toArray(new String[0][]);
+	    
 	}
 }
