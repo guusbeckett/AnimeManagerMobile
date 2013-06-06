@@ -118,11 +118,9 @@ public class AniDBWrapper {
 		    	get.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:19.0) Gecko/20100101 Firefox/19.0");
 			responseGet = client.execute(get);
 		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e("AMM", "Client Protocal Exception at HTTP GET");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e("AMM", "IOException at HTTP GET");
 		}  
 	    return responseGet.getEntity(); 
 	}

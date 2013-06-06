@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import animemanagermobile.reupload.nl.MediaObject;
 import animemanagermobile.reupload.nl.R;
+import animemanagermobile.reupload.nl.asynctasks.FetchManga;
 import animemanagermobile.reupload.nl.asynctasks.FetchMangaSources;
 import animemanagermobile.reupload.nl.asynctasks.FetchMangaSources.fetchManga;
 import animemanagermobile.reupload.nl.data.DataManage;
@@ -68,8 +69,10 @@ public class FragmentMangaRead extends Fragment implements fetchManga {
 					Log.d("start", media.getTitle());
 				}
 				else {
-					Toast toast = Toast.makeText(activ, "Sorry, not implemented yet :(", Toast.LENGTH_SHORT);
-					toast.show();
+					FetchManga mangafetches = new FetchManga(activ, media.getTitle());
+					mangafetches.execute(new Integer[]{arg2+1});
+//					new MangaUpdatesSource(media.getTitle(), activ).fetchFromSource(arg2+1);
+					Toast.makeText(activ, "Sorry, not implemented yet :(", Toast.LENGTH_SHORT).show();
 				}
 				
 			}

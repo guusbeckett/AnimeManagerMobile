@@ -1,6 +1,8 @@
 package animemanagermobile.reupload.nl.mangareader.sources;
 
 import android.app.Activity;
+import android.util.Log;
+import android.widget.Toast;
 
 public abstract class SourceClient {
 
@@ -26,15 +28,20 @@ public abstract class SourceClient {
 		this.act = act;
 	}
 	public void fetchFromSource(Integer chap) {
+		Log.d("url", chap+"");
 		String url = getScannerByChapter(chap);
+		Log.d("url", url);
 		if (url.contains("mangaupdates"))
 			url = getActualURL(url);
-		url = getDownloadPageFromScannerSite(url);
-		url = getFileURLFromDownloadPage(url);
+		Log.d("url", url);
+		getDownloadPageFromScannerSite(url);
+		url = getFileURLFromDownloadPage("",chap+"");
+//		Toast.makeText(act, "link " + url + " found!", Toast.LENGTH_SHORT).show();
+		Log.d("url", url);
 	}
 	
 	public abstract String getScannerByChapter(Integer chap);
 	public abstract String getActualURL(String url);
 	public abstract String getDownloadPageFromScannerSite(String url);
-	public abstract String getFileURLFromDownloadPage(String url);
+	public abstract String getFileURLFromDownloadPage(String url, String chap);
 }
