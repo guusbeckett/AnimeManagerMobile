@@ -392,7 +392,8 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 
 	@Override
 	public void onSelectedOption(int selectedIndex) {
-		if (selectedIndex != 0) {
+		if (selectedIndex >= 0) {
+			
 			if (media.getId() == 0)
         		DataManage.register(media.getTitle(), Integer.parseInt(title[selectedIndex].split("\\^")[1]), this, type);
 			if (type == 1 || type == 2)

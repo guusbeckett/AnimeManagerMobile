@@ -41,10 +41,14 @@ public class MangaUpdatesClient {
 		        		for (String line : item.split("\n")) {
 		        			if (line.contains("series.html")) {
 		        				String showname = line.split("Info\'>")[1].split("</a>")[0]+"^"+line.split("series.html\\?id=")[1].split("\' title")[0];
-		        				if (!title.contains(showname)) {
-		        					title.add(showname);
-		        				}
-		        				
+		        				try {
+		        					int id = Integer.parseInt(showname.split("\\^")[1]);
+			        				if (!title.contains(showname) && id > 0) {
+			        					title.add(showname);
+			        				}
+		        				} catch (Exception e) {
+									// TODO: handle exception
+								}
 		        			}
 		        		}
 		        }
