@@ -27,7 +27,7 @@ public abstract class SourceClient {
 	public void setAct(Activity act) {
 		this.act = act;
 	}
-	public void fetchFromSource(Integer chap) {
+	public String fetchFromSource(Integer chap) {
 		Log.d("url", chap+"");
 		String url = getScannerByChapter(chap);
 		Log.d("url", url);
@@ -38,6 +38,7 @@ public abstract class SourceClient {
 		url = getFileURLFromDownloadPage("",chap+"");
 //		Toast.makeText(act, "link " + url + " found!", Toast.LENGTH_SHORT).show();
 		Log.d("url", url);
+		return url;
 	}
 	
 	public abstract String getScannerByChapter(Integer chap);

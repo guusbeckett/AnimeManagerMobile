@@ -114,7 +114,7 @@ public class DataManage {
 							{
 								String prog = nya.split(" ep ")[1].split("\\.")[0];
 								int progs =Integer.parseInt(prog);
-								if (prog.length() == 1) {
+								if (prog.length() > 0) {
 									list.add(new MediaObject(nya.split(" ep ")[0], progs));
 								}
 								else {
@@ -130,7 +130,7 @@ public class DataManage {
 							if (!nya.isEmpty())
 							{
 								String prog = nya;
-								if (prog.length() == 1) {
+								if (prog.length() > 0) {
 									list.add(new MediaObject(prog));
 								}
 								else {
@@ -145,7 +145,7 @@ public class DataManage {
 							if (!nya.isEmpty())
 							{
 								String prog = nya.split(" ch ")[1].split("\\.")[0];
-								if (prog.length() == 1) {
+								if (prog.length() > 0) {
 									list.add(new MediaObject(nya.split(" ch ")[0], Integer.parseInt(prog)));
 								}
 								else {
@@ -161,7 +161,7 @@ public class DataManage {
 							{
 								String prog = nya;
 								
-								if (prog.length() == 1) {
+								if (prog.length() > 0) {
 									list.add(new MediaObject(prog));
 								}
 								else {
