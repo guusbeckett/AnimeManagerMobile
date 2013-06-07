@@ -123,6 +123,7 @@ public class AniDBWrapper {
 		} catch (ClientProtocolException e) {
 			Log.e("AMM", "Client Protocal Exception at HTTP GET");
 		} catch (IOException e) {
+			e.printStackTrace();
 			Log.e("AMM", "IOException at HTTP GET");
 		}  
 	    return responseGet.getEntity(); 

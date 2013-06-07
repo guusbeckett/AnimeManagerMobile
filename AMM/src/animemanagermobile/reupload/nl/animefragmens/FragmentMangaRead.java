@@ -61,7 +61,7 @@ public class FragmentMangaRead extends Fragment implements fetchManga {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				// TODO Auto-generated method stub
-				if (adapt.checkExistenceOf(arg2)) {
+				if (adapt.checkExistenceOf(arg2+1)) {
 					Intent intent = new Intent(activ, MangaView.class);
 					intent.putExtra("title", media.getTitle());
 					intent.putExtra("chapter", arg2+1);

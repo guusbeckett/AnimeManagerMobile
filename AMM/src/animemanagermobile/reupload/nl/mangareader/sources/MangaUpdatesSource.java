@@ -17,6 +17,7 @@ import animemanagermobile.reupload.nl.data.MangaUpdatesClient;
 public class MangaUpdatesSource extends SourceClient {
 	
 	private static final int PHPBBPAGE = 200;
+	private static final int WordPressSITE1 = 201;
 	private int id;
 	private Object sources;
 	private int type;
@@ -95,11 +96,22 @@ public class MangaUpdatesSource extends SourceClient {
 		String contents = handleGet(url, true);
 		if (contents.contains("phpBB"))
 			BBforumHandler(contents, url);
+		else if (contents.contains("WordPress.com"))
+			WordpressHandler(contents, url);
 //		for (String lel : contents.split("\n"))
 //			Log.d("lel", lel);
 		return null;
 	}
 	
+	
+	
+	public String WordpressHandler(String contents, String url2) {
+		this.type = WordPressSITE1;
+		this.url = url2;
+		return "";
+		
+	}
+
 	public String BBforumHandler(String raw, String url) {
 		for (String lel : raw.split("\n")) {
 			if (lel.contains("Translation") || lel.contains("Scanlation"))
@@ -127,19 +139,42 @@ public class MangaUpdatesSource extends SourceClient {
 	public String getFileURLFromDownloadPage(String url, String chap) {
 		if (this.url != null)//workaround for weird null bug
 			url = this.url;
-		String contents = handleGet(url, true);
-		for (String item : contents.split("\n"))
-			if (item.contains(chap) && item.contains("Chapter"))
-				for (String part : item.split("<br"))
-					if (part.contains("<a")) {
-						if (part.split("<a")[0].contains(chap) && part.split("<a")[0].contains("Chapter")) {
-							Log.d("item", part);
-							for (String link : part.split("<a")) {
-								if (!link.contains("torrent") && link.contains("href"))
-									return link.split("href=\"")[1].split("\"")[0];
+		switch (this.type) {
+			case (PHPBBPAGE):
+				String contents = handleGet(url, true);
+				for (String item : contents.split("\n"))
+					if (item.contains(chap) && item.contains("Chapter"))
+						for (String part : item.split("<br"))
+							if (part.contains("<a")) {
+								if (part.split("<a")[0].contains(chap) && part.split("<a")[0].contains("Chapter")) {
+									Log.d("item", part);
+									for (String link : part.split("<a")) {
+										if (!link.contains("torrent") && link.contains("href"))
+											return link.split("href=\"")[1].split("\"")[0];
+									}
+								}
+							}
+				break;
+			case (WordPressSITE1):
+				String contents1 = handleGet(url, true);
+				for (String item : contents1.split("<div class=\"post")) {
+//					Log.d("item", item);
+					if (item.contains(chap) && item.contains("Chapter") || item.contains("Download")) {
+						Log.d("hasChap", item);
+						if (item.contains("<a")) {
+							Log.d("haslink", item);
+							if (item.split("<a")[0].contains(chap) && item.split("<a")[0].contains("Chapter")) {
+								Log.d("hasactualink", item);
+								for (String link : item.split("<a")) {
+									if (!link.contains("torrent") && link.contains("href"))
+										return link.split("href=\"")[1].split("\"")[0];
+								}
 							}
 						}
 					}
+				}
+				break;
+		}
 		return "";
 	}
 	
