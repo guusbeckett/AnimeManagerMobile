@@ -50,8 +50,12 @@ public class MangaView extends Activity {
 				// TODO Auto-generated method stub
 				mang.nextImage();
 		        Bitmap img = mang.loadImageFromExternal(getSearchManga(mang.getPoint())+".jpg", act);
-		        iv.setImageBitmap(img);
-		        iv.invalidate();
+		        if (img == null)
+		        	mang.prevImage();
+		        else {
+			        iv.setImageBitmap(img);
+			        iv.invalidate();
+		        }
 			}
 		});
         prev.setOnClickListener(new OnClickListener() {
