@@ -21,6 +21,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
@@ -294,7 +295,7 @@ public class DataManage {
 		return false;*/
 		SQLiteOpenHelper ammData = new AMMDatabase(act);
 		SQLiteDatabase ammDatabase =  ammData.getWritableDatabase();
-		Cursor c = ammDatabase.query("Registered", new String[]{"ID"}, "Name='"+ show +"' AND Type='"+ type +"'", null, null, null, null);
+		Cursor c = ammDatabase.query("Registered", new String[]{"ID"}, "Name="+ DatabaseUtils.sqlEscapeString(show)  +" AND Type='"+ type +"'", null, null, null, null);
 		
 		return (c.getCount() > 0);
 	}
@@ -329,7 +330,7 @@ public class DataManage {
 		
 		SQLiteOpenHelper ammData = new AMMDatabase(act);
 		SQLiteDatabase ammDatabase =  ammData.getWritableDatabase();
-		Cursor c = ammDatabase.query("Registered", new String[]{"ID"}, "Name='"+ show +"' AND Type='"+ type +"'", null, null, null, null);
+		Cursor c = ammDatabase.query("Registered", new String[]{"ID"}, "Name="+ DatabaseUtils.sqlEscapeString(show)  +" AND Type='"+ type +"'", null, null, null, null);
 		
 		
 		if (c.getCount() > 0) {
@@ -381,9 +382,11 @@ public class DataManage {
 		    	cv.put("Subber", c.getString(c.getColumnIndex("Subber")));
 		    	cv.put("Keyword", c.getString(c.getColumnIndex("Keyword")));
 			}
-			cv.put("Tracking", false);
-	    	cv.put("Subber", "");
-	    	cv.put("Keyword", "");
+			else {
+				cv.put("Tracking", false);
+		    	cv.put("Subber", "");
+		    	cv.put("Keyword", "");
+			}
 			
 			
 	    	

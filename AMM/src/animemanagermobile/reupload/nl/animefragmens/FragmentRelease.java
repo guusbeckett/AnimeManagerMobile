@@ -2,6 +2,7 @@ package animemanagermobile.reupload.nl.animefragmens;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Typeface;
@@ -60,7 +61,7 @@ public class FragmentRelease extends Fragment {
         }*/
         SQLiteOpenHelper ammData = new AMMDatabase(this.getActivity());
 		final SQLiteDatabase ammDatabase =  ammData.getWritableDatabase();
-		final Cursor c = ammDatabase.query("Registered", new String[]{"Tracking", "Subber", "Keyword"}, "Name='"+ media.getTitle() +"' AND Type='1'", null, null, null, null);
+		final Cursor c = ammDatabase.query("Registered", new String[]{"Tracking", "Subber", "Keyword"}, "Name="+ DatabaseUtils.sqlEscapeString(media.getTitle())  +" AND Type='1'", null, null, null, null);
 		Cursor c2 = ammDatabase.query("Subteams", new String[]{"Name"}, null, null, null, null, null);
         
     	//ammDatabase.insert("Registered", null, cv);
@@ -103,7 +104,7 @@ public class FragmentRelease extends Fragment {
 		    	cv.put("Tracking", arg1);
 		    	cv.put("Subber", spins[spin.getSelectedItemPosition()]);
 		    	cv.put("Keyword", "");
-		    	ammDatabase.delete("Registered", "Name='"+ media.getTitle() + " AND Type='1'", null);
+		    	ammDatabase.delete("Registered", "Name="+ DatabaseUtils.sqlEscapeString(media.getTitle()) + " AND Type='1'", null);
 				ammDatabase.insert("Registered", null, cv);
 			}
 		});
@@ -122,7 +123,7 @@ public class FragmentRelease extends Fragment {
 			    	cv.put("Tracking", true);
 			    	cv.put("Subber", spins[arg2]);
 			    	cv.put("Keyword", c.getString(c.getColumnIndex("Keyword")));
-			    	ammDatabase.delete("Registered", "Name='"+ media.getTitle() +  " AND Type='1'", null);
+			    	ammDatabase.delete("Registered", "Name="+ DatabaseUtils.sqlEscapeString(media.getTitle())  +  " AND Type='1'", null);
 					ammDatabase.insert("Registered", null, cv);
 				}
 				
@@ -160,7 +161,7 @@ public class FragmentRelease extends Fragment {
 		    	cv.put("Tracking", c.getInt(c.getColumnIndex("Tracking")));
 		    	cv.put("Subber", c.getString(c.getColumnIndex("Subber")));
 		    	cv.put("Keyword", et.getText().toString());
-		    	ammDatabase.delete("Registered", "Name='"+ media.getTitle() + " AND Type='1'", null);
+		    	ammDatabase.delete("Registered", "Name="+ DatabaseUtils.sqlEscapeString(media.getTitle())  + " AND Type='1'", null);
 				ammDatabase.insert("Registered", null, cv);
 				
 			}
