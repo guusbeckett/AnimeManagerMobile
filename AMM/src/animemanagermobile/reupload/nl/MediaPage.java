@@ -86,8 +86,7 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
         id = DataManage.getID(media.getTitle(), this, type);
         DataManage.clearCaches();
         Log.d("chehck", "2");
-        if (id!=0)
-        	media.setId(id);
+       	media.setId(id);
         DataManage.cacheObject(media);
         Log.d("chechk", "3");
         if (id != 0) {
@@ -275,7 +274,7 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 
 	private void handleMangaMetadata(String term, int type) {
 		AlertDialog mInitializeDialog = ProgressDialog.show(this, "", "Fetching metadata. Please wait...", true);
-		if (media.getId() == 0)
+		if (id == 0)
 			if (term == null)
 				title = MangaUpdatesClient.getMostLikelyID(media.getTitle(), false).toArray(new String[0]);
 			else
@@ -375,13 +374,12 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
     		toast.show();*/
         }
         if (title.length == 1) {
-        	if (id == 0)
+        	if (media.getId() == 0)
         		DataManage.register(media.getTitle(), Integer.parseInt(title[0].split("\\^")[1]), this, type2);
         	AniDBWrapper.grabAnimeMetadata(Integer.parseInt(title[0].split("\\^")[1]), this);
         	this.recreate();
         }
         else {
-        	temptype = 0;
         	DialogFragment newFragment = new ShowPickerDialog();
         	((ShowPickerDialog) newFragment).setData(title);
         	((ShowPickerDialog) newFragment).setTitle(media.getTitle());
@@ -395,13 +393,19 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 	@Override
 	public void onSelectedOption(int selectedIndex) {
 		if (selectedIndex != 0) {
-			DataManage.register(media.getTitle(), Integer.parseInt(title[selectedIndex].split("\\^")[1]), this, temptype);
-			if (temptype == 0)
+			if (media.getId() == 0)
+        		DataManage.register(media.getTitle(), Integer.parseInt(title[selectedIndex].split("\\^")[1]), this, type);
+			if (type == 1 || type == 2)
 				AniDBWrapper.grabAnimeMetadata(Integer.parseInt(title[selectedIndex].split("\\^")[1]), this);
-			else
-				MangaUpdatesClient.grabMangaMetadata(Integer.parseInt(title[0].split("\\^")[1]), this);
+			else 
+				MangaUpdatesClient.grabMangaMetadata(Integer.parseInt(title[selectedIndex].split("\\^")[1]), this);
+//			DataManage.register(media.getTitle(), Integer.parseInt(title[selectedIndex].split("\\^")[1]), this, temptype);
+//			if (temptype == 0)
+//				AniDBWrapper.grabAnimeMetadata(Integer.parseInt(title[selectedIndex].split("\\^")[1]), this);
+//			else
+//				MangaUpdatesClient.grabMangaMetadata(Integer.parseInt(title[0].split("\\^")[1]), this);
 			this.recreate();
-        	finish();
+//        	finish();
 		}
 		Log.d("select", selectedIndex+"");
 		

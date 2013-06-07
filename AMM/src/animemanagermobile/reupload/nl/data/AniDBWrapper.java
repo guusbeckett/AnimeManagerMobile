@@ -52,7 +52,10 @@ public class AniDBWrapper {
 		        String[] response = EntityUtils.toString(resEntityGet).split("<anime");
 		        for (String item : response) {
 		        	if (item.contains("lang") && item.contains("aid")) {
-		        		title.add(item.split("CDATA\\[")[1].split("\\]")[0]+"^"+item.split("aid=\"")[1].split("\"")[0]);
+		        		String id = item.split("aid=\"")[1].split("\"")[0];
+		        		if (!id.equals("0")) {
+		        			title.add(item.split("CDATA\\[")[1].split("\\]")[0]+"^"+id);
+		        		}
 		        	}
 		        	else
 		        		Log.i("reject", item);
