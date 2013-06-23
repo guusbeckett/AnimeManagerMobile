@@ -91,22 +91,6 @@ public class DataManage {
         }
         
 	}
-	
-	@Deprecated
-	public MediaObject[] getWatchingAnime(Activity activ) {
-		if (!fslive) {
-			Log.d("what", fslive+"");
-			iniateFS(activ);
-		}
-		Log.d("what", "lel");
-		ArrayList<MediaObject> henk = formatArray(fs.readStringFromFile("watching.txt"),1);
-		if (henk != null) {
-//			list = henk.toArray(new MediaObject[0]);
-			return henk.toArray(new MediaObject[0]);
-		}
-		else
-			return null;
-	}
 
 	public ArrayList<MediaObject> formatArray(String lel, int i) {
 		ArrayList<MediaObject> list = null;
@@ -190,15 +174,6 @@ public class DataManage {
 	public void setWatchingAnime(Activity activ, MediaObject[] animu) {
 		if (!fslive)
 			iniateFS(activ);
-	}
-	
-	@Deprecated
-	public MediaObject getAnimeDetails(Activity act, int point, MediaObject[] list) {
-		//TODO depricated
-		writePos = true;
-//		list = getWatchingAnime(act);
-		return list[point];
-		
 	}
 	
 	public void writeSeriesDetails(Activity act, MediaObject item, int point, int type, MediaObject[] list) {
@@ -313,33 +288,6 @@ public class DataManage {
 	}
 	
 	public static int getID(String show, Activity act, int type) {
-		/*String[] in = readRegistered(act).split("\n");
-		String mani = "";
-		switch (type) {
-	    	case (1):
-	    		mani = "anime ";
-	    		break;
-	    	case (2):
-	    		mani = "anime ";
-	    		break;
-	    	case (3):
-	    		mani = "manga ";
-	    		break;
-	    	case (4):
-	    		mani = "manga ";
-	    		break;
-		}
-		int i = 0;
-		for (String item : in) {
-			if (item.contains("anime") || item.contains("manga")) {
-				if ((mani+getHash(show)).equals(mani+item.split(" ")[1]))
-					i = Integer.parseInt(item.split(" ")[2]);
-				else
-					Log.d("reject", mani+item.split(" ")[0] + " is not " + mani+getHash(show));
-			}
-		}
-		return i;*/
-		
 		SQLiteOpenHelper ammData = new AMMDatabase(act);
 		SQLiteDatabase ammDatabase =  ammData.getWritableDatabase();
 		Cursor c = ammDatabase.query("Registered", new String[]{"ID"}, "Name="+ DatabaseUtils.sqlEscapeString(show)  +" AND Type='"+ type +"'", null, null, null, null);
@@ -355,29 +303,6 @@ public class DataManage {
 	}
 	
 	public static void register(String show, int id, Activity act, int i) {
-//		String in = readRegistered(act);
-//		Log.d("old registers", in);
-//		String type = "anime ";
-//		switch (i) {
-//			case (1):
-//				type = "anime ";
-//			case (2):
-//				type = "anime ";
-//			case (3):
-//				type = "manga ";
-//			case (4):
-//				type = "manga ";
-//		}
-//		
-//		in+="\n" + type + getHash(show) + " " + id;
-//		writeRegistered(in, act);
-//		Log.d("new registers", in);
-//		Context context = act.getApplicationContext();
-//		CharSequence text = "Registered " + show + " with id " + id;
-//		int duration = Toast.LENGTH_SHORT;
-//		
-//		Toast toast = Toast.makeText(context, text, duration);
-//		toast.show();
 		if (i > 0 && i < 5) {
 			SQLiteOpenHelper ammData = new AMMDatabase(act);
 			SQLiteDatabase ammDatabase =  ammData.getWritableDatabase();
@@ -628,28 +553,6 @@ public class DataManage {
 		 cached2=null;
 	 }
 
-	@Deprecated
-	public MediaObject[] getSeenAnime(Activity activ) {
-		//TODO merge with all other get list methods
-		if (!fslive)
-			iniateFS(activ);
-		ArrayList<MediaObject> henk = formatArray(fs.readStringFromFile("seen.txt"), 2);
-		if (henk != null) {
-//			list = henk.toArray(new MediaObject[0]);
-			return henk.toArray(new MediaObject[0]);
-		}
-		else
-			return null;
-	}
-
-	@Deprecated
-	public MediaObject getFullAnimeDetails(Activity act, int point) {
-		//TODO find other way to do this
-		writePos = true;
-//		list = getSeenAnime(act);
-		return getSeenAnime(act)[point];
-	}
-
 	public static void deleteExternalFile(String path, Activity activ) {
 		File f = new File(path);
 		if (f.exists()) {
@@ -663,18 +566,11 @@ public class DataManage {
 	}
 
 	public static void unregister(String title, int type, Activity act) {
-		/*String wow = "";
-		for (String item :readRegistered(act).split("\n")) {
-			if (!item.contains(getHash(title)))
-				wow+=item+"\n";
-		}
-		writeRegistered(wow, act);*/
 		SQLiteOpenHelper ammData = new AMMDatabase(act);
 		SQLiteDatabase ammDatabase =  ammData.getWritableDatabase();
 		ammDatabase.delete("Registered", "Name='"+ title + "' AND Type='" + type + "'", null);
 	}
 	
-	@Deprecated
 	public void DeleteSeriesDetails(Activity act, int point, int type, MediaObject[] list) {
 		//TODO find other way of doing this
 		list[point] = null;
@@ -684,54 +580,6 @@ public class DataManage {
 			// TODO handle exception
 			e.printStackTrace();
 		}
-	}
-
-
-	@Deprecated
-	public MediaObject[] getReadingManga(Activity activ) {
-		//TODO merge with other get list methods
-		if (!fslive) {
-			iniateFS(activ);
-		}
-		ArrayList<MediaObject> henk = formatArray(fs.readStringFromFile("watching.txt"), 3);
-		if (henk != null) {
-//			list = henk.toArray(new MediaObject[0]);
-			return henk.toArray(new MediaObject[0]);
-		}
-		else
-			return null;
-	}
-
-
-	@Deprecated
-	public MediaObject[] getReadManga(Activity activ) {
-		//TODO merge with other get list methods
-		if (!fslive) {
-			iniateFS(activ);
-		}
-		ArrayList<MediaObject> henk = formatArray(fs.readStringFromFile("seen.txt"), 4);
-		if (henk != null) {
-//			list = henk.toArray(new MediaObject[0]);
-			return henk.toArray(new MediaObject[0]);
-		}
-		else
-			return null;
-	}
-
-
-	@Deprecated
-	public MediaObject getMangaDetails(Activity activ, int point) {
-		//TODO do this in a different way
-//		list = (MediaObject[]) getReadingManga(activ);
-		return (MediaObject) getReadingManga(activ)[point];
-	}
-
-	
-	@Deprecated
-	public MediaObject getFullMangaDetails(Activity activ, int point) {
-		//TODO do this in a different way
-//		list = (MediaObject[]) getReadManga(activ);
-		return (MediaObject) getReadManga(activ)[point];
 	}
 
 	 public static File[] listFiles(File file2){

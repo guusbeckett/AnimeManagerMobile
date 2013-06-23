@@ -303,36 +303,35 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 	}
 
 	private void destroyMedia() {
-		// TODO Auto-generated method stub
 		data.DeleteSeriesDetails(this, point, type, list);
 		finish();
 	}
 	private void MoveToOtherList() {
-		// TODO Auto-generated method stub
-		data.DeleteSeriesDetails(this, point, type, list);
-		switch (type) {
-			case (1):
-				data.getSeenAnime(this);
-				data.addNewSeries(this, media, 2, list);
-				data.getWatchingAnime(this);
-				break;
-			case (2):
-				data.getWatchingAnime(this);
-				data.addNewSeries(this, media, 1, list);
-				data.getSeenAnime(this);
-			break;
-			case (3):
-				data.getReadManga(this);
-				data.addNewSeries(this, media, 4, list);
-				data.getReadingManga(this);
-			break;
-			case (4):
-				data.getReadingManga(this);
-				data.addNewSeries(this, media, 3, list);
-				data.getReadManga(this);
-			break;
-		}
-		finish();
+		// TODO FIX THIS CODE
+//		data.DeleteSeriesDetails(this, point, type, list);
+//		switch (type) {
+//			case (1):
+//				data.getSeenAnime(this);
+//				data.addNewSeries(this, media, 2, list);
+//				data.getWatchingAnime(this);
+//				break;
+//			case (2):
+//				data.getWatchingAnime(this);
+//				data.addNewSeries(this, media, 1, list);
+//				data.getSeenAnime(this);
+//			break;
+//			case (3):
+//				data.getReadManga(this);
+//				data.addNewSeries(this, media, 4, list);
+//				data.getReadingManga(this);
+//			break;
+//			case (4):
+//				data.getReadingManga(this);
+//				data.addNewSeries(this, media, 3, list);
+//				data.getReadManga(this);
+//			break;
+//		}
+//		finish();
 	}
 
 	private void destroyMetadata() {
