@@ -12,6 +12,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -39,6 +43,7 @@ import animemanagermobile.reupload.nl.animefragmens.FragmentGeneral;
 import animemanagermobile.reupload.nl.animefragmens.FragmentMangaRead;
 import animemanagermobile.reupload.nl.animefragmens.FragmentRelease;
 import animemanagermobile.reupload.nl.animefragmens.FragmentTags;
+import animemanagermobile.reupload.nl.data.AMMDatabase;
 import animemanagermobile.reupload.nl.data.AniDBWrapper;
 import animemanagermobile.reupload.nl.data.DataManage;
 import animemanagermobile.reupload.nl.data.MangaUpdatesClient;
@@ -310,27 +315,50 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 	private void MoveToOtherList() {
 		data.DeleteSeriesDetails(this, point, type, list);
 		MediaObject[] templist;
+		boolean delete = false;
+		int newType = 0;
 		switch (type) {
 			case (1):
 				templist = data.getMediaList(this, 2);
 				data.addNewSeries(this, media, 2, templist);
+				delete = true;
+				newType = 2;
 				break;
 			case (2):
 				templist = data.getMediaList(this, 1);
 				data.addNewSeries(this, media, 1, templist);
+				delete = true;
+				newType = 1;
 			break;
 			case (3):
 				templist = data.getMediaList(this, 4);
 				data.addNewSeries(this, media, 4, templist);
+				delete = true;
+				newType = 4;
 			break;
 			case (4):
 				templist = data.getMediaList(this, 3);
 				data.addNewSeries(this, media, 3, templist);
+				delete = true;
+				newType = 3;
 			break;
 		}
+		if (delete) {
+			SQLiteOpenHelper ammData = new AMMDatabase(this);
+			SQLiteDatabase ammDatabase =  ammData.getWritableDatabase();
+	//		Cursor c = ammDatabase.query("Registered", new String[]{"Name"}, "Name="+ DatabaseUtils.sqlEscapeString(media.getTitle())  +" AND Type='1'", null, null, null, null);
+			ammDatabase.delete("Registered", "Name="+DatabaseUtils.sqlEscapeString(media.getTitle())+" AND Type='"+type+"'", null);
+			ContentValues cv = new ContentValues();
+			cv.put("Name", media.getTitle());
+	    	cv.put("Type", newType);
+	    	cv.put("ID", media.getId());
+	    	cv.put("Tracking", false);
+	    	cv.put("Subber", "");
+	    	cv.put("Keyword", "");
+			ammDatabase.insert("Registered", null, cv);
+			DataManage.setRefresh(true);
+		}
 		finish();
-		DataManage.setRefresh(true);
-		
 	}
 
 	private void destroyMetadata() {
