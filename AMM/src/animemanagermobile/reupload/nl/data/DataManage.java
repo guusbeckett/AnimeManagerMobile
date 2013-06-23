@@ -34,6 +34,7 @@ import android.widget.Toast;
 import animemanagermobile.reupload.nl.MediaObject;
 import animemanagermobile.reupload.nl.storages.DropboxFS;
 import animemanagermobile.reupload.nl.storages.FileSystem;
+import animemanagermobile.reupload.nl.storages.MyAnimeListFS;
 import animemanagermobile.reupload.nl.storages.SkyDriveFS;
 
 public class DataManage {
@@ -55,6 +56,7 @@ public class DataManage {
 	public static final int DropboxFS = 1;
 	public static final int SkyDriveFS = 2;
 	public static final int LocalFS = 5;
+	public static final int MyAnimeList = 6;
 	
 	public DataManage() {
 		fslive = false;
@@ -75,6 +77,10 @@ public class DataManage {
         	case (SkyDriveFS):
         		fs = new SkyDriveFS(activ);
         		((SkyDriveFS) fs).trulyInit();
+        		fslive = true;
+        		break;
+        	case (MyAnimeList):
+        		fs = new MyAnimeListFS();
         		fslive = true;
         		break;
         	case (LocalFS):
