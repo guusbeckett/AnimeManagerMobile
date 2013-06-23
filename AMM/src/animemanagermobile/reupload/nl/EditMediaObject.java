@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import animemanagermobile.reupload.nl.data.DataManage;
 
+@Deprecated
 public class EditMediaObject extends Activity {
 
 	 	private LinearLayout masll;
@@ -74,7 +75,7 @@ public class EditMediaObject extends Activity {
 	                //newGame();
 	            	DataManage data = new DataManage();
 	            	MediaObject lel = new MediaObject(et1.getText().toString(), Integer.valueOf(et2.getText().toString()), Integer.valueOf(et3.getText().toString()));
-	            	data.addNewSeries(this, lel, this.getIntent().getIntExtra("type", 0));
+//	            	data.addNewSeries(this, lel, this.getIntent().getIntExtra("type", 0), list);
 	            	this.finish();
 	                return true;
 	            default:

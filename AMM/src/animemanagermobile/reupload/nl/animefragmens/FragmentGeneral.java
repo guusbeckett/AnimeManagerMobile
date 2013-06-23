@@ -47,6 +47,7 @@ public class FragmentGeneral extends Fragment {
 		media = (MediaObject) DataManage.getCached();
 		data = new DataManage();
 		final int point = (Integer) DataManage.getCached4();
+		list = DataManage.getList();
         Log.d("chehck", "1");
 		String[] metadata = null;
 		if (DataManage.isCached2())
@@ -148,7 +149,7 @@ public class FragmentGeneral extends Fragment {
                 alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                 	public void onClick(DialogInterface dialog, int whichButton) {
                 		media.setProgress(np.getValue());
-                		data.writeSeriesDetails(act, media, point, type);
+                		data.writeSeriesDetails(act, media, point, type, list);
                 		act.recreate();
                 	}
                 });

@@ -37,20 +37,7 @@ public class ViewList extends Activity implements OnItemClickListener {
         setContentView(R.layout.activity_edit_anime);
         typeList = this.getIntent().getIntExtra("type", 0);
         data = new DataManage();
-        switch (typeList) {
-        	case (1):
-        		lel = data.getWatchingAnime(this);
-        		break;
-        	case (2):
-        		lel = data.getSeenAnime(this);
-        		break;
-        	case (3):
-        		lel = data.getReadingManga(this);
-        		break;
-        	case (4):
-        		lel = data.getReadManga(this);
-        		break;
-        }
+        lel = data.getMediaList(this, typeList);
         RelativeLayout rl = (RelativeLayout) findViewById(R.id.anime_relative);
         if (lel == null) {
         	Log.d("SEVERE", "getAnime returned NULL");
@@ -60,6 +47,7 @@ public class ViewList extends Activity implements OnItemClickListener {
         else {
         	Log.d("what", "lel");
         	if (lel.length > 0) {
+        		DataManage.setList(lel);
 	        	Log.d("SUCCESS", "media succesfully read");
 	        	ArrayAdapter adapter = new ArrayAdapter<String>(this, 
 	                    android.R.layout.simple_list_item_1, MediaObject.convertMediaObjectArrayToStringArray(lel));
@@ -110,8 +98,8 @@ public class ViewList extends Activity implements OnItemClickListener {
                 alert.setView(ll);
                 alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                    	MediaObject lel = new MediaObject(et1.getText().toString(), 0,0);
-    	            	data.addNewSeries(act, lel, typeList);
+                    	MediaObject item = new MediaObject(et1.getText().toString(), 0,0);
+    	            	data.addNewSeries(act, item, typeList, lel);
     	            	act.recreate();
                       }
                     });

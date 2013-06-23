@@ -32,6 +32,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 import animemanagermobile.reupload.nl.MediaObject;
+import animemanagermobile.reupload.nl.ViewList;
 import animemanagermobile.reupload.nl.storages.DropboxFS;
 import animemanagermobile.reupload.nl.storages.FileSystem;
 import animemanagermobile.reupload.nl.storages.MyAnimeListFS;
@@ -91,6 +92,7 @@ public class DataManage {
         
 	}
 	
+	@Deprecated
 	public MediaObject[] getWatchingAnime(Activity activ) {
 		if (!fslive) {
 			Log.d("what", fslive+"");
@@ -99,8 +101,8 @@ public class DataManage {
 		Log.d("what", "lel");
 		ArrayList<MediaObject> henk = formatArray(fs.readStringFromFile("watching.txt"),1);
 		if (henk != null) {
-			list = henk.toArray(new MediaObject[0]);
-			return list;
+//			list = henk.toArray(new MediaObject[0]);
+			return henk.toArray(new MediaObject[0]);
 		}
 		else
 			return null;
@@ -190,28 +192,32 @@ public class DataManage {
 			iniateFS(activ);
 	}
 	
-	public MediaObject getAnimeDetails(Activity act, int point) {
+	@Deprecated
+	public MediaObject getAnimeDetails(Activity act, int point, MediaObject[] list) {
+		//TODO depricated
 		writePos = true;
-		list = getWatchingAnime(act);
+//		list = getWatchingAnime(act);
 		return list[point];
 		
 	}
 	
-	public void writeSeriesDetails(Activity act, MediaObject item, int point, int type) {
+	public void writeSeriesDetails(Activity act, MediaObject item, int point, int type, MediaObject[] list) {
+		//TODO change how this is handled everywhere
 		list[point] = item;
 		try {
-			writeAlltoFile(act, type);
+			writeAlltoFile(act, type, list);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		//TODO handle exceptions
 	}
 	
-	public void addNewSeries(Activity act, MediaObject item, int j) {
+	public void addNewSeries(Activity act, MediaObject item, int j, MediaObject[] list) {
 //		switch (j) {
 //			case (1):
 //				
 //		}
+		//TODO fix properly
 		if (list == null)
 			list = new MediaObject[0];
 		MediaObject[] list2 = new MediaObject[list.length+1];
@@ -223,14 +229,14 @@ public class DataManage {
 		list2[list.length] = (MediaObject) item;
 		list = list2;
 		try {
-			writeAlltoFile(act, j);
+			writeAlltoFile(act, j, list);
 		} catch (IOException e) {
 			// TODO handle exceptions
 			e.printStackTrace();
 		}
 	}
 
-	private void writeAlltoFile(Activity act, int type) throws IOException {
+	private void writeAlltoFile(Activity act, int type, MediaObject[] list) throws IOException {
 		if (!fslive)
 			iniateFS(act);
 		String fname = null;
@@ -622,22 +628,26 @@ public class DataManage {
 		 cached2=null;
 	 }
 
+	@Deprecated
 	public MediaObject[] getSeenAnime(Activity activ) {
+		//TODO merge with all other get list methods
 		if (!fslive)
 			iniateFS(activ);
 		ArrayList<MediaObject> henk = formatArray(fs.readStringFromFile("seen.txt"), 2);
 		if (henk != null) {
-			list = henk.toArray(new MediaObject[0]);
-			return list;
+//			list = henk.toArray(new MediaObject[0]);
+			return henk.toArray(new MediaObject[0]);
 		}
 		else
 			return null;
 	}
 
+	@Deprecated
 	public MediaObject getFullAnimeDetails(Activity act, int point) {
+		//TODO find other way to do this
 		writePos = true;
-		list = getSeenAnime(act);
-		return list[point];
+//		list = getSeenAnime(act);
+		return getSeenAnime(act)[point];
 	}
 
 	public static void deleteExternalFile(String path, Activity activ) {
@@ -664,10 +674,12 @@ public class DataManage {
 		ammDatabase.delete("Registered", "Name='"+ title + "' AND Type='" + type + "'", null);
 	}
 	
-	public void DeleteSeriesDetails(Activity act, int point, int type) {
+	@Deprecated
+	public void DeleteSeriesDetails(Activity act, int point, int type, MediaObject[] list) {
+		//TODO find other way of doing this
 		list[point] = null;
 		try {
-			writeAlltoFile(act, type);
+			writeAlltoFile(act, type, list);
 		} catch (IOException e) {
 			// TODO handle exception
 			e.printStackTrace();
@@ -675,43 +687,51 @@ public class DataManage {
 	}
 
 
+	@Deprecated
 	public MediaObject[] getReadingManga(Activity activ) {
+		//TODO merge with other get list methods
 		if (!fslive) {
 			iniateFS(activ);
 		}
 		ArrayList<MediaObject> henk = formatArray(fs.readStringFromFile("watching.txt"), 3);
 		if (henk != null) {
-			list = henk.toArray(new MediaObject[0]);
-			return list;
+//			list = henk.toArray(new MediaObject[0]);
+			return henk.toArray(new MediaObject[0]);
 		}
 		else
 			return null;
 	}
 
 
+	@Deprecated
 	public MediaObject[] getReadManga(Activity activ) {
+		//TODO merge with other get list methods
 		if (!fslive) {
 			iniateFS(activ);
 		}
 		ArrayList<MediaObject> henk = formatArray(fs.readStringFromFile("seen.txt"), 4);
 		if (henk != null) {
-			list = henk.toArray(new MediaObject[0]);
-			return list;
+//			list = henk.toArray(new MediaObject[0]);
+			return henk.toArray(new MediaObject[0]);
 		}
 		else
 			return null;
 	}
 
 
+	@Deprecated
 	public MediaObject getMangaDetails(Activity activ, int point) {
-		list = (MediaObject[]) getReadingManga(activ);
-		return list[point];
+		//TODO do this in a different way
+//		list = (MediaObject[]) getReadingManga(activ);
+		return (MediaObject) getReadingManga(activ)[point];
 	}
 
-
+	
+	@Deprecated
 	public MediaObject getFullMangaDetails(Activity activ, int point) {
-		list = (MediaObject[]) getReadManga(activ);
-		return list[point];
+		//TODO do this in a different way
+//		list = (MediaObject[]) getReadManga(activ);
+		return (MediaObject) getReadManga(activ)[point];
 	}
 
 	 public static File[] listFiles(File file2){
@@ -802,11 +822,38 @@ public class DataManage {
 	}
 
 
-	public void setList(MediaObject[] list2) {
-		this.list = list2;
-		
+	public static MediaObject[] getList() {
+		return list;
 	}
-	
-	
-	
+
+
+	public static void setList(MediaObject[] list) {
+		DataManage.list = list;
+	}
+
+	public MediaObject[] getMediaList(Activity act, int typeList) {
+		if (!fslive) {
+			Log.d("what", fslive+"");
+			iniateFS(act);
+		}
+		ArrayList<MediaObject> formattedList = null;
+		switch (typeList) {
+	    	case (1):
+	    		formattedList = formatArray(fs.readStringFromFile("watching.txt"),1);
+	    		break;
+	    	case (2):
+	    		formattedList = formatArray(fs.readStringFromFile("seen.txt"), 2);
+	    		break;
+	    	case (3):
+	    		formattedList = formatArray(fs.readStringFromFile("watching.txt"),3);
+	    		break;
+	    	case (4):
+	    		formattedList = formatArray(fs.readStringFromFile("seen.txt"), 4);
+	    		break;
+		}
+		if (formattedList != null) {
+			return formattedList.toArray(new MediaObject[0]);
+		}
+		return null;
+	}
 }

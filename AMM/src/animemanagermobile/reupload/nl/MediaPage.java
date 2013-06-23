@@ -58,30 +58,19 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 	private int point;
 	private int type;
 	private int temptype;
+	private MediaObject[] list;
 	private String term;
 
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        list = DataManage.getList();
         data = new DataManage();
         point = getIntent().getIntExtra("point", 0);
         Log.d("chehck", "1");
         type = getIntent().getIntExtra("type", 0);
-        switch (type) {
-        	case (1):
-        		media = data.getAnimeDetails(this, point);
-        		break;
-        	case (2):
-        		media = data.getFullAnimeDetails(this, point);
-        		break;
-        	case (3):
-        		media = data.getMangaDetails(this, point);
-        		break;
-        	case (4):
-        		media = data.getFullMangaDetails(this, point);
-        		break;
-        }
+        media = list[point];
         media.setType(type);
         id = DataManage.getID(media.getTitle(), this, type);
         DataManage.clearCaches();
@@ -315,31 +304,31 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 
 	private void destroyMedia() {
 		// TODO Auto-generated method stub
-		data.DeleteSeriesDetails(this, point, type);
+		data.DeleteSeriesDetails(this, point, type, list);
 		finish();
 	}
 	private void MoveToOtherList() {
 		// TODO Auto-generated method stub
-		data.DeleteSeriesDetails(this, point, type);
+		data.DeleteSeriesDetails(this, point, type, list);
 		switch (type) {
 			case (1):
 				data.getSeenAnime(this);
-				data.addNewSeries(this, media, 2);
+				data.addNewSeries(this, media, 2, list);
 				data.getWatchingAnime(this);
 				break;
 			case (2):
 				data.getWatchingAnime(this);
-				data.addNewSeries(this, media, 1);
+				data.addNewSeries(this, media, 1, list);
 				data.getSeenAnime(this);
 			break;
 			case (3):
 				data.getReadManga(this);
-				data.addNewSeries(this, media, 4);
+				data.addNewSeries(this, media, 4, list);
 				data.getReadingManga(this);
 			break;
 			case (4):
 				data.getReadingManga(this);
-				data.addNewSeries(this, media, 3);
+				data.addNewSeries(this, media, 3, list);
 				data.getReadManga(this);
 			break;
 		}
