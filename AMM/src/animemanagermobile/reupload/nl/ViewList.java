@@ -123,5 +123,14 @@ public class ViewList extends Activity implements OnItemClickListener {
 		intent.putExtra("point", arg2);
 		startActivity(intent);
 	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (DataManage.getRefresh()) {
+			DataManage.setRefresh(false);
+			this.recreate();
+		}
+	}
 
 }

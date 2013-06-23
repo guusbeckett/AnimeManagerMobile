@@ -304,63 +304,32 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 
 	private void destroyMedia() {
 		data.DeleteSeriesDetails(this, point, type, list);
+		DataManage.setRefresh(true);
 		finish();
 	}
 	private void MoveToOtherList() {
-		// TODO FIX THIS CODE
-//		data.DeleteSeriesDetails(this, point, type, list);
-//		switch (type) {
-//			case (1):
-//				data.getSeenAnime(this);
-//				data.addNewSeries(this, media, 2, list);
-//				data.getWatchingAnime(this);
-//				break;
-//			case (2):
-//				data.getWatchingAnime(this);
-//				data.addNewSeries(this, media, 1, list);
-//				data.getSeenAnime(this);
-//			break;
-//			case (3):
-//				data.getReadManga(this);
-//				data.addNewSeries(this, media, 4, list);
-//				data.getReadingManga(this);
-//			break;
-//			case (4):
-//				data.getReadingManga(this);
-//				data.addNewSeries(this, media, 3, list);
-//				data.getReadManga(this);
-//			break;
-//		}
-//		finish();
 		data.DeleteSeriesDetails(this, point, type, list);
 		MediaObject[] templist;
 		switch (type) {
 			case (1):
 				templist = data.getMediaList(this, 2);
-//				data.getSeenAnime(this);
 				data.addNewSeries(this, media, 2, templist);
-//				data.getWatchingAnime(this);
 				break;
 			case (2):
 				templist = data.getMediaList(this, 1);
-//				data.getWatchingAnime(this);
 				data.addNewSeries(this, media, 1, templist);
-//				data.getSeenAnime(this);
 			break;
 			case (3):
 				templist = data.getMediaList(this, 4);
-//				data.getReadManga(this);
 				data.addNewSeries(this, media, 4, templist);
-//				data.getReadingManga(this);
 			break;
 			case (4):
 				templist = data.getMediaList(this, 3);
-//				data.getReadingManga(this);
 				data.addNewSeries(this, media, 3, templist);
-//				data.getReadManga(this);
 			break;
 		}
 		finish();
+		DataManage.setRefresh(true);
 		
 	}
 

@@ -57,6 +57,7 @@ public class DataManage {
 	private boolean writePos;
 	private static String watchingfileLocation;
 	private static String seenfileLocation;
+	private static boolean refresh;
 	
 	public static final int NoFS = 0;
 	public static final int DropboxFS = 1;
@@ -709,5 +710,16 @@ public class DataManage {
 			return formattedList.toArray(new MediaObject[0]);
 		}
 		return null;
+	}
+
+
+	public static void setRefresh(boolean b) {
+		refresh = b;
+		
+	}
+
+
+	public static boolean getRefresh() {
+		return refresh;
 	}
 }
