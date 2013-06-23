@@ -40,6 +40,11 @@ import animemanagermobile.reupload.nl.storages.SkyDriveFS;
 
 public class DataManage {
 
+	public static final int watchingAnime = 1;
+	public static final int seenAnime = 2;
+	public static final int readingManga = 3;
+	public static final int readManga = 4;
+	
 	
 	private FileSystem fs;
 	private static Object cached;
@@ -699,6 +704,7 @@ public class DataManage {
 	    		formattedList = formatArray(fs.readStringFromFile("seen.txt"), 4);
 	    		break;
 		}
+		//TODO the numbers are mixed up
 		if (formattedList != null) {
 			return formattedList.toArray(new MediaObject[0]);
 		}
