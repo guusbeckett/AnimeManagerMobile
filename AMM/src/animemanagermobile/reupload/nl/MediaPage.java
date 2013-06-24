@@ -310,6 +310,9 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 	private void destroyMedia() {
 		data.DeleteSeriesDetails(this, point, type, list);
 		DataManage.setRefresh(true);
+		SQLiteOpenHelper ammData = new AMMDatabase(this);
+		SQLiteDatabase ammDatabase =  ammData.getWritableDatabase();
+		ammDatabase.delete("Registered", "Name="+DatabaseUtils.sqlEscapeString(media.getTitle())+" AND Type='"+type+"'", null);
 		finish();
 	}
 	private void MoveToOtherList() {

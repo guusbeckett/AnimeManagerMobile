@@ -111,3 +111,37 @@ public class MainMenu extends Activity {
     }
     
 }
+
+/**
+ * This will be my general checklist from now on
+ * 
+ * Notable Bugs:
+ * cannot save progress on unregistered shows, causes ANR
+ * 
+ *TODO
+ * [ ] BackLog support - Should not be hard to implement given the way lists are now
+ * [*] Make deleting items also unregister them
+ * [ ] Make the mangaCrawler more intelligent and more useful
+ * [ ] Make the main menu nicer looking
+ * [ ] Make a mediafire client
+ * [ ] Make it possible to download metadata in an asynctask
+ * [ ] Make it possible to mass download metadata
+ * [ ] Implemented a "sync services" system that works separate from the filesystem code for sites like aniDB MyList and MAL
+ * [ ] Make notifications stack
+ * [ ] Make proper RSS reader
+ * [ ] Make page for notifcations that links to the show
+ * [ ] Make the notification system nagging
+ * [ ] Make first run wizard
+ * [ ] Make mangareader downloaders as backup system
+ * [ ] Make it possible to manually select folder for a separate manga
+ * [ ] Add archive support to mangareader
+ * [ ] Fix all tabs for MediaPage
+ * [ ] Make it possible to save files in SkyDrive
+ * [ ] Fix Google Drive support
+ * [ ] Make pop-out thingy for images with zoom
+ * [ ] YouTube/NicoVideo linking to OP/ED
+ * [ ] Inline links for aniDB descriptions
+ * [ ] Proper multiple metadata source system
+ * [ ] able to open shows tempory from metadata source
+ * 
+ */
