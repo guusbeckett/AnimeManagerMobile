@@ -142,6 +142,9 @@ public class MainMenu extends Activity {
  * [ ] YouTube/NicoVideo linking to OP/ED
  * [ ] Inline links for aniDB descriptions
  * [ ] Proper multiple metadata source system
- * [ ] able to open shows tempory from metadata source
+ * [ ] able to open shows temporary from metadata source
+ * [ ] link to related shows/manga
+ * [ ] only write to external when user has chosen to do so, it is available
+ * [ ] simple stats screen, like MAL stats
  * 
  */

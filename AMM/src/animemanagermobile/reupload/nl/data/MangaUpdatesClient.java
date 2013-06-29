@@ -79,7 +79,7 @@ public class MangaUpdatesClient {
 		return title;
 	}
 
-	public static void grabMangaMetadata(int id, Activity activ) {
+	public static void grabMangaMetadata(int id, boolean temp, Activity activ) {
 		String getURL = "http://www.mangaupdates.com/series.html?id=" + id;
 	    HttpEntity resEntityGet = AniDBWrapper.httpget(getURL, true);
 	    String parsed = null;
@@ -93,8 +93,14 @@ public class MangaUpdatesClient {
 			e.printStackTrace();
 		}
 	    parsed = convertHTMLToXML(parsed);
-		DataManage.writeToExternal(parsed, "manga"+id+".xml", activ);
+	    if (!temp)
+	    	DataManage.writeToExternal(parsed, "manga"+id+".xml", activ);
+	    else
+	    	DataManage.writeToCache(parsed, "/tempmetadata/tempmanga"+id+".xml", activ);
 		
+	}
+	public static void grabMangaMetadata(int id, Activity activ) {
+		grabMangaMetadata(id, false, activ);
 	}
 
 	private static String convertHTMLToXML(String parsed) {
@@ -119,10 +125,14 @@ public class MangaUpdatesClient {
 		return DataManage.doesExternalFileExist("manga"+id+".xml", activ);
 	}
 	
-	public static String[] parseMangaUpdatesfile(int id, Activity act) {
+	public static String[] parseMangaUpdatesfile(int id, boolean temp, Activity act) {
 		if (doesMangaUpdatesfileExist(id, act)) {
-			String stream = DataManage.readFromExternal("manga"+id+".xml", act);
-			String[] data = new String[17];
+			String stream = null;
+			if (!temp)
+				stream = DataManage.readFromExternal("manga"+id+".xml", act);
+			else
+				stream = DataManage.readFromCache("/tempmetadata/tempmanga"+id+".xml", act);
+			String[] data = new String[18];
 			/**
 			 * Explanation for this array:
 			 * I parse the xml per category of data with a total of 15 categories
@@ -180,6 +190,9 @@ public class MangaUpdatesClient {
 		}
 		else
 			return null;
+	}
+	public static String[] parseMangaUpdatesfile(int id, Activity act) {
+		return parseMangaUpdatesfile(id, false, act);
 	}
 	
 	public static void fetchImage(String filename, Activity act) {

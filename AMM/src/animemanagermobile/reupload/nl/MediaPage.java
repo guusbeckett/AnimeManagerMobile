@@ -65,11 +65,13 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 	private int temptype;
 	private MediaObject[] list;
 	private String term;
+	private boolean tempMode;
 
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        tempMode = getIntent().getBooleanExtra("tempMode", false);
         list = DataManage.getList();
         data = new DataManage();
         point = getIntent().getIntExtra("point", 0);
@@ -77,28 +79,58 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
         type = getIntent().getIntExtra("type", 0);
         media = list[point];
         media.setType(type);
-        id = DataManage.getID(media.getTitle(), this, type);
+        if (!tempMode)
+        	id = DataManage.getID(media.getTitle(), this, type);
+        else {
+        	id = getIntent().getIntExtra("mediaID", 0);
+        	if (id == 0)
+        		finish();
+        }
         DataManage.clearCaches();
         Log.d("chehck", "2");
        	media.setId(id);
         DataManage.cacheObject(media);
         Log.d("chechk", "3");
-        if (id != 0) {
-        	if (type == 1 || type == 2) {
-	        	if (AniDBWrapper.doesAniDBfileExist(id, this)){
-	        		metadataParse = AniDBWrapper.parseAniDBfile(id, this);
-	        		metadataParse[16]=type+"";
-	        		DataManage.cacheObject2(metadataParse);
+        if (!tempMode) {
+	        if (id != 0) {
+	        	if (type == 1 || type == 2) {
+		        	if (AniDBWrapper.doesAniDBfileExist(id, this)){
+		        		metadataParse = AniDBWrapper.parseAniDBfile(id, this);
+		        		metadataParse[16]=type+"";
+		        		metadataParse[17]="0";
+		        		DataManage.cacheObject2(metadataParse);
+		        	}
 	        	}
-        	}
-        	else {
-        		if (MangaUpdatesClient.doesMangaUpdatesfileExist(id, this)){
-	        		metadataParse = MangaUpdatesClient.parseMangaUpdatesfile(id, this);
-	        		metadataParse[16]=type+"";
-	        		DataManage.cacheObject2(metadataParse);
+	        	else {
+	        		if (MangaUpdatesClient.doesMangaUpdatesfileExist(id, this)){
+		        		metadataParse = MangaUpdatesClient.parseMangaUpdatesfile(id, this);
+		        		metadataParse[16]=type+"";
+		        		metadataParse[17]="0";
+		        		DataManage.cacheObject2(metadataParse);
+		        	}
 	        	}
-        	}
-        		
+	        		
+	        }
+        }
+        else {
+        	switch (type) {
+        		case (2):
+//        			handleAnimeMetadata(null, type);
+        			AniDBWrapper.grabAnimeMetadata(id, true, this);	
+	        		metadataParse = AniDBWrapper.parseAniDBfile(id, true, this);
+	        		metadataParse[16]=type+"";
+	        		metadataParse[17]="1";
+	        		DataManage.cacheObject2(metadataParse);
+        			break;
+        		case (4):
+        			MangaUpdatesClient.grabMangaMetadata(id, true, this);
+	        		metadataParse = MangaUpdatesClient.parseMangaUpdatesfile(id, true, this);
+	        		metadataParse[16]=type+"";
+	        		metadataParse[17]="1";
+	        		DataManage.cacheObject2(metadataParse);
+//        			handleMangaMetadata(null, type);
+        			break;
+        	}	
         }
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);

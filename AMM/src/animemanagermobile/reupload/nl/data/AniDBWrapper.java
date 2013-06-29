@@ -31,6 +31,7 @@ import org.apache.http.util.EntityUtils;
 import android.app.Activity;
 import android.net.http.AndroidHttpClient;
 import android.os.StrictMode;
+import android.provider.ContactsContract.Contacts.Data;
 import android.util.Log;
 
 
@@ -79,7 +80,7 @@ public class AniDBWrapper {
 		return title;
 	}
 	
-	public static void grabAnimeMetadata(int aid, Activity act) {
+	public static void grabAnimeMetadata(int aid, boolean temp, Activity act) {
 		String getURL = "http://api.anidb.net:9001/httpapi?request=anime&client=animemanagermob&clientver=1&protover=1&aid=" + aid;
 	    HttpEntity resEntityGet = httpget(getURL, false);
 	    String parsed = "";
@@ -105,7 +106,14 @@ public class AniDBWrapper {
 		}
 		parsed = new String(baf.toByteArray());
 	    Log.d("wow", parsed);
-		DataManage.writeToExternal(parsed, "anime"+aid+".xml", act);
+	    if (!temp)
+	    	DataManage.writeToExternal(parsed, "anime"+aid+".xml", act);
+	    else
+	    	DataManage.writeToCache(parsed, "/tempmetadata/tempanime"+aid+".xml", act);
+	}
+	
+	public static void grabAnimeMetadata(int aid, Activity act) {
+		grabAnimeMetadata(aid, false, act);
 	}
 	
 	public static HttpEntity httpget(String url, boolean fakeDesktop) {
@@ -160,10 +168,14 @@ public class AniDBWrapper {
 		return DataManage.doesExternalFileExist("anime"+aid+".xml", act);
 	}
 	
-	public static String[] parseAniDBfile(int aid, Activity act) {
+	public static String[] parseAniDBfile(int aid, boolean temp, Activity act) {
 		if (doesAniDBfileExist(aid, act)) {
-			String stream = DataManage.readFromExternal("anime"+aid+".xml", act);
-			String[] data = new String[17];
+			String stream = null;
+			if (!temp)
+				stream = DataManage.readFromExternal("anime"+aid+".xml", act);
+			else
+				stream = DataManage.readFromCache("/tempmetadata/tempanime"+aid+".xml", act);
+			String[] data = new String[18];
 			/**
 			 * Explanation for this array:
 			 * I parse the xml per category of data with a total of 15 categories
@@ -214,6 +226,10 @@ public class AniDBWrapper {
 		}
 		else
 			return null;
+	}
+	
+	public static String[] parseAniDBfile(int aid, Activity act) {
+		return parseAniDBfile(aid, false, act);
 	}
 	
 	public static void fetchImage(String filename, Activity act, String string) {
