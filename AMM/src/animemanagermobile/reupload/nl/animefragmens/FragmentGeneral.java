@@ -38,6 +38,7 @@ public class FragmentGeneral extends Fragment {
 	private int maxValue ;
 	private int type;
 	private MediaObject[] list;
+	private boolean tempMode;
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,6 +53,8 @@ public class FragmentGeneral extends Fragment {
 		String[] metadata = null;
 		if (DataManage.isCached2())
 			metadata = (String[]) DataManage.getCached2();
+		if (metadata != null)
+			tempMode = metadata[16].equals("1");
 		ScrollView view = (ScrollView) v.findViewById(R.id.anime_frag);
         linlay = new LinearLayout(this.getActivity());
         view.addView(linlay);
@@ -68,25 +71,39 @@ public class FragmentGeneral extends Fragment {
         if (metadata != null) {
         	Bitmap bm = null;
         	type = Integer.parseInt(metadata[16]);
-        	if (type == 1 || type == 2) {
-        		if (DataManage.doesExternalFileExist("/images/" + metadata[10], this.getActivity())) {
-        			bm = DataManage.loadImageFromExternal(metadata[10], this.getActivity());
-        			
-            	}
-        		else {
-            		AniDBWrapper.fetchImage(metadata[10], this.getActivity(), "");
-            		bm = DataManage.loadImageFromExternal(metadata[10], this.getActivity());
-            		//Log.d("hai", "FnF");
-        		}
-            	
+        	if (!tempMode) {
+	        	if (type == 1 || type == 2) {
+	        		if (DataManage.doesExternalFileExist("/images/" + metadata[10], this.getActivity())) {
+	        			bm = DataManage.loadImageFromExternal(metadata[10], this.getActivity());
+	        			
+	            	}
+	        		else {
+	            		AniDBWrapper.fetchImage(metadata[10], this.getActivity(), "");
+	            		bm = DataManage.loadImageFromExternal(metadata[10], this.getActivity());
+	            		//Log.d("hai", "FnF");
+	        		}
+	            	
+	        	}
+	        	else if (type != 0) {
+	        		if (DataManage.doesExternalFileExist("/images/" + metadata[10].split("/")[metadata[10].split("/").length-1], this.getActivity())) {
+	        			bm = DataManage.loadImageFromExternal(metadata[10].split("/")[metadata[10].split("/").length-1], this.getActivity());
+	            	}
+	        		else {
+	        			MangaUpdatesClient.fetchImage(metadata[10], this.getActivity());
+	        			bm = DataManage.loadImageFromExternal(metadata[10].split("/")[metadata[10].split("/").length-1], this.getActivity());
+	        		}
+	        	}
         	}
-        	else if (type != 0) {
-        		if (DataManage.doesExternalFileExist("/images/" + metadata[10].split("/")[metadata[10].split("/").length-1], this.getActivity())) {
-        			bm = DataManage.loadImageFromExternal(metadata[10].split("/")[metadata[10].split("/").length-1], this.getActivity());
-            	}
-        		else {
-        			MangaUpdatesClient.fetchImage(metadata[10], this.getActivity());
-        			bm = DataManage.loadImageFromExternal(metadata[10].split("/")[metadata[10].split("/").length-1], this.getActivity());
+        	else {
+        		switch (type) {
+        			case (2):
+        				AniDBWrapper.fetchImage(metadata[10], true, this.getActivity(), "");
+            			bm = DataManage.loadImageFromExternal(metadata[10], true, this.getActivity());
+            			break;
+        			case (4):
+        				MangaUpdatesClient.fetchImage(metadata[10], true, this.getActivity());
+        				bm = DataManage.loadImageFromExternal(metadata[10].split("/")[metadata[10].split("/").length-1], true, this.getActivity());
+        				break;
         		}
         	}
         	ImageView img = new ImageView(this.getActivity());

@@ -195,17 +195,23 @@ public class MangaUpdatesClient {
 		return parseMangaUpdatesfile(id, false, act);
 	}
 	
-	public static void fetchImage(String filename, Activity act) {
+	public static void fetchImage(String filename, boolean temp, Activity act) {
 		String url = filename;
 	    HttpEntity resEntityGet = AniDBWrapper.httpget(url, true);
 	    Log.d("filename", filename.split("/")[filename.split("/").length-1]);
 	    Log.d("filename", "test");
 	    try {
-			resEntityGet.writeTo(DataManage.openOutputStreamToExternal(new File(act.getExternalFilesDir(null), "/images/"), filename.split("/")[filename.split("/").length-1]));
+	    	if (!temp)
+	    		resEntityGet.writeTo(DataManage.openOutputStreamToExternal(new File(act.getExternalFilesDir(null), "/images/"), filename.split("/")[filename.split("/").length-1]));
+	    	else
+	    		resEntityGet.writeTo(DataManage.openOutputStreamToCache(new File("/tempimages/"), filename.split("/")[filename.split("/").length-1], act));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	public static void fetchImage(String filename, Activity act) {
+		fetchImage(filename, false, act);
 	}
 
 	public static String[][] getMangaReleaseInfo(int id) {

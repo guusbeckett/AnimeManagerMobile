@@ -232,16 +232,22 @@ public class AniDBWrapper {
 		return parseAniDBfile(aid, false, act);
 	}
 	
-	public static void fetchImage(String filename, Activity act, String string) {
+	public static void fetchImage(String filename, boolean temp, Activity act, String string) {
 		String url = "http://img7.anidb.net/pics/anime/" + filename;
 	    HttpEntity resEntityGet = httpget(url, false);
 
 	    try {
-			resEntityGet.writeTo(DataManage.openOutputStreamToExternal(new File(act.getExternalFilesDir(null), "/images/" + string), filename));
+	    	if (!temp)
+	    		resEntityGet.writeTo(DataManage.openOutputStreamToExternal(new File(act.getExternalFilesDir(null), "/images/" + string), filename));
+	    	else
+	    		resEntityGet.writeTo(DataManage.openOutputStreamToCache(new File("/tempimages/" + string), filename, act));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	public static void fetchImage(String filename, Activity act, String string) {
+		fetchImage(filename, false, act, string);
 	}
 	
 	public static String findEpisodeNearestAfterDate(String date, String rawEpisodeList) {

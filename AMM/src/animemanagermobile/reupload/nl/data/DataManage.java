@@ -541,9 +541,13 @@ public class DataManage {
 			return null;
 	}
 	
-	 public static Bitmap loadImageFromExternal(String filename, Activity act) {
+	 public static Bitmap loadImageFromExternal(String filename, boolean temp, Activity act) {
 	      try {
-	          File f = new File(act.getExternalFilesDir(null)+"/images/", filename);
+	    	  File f = null;
+	    	  if (!temp)
+	    		  f = new File(act.getExternalFilesDir(null)+"/images/", filename);
+	    	  else
+	    		  f = new File(act.getCacheDir()+"/tempimages/", filename);
 	          Log.d("file ", f.toString());
 	          if (!f.exists()) { Log.d("BitMapLoader", "File " + f + " Not Found"); return null; }
 	          Bitmap tmp = BitmapFactory.decodeFile(f.toString());
@@ -553,6 +557,9 @@ public class DataManage {
 	          return null;
 	      }
 	  }
+	 public static Bitmap loadImageFromExternal(String filename, Activity act) {
+		 return loadImageFromExternal(filename, false, act);
+	 }
 	 
 	 public static void clearCaches() {
 		 cached =null;
@@ -721,5 +728,23 @@ public class DataManage {
 
 	public static boolean getRefresh() {
 		return refresh;
+	}
+
+
+	public static OutputStream openOutputStreamToCache(File file,
+			String filename, Activity act) {
+		// TODO Auto-generated method stub
+		FileOutputStream fos = null;
+		file = new File(act.getCacheDir(), file.toString());
+		if (!file.exists()){
+			file.mkdirs();
+		}
+			try {
+				fos = new FileOutputStream(new File(file, filename));
+			} catch (FileNotFoundException e) {
+				// TODO handle exception
+				e.printStackTrace();
+			}
+		return fos;
 	}
 }
