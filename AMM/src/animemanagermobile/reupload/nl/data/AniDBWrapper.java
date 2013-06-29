@@ -169,7 +169,7 @@ public class AniDBWrapper {
 	}
 	
 	public static String[] parseAniDBfile(int aid, boolean temp, Activity act) {
-		if (doesAniDBfileExist(aid, act)) {
+		if (doesAniDBfileExist(aid, act) || temp) {
 			String stream = null;
 			if (!temp)
 				stream = DataManage.readFromExternal("anime"+aid+".xml", act);
@@ -200,24 +200,38 @@ public class AniDBWrapper {
 			data[0] = stream.split("<type>")[1].split("</type>")[0];
 			Log.d("check", "0");
 			data[1] = stream.split("<episodecount>")[1].split("</episodecount>")[0];
-			data[2] = stream.split("<startdate>")[1].split("</startdate>")[0];
+			if (stream.contains("<startdate>"))
+				data[2] = stream.split("<startdate>")[1].split("</startdate>")[0];
+			else
+				data[2] = "";
 			Log.d("check", "2");
 			for (String item : stream.split("<titles>")[1].split("</titles>")[0].split("<title")) {
 			//	data[3] += "\n"+item.split("\">")[1].split("</title>")[0];
 			}
-			
-			data[4] = stream.split("<relatedanime>")[1].split("</relatedanime>")[0];
+			if (stream.contains("<relatedanime>"))
+				data[4] = stream.split("<relatedanime>")[1].split("</relatedanime>")[0];
+			else
+				data[4] = "";
 			data[5] = "similaranime";
 			Log.d("check", "3");
-			data[6] = stream.split("<url>")[1].split("</url>")[0];
-			data[7] = stream.split("<creators>")[1].split("</creators>")[0];
+			if (stream.contains("<url>"))
+				data[6] = stream.split("<url>")[1].split("</url>")[0];
+			else
+				data[6] = "";
+			if (stream.contains("<creators>"))
+				data[7] = stream.split("<creators>")[1].split("</creators>")[0];
+			else
+				data[7] = "";
 			data[8] = stream.split("<description>")[1].split("</description>")[0];
 			data[9] = stream.split("<ratings>")[1].split("</ratings>")[0];
 			Log.d("check", "4");
 			data[10] = stream.split("<picture>")[1].split("</picture>")[0];
 			data[11] = stream.split("<categories>")[1].split("</categories>")[0];
 			data[12] = stream.split("<resources>")[1].split("</resources>")[0];
-			data[13] = stream.split("<tags>")[1].split("</tags>")[0];
+			if (stream.contains("<tags>"))
+				data[13] = stream.split("<tags>")[1].split("</tags>")[0];
+			else
+				data[13] = "";
 			Log.d("check", "5");
 			data[14] = stream.split("<characters>")[1].split("</characters>")[0];
 			data[15] = stream.split("<episodes>")[1].split("</episodes>")[0];

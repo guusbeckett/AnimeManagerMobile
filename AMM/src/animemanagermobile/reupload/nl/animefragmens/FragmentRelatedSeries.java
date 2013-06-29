@@ -48,6 +48,7 @@ public class FragmentRelatedSeries extends Fragment {
         linlay.setOrientation(LinearLayout.VERTICAL);
         TextView eps = new TextView(this.getActivity());
         if (metadata != null) {
+        	final int type = Integer.parseInt(metadata[16]);
 			ListView lv = new ListView(this.getActivity());
 //	        final ListAdapter adapt = new List(this.getActivity(), parseEps(metadata[15]));
 			final String[] titles = getTitleArray(metadata[4]);
@@ -63,7 +64,9 @@ public class FragmentRelatedSeries extends Fragment {
 						int arg2, long arg3) {
 					Intent openTemp = new Intent(getActivity(), MediaPage.class);
 					openTemp.putExtra("tempMode", true);
-					openTemp.putExtra("mediaID", titles[arg2]);
+					openTemp.putExtra("mediaID", Integer.parseInt(titles[arg2].split("\\^")[1]));
+					openTemp.putExtra("type", ((type==1||type==2)?2:4));
+					startActivity(openTemp);
 					
 				}
 			});
@@ -105,7 +108,11 @@ public class FragmentRelatedSeries extends Fragment {
 	private String[] getTitleArray(String stream) {
 		ArrayList<String> titles = new ArrayList<String>();
 		for (String show : stream.split("<anime id=\"")) {
-			titles.add(show.split(">")[1].split("</anime")[0]+"^"+show.split("\">")[0]);
+			show = show.split("</anime")[0]+"^"+show.split("\"")[0];
+			if (!show.equals("^"))
+				titles.add(show);
+//			titles.add(show.split(">")[1].split("</anime")[0]+"^"+show.split("\"")[0]);
+//			Log.d("lel", show);
 		}
 		return titles.toArray(new String[0]);
 	}

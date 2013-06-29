@@ -73,12 +73,17 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         tempMode = getIntent().getBooleanExtra("tempMode", false);
-        list = DataManage.getList();
+        Log.e("lel", "tempMode is "+tempMode);
+        if (!tempMode)
+        	list = DataManage.getList();
         data = new DataManage();
         point = getIntent().getIntExtra("point", 0);
         Log.d("chehck", "1");
         type = getIntent().getIntExtra("type", 0);
-        media = list[point];
+        if (!tempMode)
+        	media = list[point];
+        else
+        	media = new MediaObject("");
         media.setType(type);
         if (!tempMode)
         	id = DataManage.getID(media.getTitle(), this, type);
