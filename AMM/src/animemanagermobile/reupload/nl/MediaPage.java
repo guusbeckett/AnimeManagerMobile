@@ -41,6 +41,7 @@ import animemanagermobile.reupload.nl.animefragmens.FragmentDescription;
 import animemanagermobile.reupload.nl.animefragmens.FragmentEpisodes;
 import animemanagermobile.reupload.nl.animefragmens.FragmentGeneral;
 import animemanagermobile.reupload.nl.animefragmens.FragmentMangaRead;
+import animemanagermobile.reupload.nl.animefragmens.FragmentRelatedSeries;
 import animemanagermobile.reupload.nl.animefragmens.FragmentRelease;
 import animemanagermobile.reupload.nl.animefragmens.FragmentTags;
 import animemanagermobile.reupload.nl.data.AMMDatabase;
@@ -157,6 +158,8 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
             		FragmentEpisodes.class, null);
             mTabsAdapter.addTab(actionBar.newTab().setText(R.string.frag_chars),
             		FragmentCharacters.class, null);
+            mTabsAdapter.addTab(actionBar.newTab().setText(R.string.frag_related),
+            		FragmentRelatedSeries.class, null);
             if (type == 1)
         	mTabsAdapter.addTab(actionBar.newTab().setText("Releases"),
         			FragmentRelease.class, null);

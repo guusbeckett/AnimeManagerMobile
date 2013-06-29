@@ -18,6 +18,7 @@
     <string name="frag_eps">Episodes</string>
     <string name="frag_cats">Categories</string>
     <string name="frag_tags">Tags</string>
+    <string name="frag_related">Related Series</string>
     <string name="wait_fs">Please wait for filesystem sync</string>
     <string name="ok_button_label">go!</string>
     <string name="meta_storage">Metadata storage</string>
