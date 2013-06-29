@@ -206,7 +206,7 @@ public class AniDBWrapper {
 			//	data[3] += "\n"+item.split("\">")[1].split("</title>")[0];
 			}
 			
-			data[4] = "relatedanime";
+			data[4] = stream.split("<relatedanime>")[1].split("</relatedanime>")[0];
 			data[5] = "similaranime";
 			Log.d("check", "3");
 			data[6] = stream.split("<url>")[1].split("</url>")[0];
