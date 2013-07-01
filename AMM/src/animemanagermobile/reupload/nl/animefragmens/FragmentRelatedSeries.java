@@ -32,6 +32,7 @@ public class FragmentRelatedSeries extends Fragment {
 
 	private MediaObject media;
 	private LinearLayout linlay;
+	private boolean tempMode;
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,6 +49,8 @@ public class FragmentRelatedSeries extends Fragment {
         linlay.setOrientation(LinearLayout.VERTICAL);
         TextView eps = new TextView(this.getActivity());
         if (metadata != null) {
+        	final int origin = Integer.parseInt(metadata[16]);
+        	tempMode = metadata[17].equals("1");
         	final int type = Integer.parseInt(metadata[16]);
 			ListView lv = new ListView(this.getActivity());
 //	        final ListAdapter adapt = new List(this.getActivity(), parseEps(metadata[15]));
@@ -67,6 +70,10 @@ public class FragmentRelatedSeries extends Fragment {
 					openTemp.putExtra("mediaID", Integer.parseInt(titles[arg2].split("\\^")[1]));
 					openTemp.putExtra("type", ((type==1||type==2)?2:4));
 					openTemp.putExtra("title", titles[arg2].split("\\^")[0]);
+					if (!tempMode)
+						openTemp.putExtra("origin", origin);
+					else
+						openTemp.putExtra("origin", act.getIntent().getIntExtra("origin", 0));
 					startActivity(openTemp);
 					
 				}

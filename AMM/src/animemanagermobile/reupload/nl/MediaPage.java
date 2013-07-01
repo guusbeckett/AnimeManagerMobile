@@ -69,6 +69,7 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 	private MediaObject[] list;
 	private String term;
 	private boolean tempMode;
+	private int origintype;
 
 
 	@Override
@@ -90,6 +91,7 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
         if (!tempMode)
         	id = DataManage.getID(media.getTitle(), this, type);
         else {
+        	origintype = getIntent().getIntExtra("origin", 0);
         	media.setTitle(getIntent().getStringExtra("title"));
         	id = getIntent().getIntExtra("mediaID", 0);
         	if (id == 0)
@@ -360,7 +362,7 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 		MediaObject[] templist;
 		templist = data.getMediaList(this, list);
 		data.addNewSeries(this, media, list, templist);
-		if (type == list)
+		if (origintype == list)
 			DataManage.setRefresh(true);
 	}
 
