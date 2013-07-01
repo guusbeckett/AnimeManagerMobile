@@ -1,6 +1,7 @@
 package animemanagermobile.reupload.nl;
 
 import java.io.File;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
 import android.app.ActionBar;
@@ -327,7 +328,7 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 				if (!manga) {
 					addTempToPerm(1);
 					DataManage.register(media.getTitle(), media.getId(), this, 1);
-					new File(getCacheDir()+"/tempmetadata/tempanime"+media.getId()+".xml").renameTo(new File(getExternalFilesDir(null)+"/anime"+media.getId()+".xml"));
+					DataManage.moveFile(getCacheDir()+"/tempmetadata/", "tempanime"+media.getId()+".xml", getExternalFilesDir(null)+"/", "anime"+media.getId()+".xml");
 				}
 				finish();
 				return true;
@@ -336,7 +337,7 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 				if (!manga) {
 					addTempToPerm(2);
 					DataManage.register(media.getTitle(), media.getId(), this, 2);
-					new File(getCacheDir()+"/tempmetadata/tempmanga"+media.getId()+".xml").renameTo(new File(getExternalFilesDir(null)+"/manga"+media.getId()+".xml"));
+					DataManage.moveFile(getCacheDir()+"/tempmetadata/", "tempmanga"+media.getId()+".xml", getExternalFilesDir(null)+"/", "manga"+media.getId()+".xml");
 				}
 				finish();
 				return true;
@@ -359,24 +360,8 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 		MediaObject[] templist;
 		templist = data.getMediaList(this, list);
 		data.addNewSeries(this, media, list, templist);
-//		switch (list) {
-//			case (1):
-//				templist = data.getMediaList(this, 1);
-//				data.addNewSeries(this, media, 2, templist);
-//				break;
-//			case (2):
-//				templist = data.getMediaList(this, 1);
-//				data.addNewSeries(this, media, 1, templist);
-//			break;
-//			case (3):
-//				templist = data.getMediaList(this, 4);
-//				data.addNewSeries(this, media, 4, templist);
-//			break;
-//			case (4):
-//				templist = data.getMediaList(this, 3);
-//				data.addNewSeries(this, media, 3, templist);
-//			break;
-//		}
+		if (type == list)
+			DataManage.setRefresh(true);
 	}
 
 	private void handleMangaMetadata(String term, int type) {
@@ -478,7 +463,6 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 	}
 
 	private void destroyMetadata() {
-		// TODO Auto-generated method stub
 		if (id!=0) {
 			if (type == 1 || type == 2) {
 				DataManage.deleteExternalFile(this.getExternalFilesDir(null) + "/images/" + metadataParse[10], this);
@@ -518,7 +502,6 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
             //this.recreate();
             
         }
-        
 	}
 	
 	@Override
