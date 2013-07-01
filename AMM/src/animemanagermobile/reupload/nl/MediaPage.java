@@ -1,5 +1,6 @@
 package animemanagermobile.reupload.nl;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import android.app.ActionBar;
@@ -88,6 +89,7 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
         if (!tempMode)
         	id = DataManage.getID(media.getTitle(), this, type);
         else {
+        	media.setTitle(getIntent().getStringExtra("title"));
         	id = getIntent().getIntExtra("mediaID", 0);
         	if (id == 0)
         		finish();
@@ -177,134 +179,205 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.media_view, menu);
-        if (id != 0) {
-        	menu.add(0, 7, 0, "Refresh Metadata");
-        	menu.add(0, 5, 0, "Unlink Metadata"); 
-        }
-        switch (type) {
-			case (1):
-				menu.add(0, 9, 0, "Move to seen");
-				break;
-			case (2):
-				menu.add(0, 9, 0, "Move to watching");
-				break;
-			case (3):
-				menu.add(0, 9, 0, "Move to read");
-				break;
-			case (4):
-				menu.add(0, 9, 0, "Move to seen reading");
-				break;
-        }
-        menu.add(0, 6, 0, "Delete series"); 
-        menu.add(0, 8, 0, "Search custom"); 
-		return true;
+		if (!tempMode) {
+	        getMenuInflater().inflate(R.menu.media_view, menu);
+	        if (id != 0) {
+	        	menu.add(0, 7, 0, "Refresh Metadata");
+	        	menu.add(0, 5, 0, "Unlink Metadata"); 
+	        }
+	        switch (type) {
+				case (1):
+					menu.add(0, 9, 0, "Move to seen");
+					break;
+				case (2):
+					menu.add(0, 9, 0, "Move to watching");
+					break;
+				case (3):
+					menu.add(0, 9, 0, "Move to read");
+					break;
+				case (4):
+					menu.add(0, 9, 0, "Move to seen reading");
+					break;
+	        }
+	        menu.add(0, 6, 0, "Delete series"); 
+	        menu.add(0, 8, 0, "Search custom"); 
+			return true;
+		}
+		else {
+			switch (type) {
+				case (2):
+					menu.add(0, 1, 0, "Add to watching");
+					menu.add(0, 2, 0, "Add to seen");
+					menu.add(0, 3, 0, "Add to backlog"); //TODO make
+					break;
+			}
+			return true;
+		}
 
     }
 	
 	@Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.fetch_metadata:
-                //newGame();
-            	switch (type) {
-            		case (1):
-            			handleAnimeMetadata(null, type);
-            			break;
-            		case (2):
-            			handleAnimeMetadata(null, type);
-            			break;
-            		case (3):
-            			handleMangaMetadata(null, type);
-            			break;
-            		case (4):
-            			handleMangaMetadata(null, type);
-            			break;
-            	}
-                return true;
-            case android.R.id.home:
+		if (!tempMode) {
+	        switch (item.getItemId()) {
+	            case R.id.fetch_metadata:
+	                //newGame();
+	            	switch (type) {
+	            		case (1):
+	            			handleAnimeMetadata(null, type);
+	            			break;
+	            		case (2):
+	            			handleAnimeMetadata(null, type);
+	            			break;
+	            		case (3):
+	            			handleMangaMetadata(null, type);
+	            			break;
+	            		case (4):
+	            			handleMangaMetadata(null, type);
+	            			break;
+	            	}
+	                return true;
+	            case android.R.id.home:
+		            // app icon in action bar clicked; go home
+	            	finish();
+		            return true;
+	            case 5:
+	            	destroyMetadata();
+	            	this.recreate();
+	            	return true;
+	            case 6:
+	            	destroyMetadata();
+	            	destroyMedia();
+	            	this.finish();
+	            	return true;
+	            case 7:
+	            	switch (type) {
+		        		case (1):
+		        			AniDBWrapper.grabAnimeMetadata(id, this);
+		        			recreate();
+		        			break;
+		        		case (2):
+		        			AniDBWrapper.grabAnimeMetadata(id, this);
+		        			recreate();
+		        			break;
+		        		case (3):
+		        			MangaUpdatesClient.grabMangaMetadata(id, this);
+		        			recreate();
+		        			break;
+		        		case (4):
+		        			MangaUpdatesClient.grabMangaMetadata(id, this);
+		        			recreate();
+		        			break;
+	            	}
+	            	return true;
+	            case 8:
+	            	term = null;
+	            	AlertDialog.Builder alert = new AlertDialog.Builder(this);
+	            	alert.setTitle("Insert a searchterm: ");
+	
+	                LinearLayout ll = new LinearLayout(this);
+	        	    ll.setOrientation(LinearLayout.VERTICAL);
+	        	    final EditText et1 = new EditText(this);
+	        	    et1.setHint("term");
+	        	    ll.addView(et1);
+	                alert.setView(ll);
+	                alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+	                    public void onClick(DialogInterface dialog, int whichButton) {
+	                      term = et1.getText().toString();
+	                      if (term != null) {
+	      	            	switch (type) {
+	      		        		case (1):
+	      		        			handleAnimeMetadata(term, type);
+	      		        			break;
+	      		        		case (2):
+	      		        			handleAnimeMetadata(term, type);
+	      		        			break;
+	      		        		case (3):
+	      		        			handleMangaMetadata(term, type);
+	      		        			break;
+	      		        		case (4):
+	      		        			handleMangaMetadata(term, type);
+	      		        			break;
+	      	            	}
+	                      }
+	                      }
+	                    });
+	
+	                    alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+	                      public void onClick(DialogInterface dialog, int whichButton) {
+	                        // Cancel.
+	                      }
+	                    });
+	                alert.show();
+	               
+	            	return true;
+	            case (9):
+	            	MoveToOtherList();
+	            	return true;
+	            default:
+	                return super.onOptionsItemSelected(item);
+	            
+	        }
+		}
+		boolean manga = (type==3||type==4);
+		switch (item.getItemId()) {
+			case (1):
+				//Add to watching/reading
+				if (!manga) {
+					addTempToPerm(1);
+					DataManage.register(media.getTitle(), media.getId(), this, 1);
+					new File(getCacheDir()+"/tempmetadata/tempanime"+media.getId()+".xml").renameTo(new File(getExternalFilesDir(null)+"/anime"+media.getId()+".xml"));
+				}
+				finish();
+				return true;
+			case (2):
+				//Add to seen/read
+				if (!manga) {
+					addTempToPerm(2);
+					DataManage.register(media.getTitle(), media.getId(), this, 2);
+					new File(getCacheDir()+"/tempmetadata/tempmanga"+media.getId()+".xml").renameTo(new File(getExternalFilesDir(null)+"/manga"+media.getId()+".xml"));
+				}
+				finish();
+				return true;
+			case (3):
+				//Add to backlog
+//				addTempToPerm(5);
+//				DataManage.register(media.getTitle(), media.getId(), this, 5);
+				finish();
+				return true;
+			case android.R.id.home:
 	            // app icon in action bar clicked; go home
-            	finish();
+	        	finish();
 	            return true;
-            case 5:
-            	destroyMetadata();
-            	this.recreate();
-            	return true;
-            case 6:
-            	destroyMetadata();
-            	destroyMedia();
-            	this.finish();
-            	return true;
-            case 7:
-            	switch (type) {
-	        		case (1):
-	        			AniDBWrapper.grabAnimeMetadata(id, this);
-	        			recreate();
-	        			break;
-	        		case (2):
-	        			AniDBWrapper.grabAnimeMetadata(id, this);
-	        			recreate();
-	        			break;
-	        		case (3):
-	        			MangaUpdatesClient.grabMangaMetadata(id, this);
-	        			recreate();
-	        			break;
-	        		case (4):
-	        			MangaUpdatesClient.grabMangaMetadata(id, this);
-	        			recreate();
-	        			break;
-            	}
-            	return true;
-            case 8:
-            	term = null;
-            	AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            	alert.setTitle("Insert a searchterm: ");
-
-                LinearLayout ll = new LinearLayout(this);
-        	    ll.setOrientation(LinearLayout.VERTICAL);
-        	    final EditText et1 = new EditText(this);
-        	    et1.setHint("term");
-        	    ll.addView(et1);
-                alert.setView(ll);
-                alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                      term = et1.getText().toString();
-                      if (term != null) {
-      	            	switch (type) {
-      		        		case (1):
-      		        			handleAnimeMetadata(term, type);
-      		        			break;
-      		        		case (2):
-      		        			handleAnimeMetadata(term, type);
-      		        			break;
-      		        		case (3):
-      		        			handleMangaMetadata(term, type);
-      		        			break;
-      		        		case (4):
-      		        			handleMangaMetadata(term, type);
-      		        			break;
-      	            	}
-                      }
-                      }
-                    });
-
-                    alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                      public void onClick(DialogInterface dialog, int whichButton) {
-                        // Cancel.
-                      }
-                    });
-                alert.show();
-               
-            	return true;
-            case (9):
-            	MoveToOtherList();
-            	return true;
-            default:
+			default:
                 return super.onOptionsItemSelected(item);
-            
-        }
+		}
     }
+	
+	public void addTempToPerm(int list) {
+		MediaObject[] templist;
+		templist = data.getMediaList(this, list);
+		data.addNewSeries(this, media, list, templist);
+//		switch (list) {
+//			case (1):
+//				templist = data.getMediaList(this, 1);
+//				data.addNewSeries(this, media, 2, templist);
+//				break;
+//			case (2):
+//				templist = data.getMediaList(this, 1);
+//				data.addNewSeries(this, media, 1, templist);
+//			break;
+//			case (3):
+//				templist = data.getMediaList(this, 4);
+//				data.addNewSeries(this, media, 4, templist);
+//			break;
+//			case (4):
+//				templist = data.getMediaList(this, 3);
+//				data.addNewSeries(this, media, 3, templist);
+//			break;
+//		}
+	}
 
 	private void handleMangaMetadata(String term, int type) {
 		AlertDialog mInitializeDialog = ProgressDialog.show(this, "", "Fetching metadata. Please wait...", true);
@@ -446,6 +519,13 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
             
         }
         
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		DataManage.cacheObject2(metadataParse);
+		DataManage.cacheObject(media);
 	}
 
 	@Override

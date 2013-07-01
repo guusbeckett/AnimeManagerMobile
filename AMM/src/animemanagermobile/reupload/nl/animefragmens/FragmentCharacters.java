@@ -63,68 +63,70 @@ public class FragmentCharacters extends Fragment {
         
         
 		if (metadata != null) {
-//			String[][] chara = parseCharacters(metadata[14]);
-			ListView lv = new ListView(this.getActivity());
-	        final CharacterListAdapter adapt = new CharacterListAdapter(this.getActivity(), parseCharacters(metadata[14]));
-	        lv.setAdapter(adapt);
-	        final Activity act = getActivity();
-	        lv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-	        lv.setOnItemClickListener(new OnItemClickListener() {
-				@Override
-				public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-						long arg3) {
-					AlertDialog.Builder alert = new AlertDialog.Builder(act);
-	                LinearLayout ll = new LinearLayout(getActivity());
-	        	    ll.setOrientation(LinearLayout.VERTICAL);
-	                alert.setView(ll);
-	                Bitmap bm = null;
-	                if (!((String[])adapt.getItem(arg2))[4].equals("")) {
-		            	if (DataManage.doesExternalFileExist("/images/character/" + ((String[])adapt.getItem(arg2))[4], act)) {
-		            		bm = DataManage.loadImageFromExternal("character/" + ((String[])adapt.getItem(arg2))[4], act);
-		            		
-		                }
-		            	else {
-		                	AniDBWrapper.fetchImage(((String[])adapt.getItem(arg2))[4], act, "character");
-		                	bm = DataManage.loadImageFromExternal("character/"+((String[])adapt.getItem(arg2))[4], act);
-		                	//Log.d("hai", "FnF");
-		            	}
-	        		}
-	                TextView title = new TextView(act);
-	                TextView rest = new TextView(act);
-	                rest.setText("Type: " + ((String[])adapt.getItem(arg2))[0] 
-						+ "\nGender: " + ((String[])adapt.getItem(arg2))[2]
-						+ "\nSeiyuu: " + ((String[])adapt.getItem(arg2))[5]);
-	                title.setGravity(Gravity.CENTER);
-	            	title.setText(((String[])adapt.getItem(arg2))[1]);
-	            	title.setTypeface(null, Typeface.BOLD);
-	            	ll.addView(title);
-	            	ll.addView(rest);
-	            	ImageView img = new ImageView(act);
-	            	img.setMinimumWidth(linlay.getWidth());
-	            	img.setImageBitmap(bm);
-	            	
-	            	ll.addView(img);
-                    alert.show();
-					// TODO Auto-generated method stub
-//					Intent intent = new Intent(activ, MangaView.class);
-//					intent.putExtra("title", media.getTitle());
-//					intent.putExtra("chapter", arg2+1);
-//					startActivity(intent);
-//					Log.d("start", media.getTitle());
-					
-				}
-			});
-	        Log.d("ne", "e");
-	        view.addView(lv);
-	        Log.d("ne", "e");
-//				TextView tv = new TextView(this.getActivity());
-//				tv.setText("\n\nName: " + charl[1]
-//						+ "\nType: " + charl[0] 
-//						+ "\nGender: " + charl[2]
-//						+ "\nCharacter type: " + charl[3] 
-//						+ "\nPicture: " + charl[4]
-//						+ "\nSeiyuu: " + charl[5]);
-//				linlay.addView(tv);
+			if (metadata[14] != null) {
+	//			String[][] chara = parseCharacters(metadata[14]);
+				ListView lv = new ListView(this.getActivity());
+		        final CharacterListAdapter adapt = new CharacterListAdapter(this.getActivity(), parseCharacters(metadata[14]));
+		        lv.setAdapter(adapt);
+		        final Activity act = getActivity();
+		        lv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		        lv.setOnItemClickListener(new OnItemClickListener() {
+					@Override
+					public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+							long arg3) {
+						AlertDialog.Builder alert = new AlertDialog.Builder(act);
+		                LinearLayout ll = new LinearLayout(getActivity());
+		        	    ll.setOrientation(LinearLayout.VERTICAL);
+		                alert.setView(ll);
+		                Bitmap bm = null;
+		                if (!((String[])adapt.getItem(arg2))[4].equals("")) {
+			            	if (DataManage.doesExternalFileExist("/images/character/" + ((String[])adapt.getItem(arg2))[4], act)) {
+			            		bm = DataManage.loadImageFromExternal("character/" + ((String[])adapt.getItem(arg2))[4], act);
+			            		
+			                }
+			            	else {
+			                	AniDBWrapper.fetchImage(((String[])adapt.getItem(arg2))[4], act, "character");
+			                	bm = DataManage.loadImageFromExternal("character/"+((String[])adapt.getItem(arg2))[4], act);
+			                	//Log.d("hai", "FnF");
+			            	}
+		        		}
+		                TextView title = new TextView(act);
+		                TextView rest = new TextView(act);
+		                rest.setText("Type: " + ((String[])adapt.getItem(arg2))[0] 
+							+ "\nGender: " + ((String[])adapt.getItem(arg2))[2]
+							+ "\nSeiyuu: " + ((String[])adapt.getItem(arg2))[5]);
+		                title.setGravity(Gravity.CENTER);
+		            	title.setText(((String[])adapt.getItem(arg2))[1]);
+		            	title.setTypeface(null, Typeface.BOLD);
+		            	ll.addView(title);
+		            	ll.addView(rest);
+		            	ImageView img = new ImageView(act);
+		            	img.setMinimumWidth(linlay.getWidth());
+		            	img.setImageBitmap(bm);
+		            	
+		            	ll.addView(img);
+	                    alert.show();
+						// TODO Auto-generated method stub
+	//					Intent intent = new Intent(activ, MangaView.class);
+	//					intent.putExtra("title", media.getTitle());
+	//					intent.putExtra("chapter", arg2+1);
+	//					startActivity(intent);
+	//					Log.d("start", media.getTitle());
+						
+					}
+				});
+		        Log.d("ne", "e");
+		        view.addView(lv);
+		        Log.d("ne", "e");
+	//				TextView tv = new TextView(this.getActivity());
+	//				tv.setText("\n\nName: " + charl[1]
+	//						+ "\nType: " + charl[0] 
+	//						+ "\nGender: " + charl[2]
+	//						+ "\nCharacter type: " + charl[3] 
+	//						+ "\nPicture: " + charl[4]
+	//						+ "\nSeiyuu: " + charl[5]);
+	//				linlay.addView(tv);
+			}
 		}
 		
 		

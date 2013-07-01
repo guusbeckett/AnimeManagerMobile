@@ -11,6 +11,10 @@ public class MediaObject implements Serializable {
 	 */
 	private static final long serialVersionUID = -6107033642861376397L;
 	private String title;
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
 	private int progress;
 	private int total;
 	private int id;

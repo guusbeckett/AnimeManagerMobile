@@ -233,7 +233,8 @@ public class AniDBWrapper {
 			else
 				data[13] = "";
 			Log.d("check", "5");
-			data[14] = stream.split("<characters>")[1].split("</characters>")[0];
+			if (stream.contains("<characters>"))
+				data[14] = stream.split("<characters>")[1].split("</characters>")[0];
 			data[15] = stream.split("<episodes>")[1].split("</episodes>")[0];
 			Log.d("check", "6");
 			return data;

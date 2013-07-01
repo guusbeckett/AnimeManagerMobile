@@ -54,7 +54,7 @@ public class FragmentGeneral extends Fragment {
 		if (DataManage.isCached2())
 			metadata = (String[]) DataManage.getCached2();
 		if (metadata != null)
-			tempMode = metadata[16].equals("1");
+			tempMode = metadata[17].equals("1");
 		ScrollView view = (ScrollView) v.findViewById(R.id.anime_frag);
         linlay = new LinearLayout(this.getActivity());
         view.addView(linlay);
@@ -72,10 +72,10 @@ public class FragmentGeneral extends Fragment {
         	Bitmap bm = null;
         	type = Integer.parseInt(metadata[16]);
         	if (!tempMode) {
+        		Log.d("type", type+"");
 	        	if (type == 1 || type == 2) {
 	        		if (DataManage.doesExternalFileExist("/images/" + metadata[10], this.getActivity())) {
 	        			bm = DataManage.loadImageFromExternal(metadata[10], this.getActivity());
-	        			
 	            	}
 	        		else {
 	            		AniDBWrapper.fetchImage(metadata[10], this.getActivity(), "");

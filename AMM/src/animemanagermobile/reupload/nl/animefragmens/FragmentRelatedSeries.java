@@ -66,6 +66,7 @@ public class FragmentRelatedSeries extends Fragment {
 					openTemp.putExtra("tempMode", true);
 					openTemp.putExtra("mediaID", Integer.parseInt(titles[arg2].split("\\^")[1]));
 					openTemp.putExtra("type", ((type==1||type==2)?2:4));
+					openTemp.putExtra("title", titles[arg2].split("\\^")[0]);
 					startActivity(openTemp);
 					
 				}
@@ -108,11 +109,15 @@ public class FragmentRelatedSeries extends Fragment {
 	private String[] getTitleArray(String stream) {
 		ArrayList<String> titles = new ArrayList<String>();
 		for (String show : stream.split("<anime id=\"")) {
-			show = show.split("</anime")[0]+"^"+show.split("\"")[0];
-			if (!show.equals("^"))
-				titles.add(show);
-//			titles.add(show.split(">")[1].split("</anime")[0]+"^"+show.split("\"")[0]);
-//			Log.d("lel", show);
+			Log.d("lel", show);
+			//String newshow = show.split(">")[1].split("</anime")[0].replace(">", "")+"^"+show.split("\"")[0];
+			if (show.contains("anime")) {
+				show = show.split(">")[1].split("</anime")[0]+"^"+show.split("\"")[0];
+				if (!show.split("\\^")[0].equals(""))
+					titles.add(show);
+	//			titles.add(show.split(">")[1].split("</anime")[0]+"^"+show.split("\"")[0]);
+				Log.d("lel", show);
+			}
 		}
 		return titles.toArray(new String[0]);
 	}
