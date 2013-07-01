@@ -338,6 +338,32 @@ public class DataManage {
 		return (c.getCount() > 0);
 	}
 	
+	public static int getListWhereIDisRegistered(int ID, Activity act) {
+		/*String in = readRegistered(act);
+	       //TODO fix
+		return false;*/
+		SQLiteOpenHelper ammData = new AMMDatabase(act);
+		SQLiteDatabase ammDatabase =  ammData.getWritableDatabase();
+		Cursor c = ammDatabase.query("Registered", new String[]{"Type"}, "ID='"+ ID + "'", null, null, null, null);
+		if (c.getCount() > 0) {
+			c.moveToFirst();
+			return c.getInt(c.getColumnIndex("Type"));
+		} else return 0;
+	}
+	
+	public static String getTitleFromRegisteredID(int ID, Activity act) {
+		/*String in = readRegistered(act);
+	       //TODO fix
+		return false;*/
+		SQLiteOpenHelper ammData = new AMMDatabase(act);
+		SQLiteDatabase ammDatabase =  ammData.getWritableDatabase();
+		Cursor c = ammDatabase.query("Registered", new String[]{"Name"}, "ID='"+ ID + "'", null, null, null, null);
+		if (c.getCount() > 0) {
+			c.moveToFirst();
+			return c.getString(c.getColumnIndex("Name"));
+		} else return null;
+	}
+	
 	public static int getID(String show, Activity act, int type) {
 		SQLiteOpenHelper ammData = new AMMDatabase(act);
 		SQLiteDatabase ammDatabase =  ammData.getWritableDatabase();

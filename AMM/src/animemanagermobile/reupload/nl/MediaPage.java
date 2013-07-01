@@ -70,27 +70,55 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 	private String term;
 	private boolean tempMode;
 	private int origintype;
+	private boolean standAlone;
 
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        standAlone = getIntent().getBooleanExtra("standalone", false);
         tempMode = getIntent().getBooleanExtra("tempMode", false);
         Log.e("lel", "tempMode is "+tempMode);
-        if (!tempMode)
-        	list = DataManage.getList();
         data = new DataManage();
+        if (!tempMode && !standAlone)
+        	list = DataManage.getList();
+        else if (standAlone) {
+        	int listNum = getIntent().getIntExtra("list", 0);
+        	if (listNum != 0) 
+        		list = data.getMediaList(this, listNum);
+        	else {
+        		Log.e("list 0 is rejected", "sorry");
+        		finish();
+        	}
+        }
         point = getIntent().getIntExtra("point", 0);
         Log.d("chehck", "1");
-        type = getIntent().getIntExtra("type", 0);
-        if (!tempMode)
+        if (!standAlone)
+        	type = getIntent().getIntExtra("type", 0);
+        else
+        	type = getIntent().getIntExtra("list", 0);
+        if (!tempMode && !standAlone)
         	media = list[point];
+        else if (standAlone) {
+        	id = getIntent().getIntExtra("mediaID", 0);
+        	String title = DataManage.getTitleFromRegisteredID(id, this);
+        	for (MediaObject object : list) {
+        		if (object.getTitle().equals(title)) {
+        			media = object;
+        			break;
+        		}
+        	}
+        	if (media == null) {
+    			Log.d("title", title + " is reject and has no results");
+    			finish();
+    		}
+        }
         else
         	media = new MediaObject("");
         media.setType(type);
-        if (!tempMode)
+        if (!tempMode && !standAlone)
         	id = DataManage.getID(media.getTitle(), this, type);
-        else {
+        else  if (tempMode){
         	origintype = getIntent().getIntExtra("origin", 0);
         	media.setTitle(getIntent().getStringExtra("title"));
         	id = getIntent().getIntExtra("mediaID", 0);
@@ -511,6 +539,8 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 		super.onResume();
 		DataManage.cacheObject2(metadataParse);
 		DataManage.cacheObject(media);
+		if (DataManage.getRefresh() && !tempMode)
+			list = data.getMediaList(this, type);
 	}
 
 	@Override
@@ -523,13 +553,7 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 				AniDBWrapper.grabAnimeMetadata(Integer.parseInt(title[selectedIndex].split("\\^")[1]), this);
 			else 
 				MangaUpdatesClient.grabMangaMetadata(Integer.parseInt(title[selectedIndex].split("\\^")[1]), this);
-//			DataManage.register(media.getTitle(), Integer.parseInt(title[selectedIndex].split("\\^")[1]), this, temptype);
-//			if (temptype == 0)
-//				AniDBWrapper.grabAnimeMetadata(Integer.parseInt(title[selectedIndex].split("\\^")[1]), this);
-//			else
-//				MangaUpdatesClient.grabMangaMetadata(Integer.parseInt(title[0].split("\\^")[1]), this);
 			this.recreate();
-//        	finish();
 		}
 		Log.d("select", selectedIndex+"");
 		

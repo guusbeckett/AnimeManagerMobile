@@ -65,16 +65,26 @@ public class FragmentRelatedSeries extends Fragment {
 				@Override
 				public void onItemClick(AdapterView<?> arg0, View arg1,
 						int arg2, long arg3) {
-					Intent openTemp = new Intent(getActivity(), MediaPage.class);
-					openTemp.putExtra("tempMode", true);
-					openTemp.putExtra("mediaID", Integer.parseInt(titles[arg2].split("\\^")[1]));
-					openTemp.putExtra("type", ((type==1||type==2)?2:4));
-					openTemp.putExtra("title", titles[arg2].split("\\^")[0]);
-					if (!tempMode)
-						openTemp.putExtra("origin", origin);
-					else
-						openTemp.putExtra("origin", act.getIntent().getIntExtra("origin", 0));
-					startActivity(openTemp);
+					int list = DataManage.getListWhereIDisRegistered(Integer.parseInt(titles[arg2].split("\\^")[1]), act);
+					if (list == 0) {
+						Intent openTemp = new Intent(getActivity(), MediaPage.class);
+						openTemp.putExtra("tempMode", true);
+						openTemp.putExtra("mediaID", Integer.parseInt(titles[arg2].split("\\^")[1]));
+						openTemp.putExtra("type", ((type==1||type==2)?2:4));
+						openTemp.putExtra("title", titles[arg2].split("\\^")[0]);
+						if (!tempMode)
+							openTemp.putExtra("origin", origin);
+						else
+							openTemp.putExtra("origin", act.getIntent().getIntExtra("origin", 0));
+						startActivity(openTemp);
+					}
+					else {
+						Intent openExisting = new Intent(getActivity(), MediaPage.class);
+						openExisting.putExtra("standalone", true);
+						openExisting.putExtra("list", list);
+						openExisting.putExtra("mediaID", Integer.parseInt(titles[arg2].split("\\^")[1]));
+						startActivity(openExisting);
+					}
 					
 				}
 			});
