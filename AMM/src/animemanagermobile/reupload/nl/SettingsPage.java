@@ -1,15 +1,10 @@
 package animemanagermobile.reupload.nl;
 
-import android.annotation.TargetApi;
 import android.app.ActionBar;
-import android.app.ActionBar.Tab;
-import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.view.Menu;
 import android.view.MenuItem;
 import animemanagermobile.reupload.nl.optionfragments.FileLocationFrag;
 import animemanagermobile.reupload.nl.optionfragments.MangaSelectionFragment;
@@ -45,6 +40,7 @@ public class SettingsPage extends FragmentActivity {
         		MangaSelectionFragment.class, null);
 	}
 	
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
 	        case android.R.id.home:

@@ -2,7 +2,6 @@ package animemanagermobile.reupload.nl.mangareader.sources;
 
 import android.app.Activity;
 import android.util.Log;
-import android.widget.Toast;
 
 public abstract class SourceClient {
 

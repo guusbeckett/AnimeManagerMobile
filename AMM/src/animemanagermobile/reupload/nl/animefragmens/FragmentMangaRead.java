@@ -1,8 +1,6 @@
 package animemanagermobile.reupload.nl.animefragmens;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,12 +12,8 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.Toast;
 import animemanagermobile.reupload.nl.MediaObject;
 import animemanagermobile.reupload.nl.R;
@@ -29,7 +23,6 @@ import animemanagermobile.reupload.nl.asynctasks.FetchMangaSources.fetchManga;
 import animemanagermobile.reupload.nl.data.DataManage;
 import animemanagermobile.reupload.nl.mangareader.MangaListAdapter;
 import animemanagermobile.reupload.nl.mangareader.MangaView;
-import animemanagermobile.reupload.nl.mangareader.sources.MangaUpdatesSource;
 
 public class FragmentMangaRead extends Fragment implements fetchManga {
 

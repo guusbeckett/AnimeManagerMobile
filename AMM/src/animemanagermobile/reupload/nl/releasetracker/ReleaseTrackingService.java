@@ -1,10 +1,5 @@
 package animemanagermobile.reupload.nl.releasetracker;
 
-import java.io.IOException;
-
-import org.apache.http.ParseException;
-import org.apache.http.util.EntityUtils;
-
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -16,7 +11,6 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 import android.os.Process;
-import animemanagermobile.reupload.nl.data.AniDBWrapper;
 
 public class ReleaseTrackingService extends Service {
   private Looper mServiceLooper;

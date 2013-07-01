@@ -4,10 +4,6 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,19 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import animemanagermobile.reupload.nl.MediaObject;
 import animemanagermobile.reupload.nl.R;
-import animemanagermobile.reupload.nl.animefragmens.listadapters.CharacterListAdapter;
 import animemanagermobile.reupload.nl.animefragmens.listadapters.EpisodeListAdapter;
-import animemanagermobile.reupload.nl.data.AMMDatabase;
-import animemanagermobile.reupload.nl.data.AniDBWrapper;
 import animemanagermobile.reupload.nl.data.DataManage;
 
 public class FragmentEpisodes extends Fragment {

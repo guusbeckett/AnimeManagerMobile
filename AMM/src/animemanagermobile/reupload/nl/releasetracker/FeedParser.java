@@ -1,10 +1,6 @@
 package animemanagermobile.reupload.nl.releasetracker;
 
 import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Random;
-
 import org.apache.http.ParseException;
 import org.apache.http.util.EntityUtils;
 
@@ -17,7 +13,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Vibrator;
-import android.renderscript.RenderScript.Priority;
 import android.support.v4.app.NotificationCompat;
 import android.util.Base64;
 import android.util.Log;

@@ -24,20 +24,23 @@ public class MediaObject implements Serializable {
 		this.title = title;
 		this.progress = progress;
 		this.total = total;
+		this.id = 0;
 	}
 
 	public MediaObject(String string) {
 		this.title = string;
 		this.progress = 0;
 		this.total = 0;
+		this.id = 0;
 	}
 	
-	public MediaObject(String string, int i) {
+	public MediaObject(String string, int ID) {
 		this.title = string;
-		this.progress = i;
+		this.progress = 0;
 		this.total = 0;
+		this.id = ID;
 	}
-
+	
 	public String getTitle() {
 		return title;
 	}

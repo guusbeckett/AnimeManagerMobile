@@ -8,21 +8,17 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.renderscript.Font.Style;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import animemanagermobile.reupload.nl.AnimeObject;
 import animemanagermobile.reupload.nl.MediaObject;
 import animemanagermobile.reupload.nl.R;
 import animemanagermobile.reupload.nl.data.AniDBWrapper;
@@ -164,7 +160,8 @@ public class FragmentGeneral extends Fragment {
                 np.setValue(media.getProgress());
                 alert.setView(np);
                 alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                	public void onClick(DialogInterface dialog, int whichButton) {
+                	@Override
+					public void onClick(DialogInterface dialog, int whichButton) {
                 		media.setProgress(np.getValue());
                 		data.writeSeriesDetails(act, media, point, type, list);
                 		act.recreate();
@@ -172,7 +169,8 @@ public class FragmentGeneral extends Fragment {
                 });
 
                 alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                  public void onClick(DialogInterface dialog, int whichButton) {
+                  @Override
+				public void onClick(DialogInterface dialog, int whichButton) {
                     // Cancel.
                   }
                 });

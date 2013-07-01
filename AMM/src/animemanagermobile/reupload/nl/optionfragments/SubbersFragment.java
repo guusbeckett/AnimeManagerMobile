@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -14,18 +13,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TextView;
-import animemanagermobile.reupload.nl.MediaObject;
 import animemanagermobile.reupload.nl.R;
 import animemanagermobile.reupload.nl.data.AMMDatabase;
-import animemanagermobile.reupload.nl.data.DataManage;
 
 public class SubbersFragment extends Fragment {
 
@@ -49,7 +44,8 @@ public class SubbersFragment extends Fragment {
         final Activity act = this.getActivity();
         destroyMeta.setText("Add a fansubteam");
         destroyMeta.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+            @Override
+			public void onClick(View v) {
             	AlertDialog.Builder alert = new AlertDialog.Builder(act);
             	alert.setTitle("Add a fansubber: ");
 
@@ -63,7 +59,8 @@ public class SubbersFragment extends Fragment {
         	    ll.addView(et2);
                 alert.setView(ll);
                 alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
+                    @Override
+					public void onClick(DialogInterface dialog, int whichButton) {
                     	ContentValues cv = new ContentValues();
                     	cv.put("Name", et1.getText().toString());
                     	cv.put("RSS_URL", et2.getText().toString());
@@ -74,7 +71,8 @@ public class SubbersFragment extends Fragment {
                     });
 
                     alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                      public void onClick(DialogInterface dialog, int whichButton) {
+                      @Override
+					public void onClick(DialogInterface dialog, int whichButton) {
                         // Cancel.
                       }
                     });

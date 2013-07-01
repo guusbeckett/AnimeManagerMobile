@@ -27,11 +27,13 @@ public class FetchMangaSources extends AsyncTask<String, Integer, Long> {
     	this.act = act;
     }
 
-    protected void onProgressUpdate(Integer... progress) {
+    @Override
+	protected void onProgressUpdate(Integer... progress) {
 //        setProgressPercent(progress[0]);
     }
 
-    protected void onPostExecute(Long result) {
+    @Override
+	protected void onPostExecute(Long result) {
 //        showDialog("Downloaded " + result + " bytes");
     	fetches.isDone();
     }

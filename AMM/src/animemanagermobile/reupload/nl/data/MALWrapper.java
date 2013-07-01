@@ -2,11 +2,9 @@ package animemanagermobile.reupload.nl.data;
 
 import java.io.IOException;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.ParseException;
 import org.apache.http.util.EntityUtils;
 
-import android.content.Entity;
 import android.util.Log;
 
 public class MALWrapper {

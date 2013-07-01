@@ -2,22 +2,14 @@ package animemanagermobile.reupload.nl;
 
 import android.os.Bundle;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import animemanagermobile.reupload.nl.data.MangaUpdatesClient;
-import animemanagermobile.reupload.nl.dialogs.WaitDialog;
-import animemanagermobile.reupload.nl.mangareader.MangaView;
-import animemanagermobile.reupload.nl.mangareader.sources.MangaUpdatesSource;
 import animemanagermobile.reupload.nl.releasetracker.ReleaseTrackingService;
 import animemanagermobile.reupload.nl.storages.SkyDriveFS;
 
@@ -41,6 +33,8 @@ public class MainMenu extends Activity {
 	        SkyDriveFS lel = new SkyDriveFS(this);
 	        lel.trulyInit();
         }
+     // Get the SearchView and set the searchable configuration
+
         //lel.findWatchingFile(this);
         //MangaUpdatesClient.getMostLikelyID("lel", false);
      // Restore preferences
@@ -53,7 +47,8 @@ public class MainMenu extends Activity {
         	but.setText("Open settings menu");
         	final Intent intent_settings = new Intent(this, SettingsPage.class);
         	but.setOnClickListener(new View.OnClickListener() {
-	            public void onClick(View v) {
+	            @Override
+				public void onClick(View v) {
 	            	startActivity(intent_settings);
 	            }
 	        });
@@ -69,25 +64,29 @@ public class MainMenu extends Activity {
 	        final Button viewListButton = (Button) findViewById(R.id.button3);
 	        final Button viewReadManga = (Button) findViewById(R.id.button4);
 	        editAnimeButton.setOnClickListener(new View.OnClickListener() {
-	            public void onClick(View v) {
+	            @Override
+				public void onClick(View v) {
 	            	intent1.putExtra("type", 1);
 	            	startActivity(intent1);
 	            }
 	        });
 	        editMangaButton.setOnClickListener(new View.OnClickListener() {
-	        	public void onClick(View v) {
+	        	@Override
+				public void onClick(View v) {
 	        		intent1.putExtra("type", 3);
 	        		startActivity(intent1);
 	        	}
 	        });
 	        viewListButton.setOnClickListener(new View.OnClickListener() {
-	        	public void onClick(View v) {
+	        	@Override
+				public void onClick(View v) {
 	        		intent1.putExtra("type", 2);
 	        		startActivity(intent1);
 	        	}
 	        });
 	        viewReadManga.setOnClickListener(new View.OnClickListener() {
-	        	public void onClick(View v) {
+	        	@Override
+				public void onClick(View v) {
 	        		intent1.putExtra("type", 4);
 	        		startActivity(intent1);
 	        	}
@@ -105,10 +104,16 @@ public class MainMenu extends Activity {
                 //newGame();
             	startActivity(intent_settings);
                 return true;
+            case R.id.menu_search:
+            	Intent i = new Intent(this, SearchAMM.class);
+            	startActivity(i);
+            	return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+    
+    
     
 }
 

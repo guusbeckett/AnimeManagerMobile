@@ -1,21 +1,15 @@
 package animemanagermobile.reupload.nl.mangareader;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
-
 import android.app.Activity;
-import android.content.ClipData.Item;
-import android.content.ContentValues;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 import animemanagermobile.reupload.nl.R;
 import animemanagermobile.reupload.nl.data.DataManage;
@@ -67,19 +61,23 @@ public class MangaListAdapter extends BaseAdapter {
     	}
     }
  
-    public int getCount() {
+    @Override
+	public int getCount() {
         return total;
     }
  
-    public Object getItem(int position) {
+    @Override
+	public Object getItem(int position) {
         return position;
     }
  
-    public long getItemId(int position) {
+    @Override
+	public long getItemId(int position) {
         return position;
     }
  
-    public View getView(int position, View convertView, ViewGroup parent) {
+    @Override
+	public View getView(int position, View convertView, ViewGroup parent) {
         View vi=convertView;
         if(convertView==null)
             vi = inflater.inflate(R.layout.manga_item, null);

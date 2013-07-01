@@ -3,7 +3,6 @@ package animemanagermobile.reupload.nl.storages;
 import java.io.IOException;
 
 import android.app.Activity;
-import android.util.Log;
 import animemanagermobile.reupload.nl.keysnstuff.KeysNStuff;
 
 import com.dropbox.sync.android.DbxAccountManager;

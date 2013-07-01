@@ -1,20 +1,14 @@
 package animemanagermobile.reupload.nl;
 
-import java.io.File;
-import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -23,19 +17,13 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTabHost;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.Toast;
 import animemanagermobile.reupload.nl.animefragmens.FragmentCategories;
 import animemanagermobile.reupload.nl.animefragmens.FragmentCharacters;
@@ -101,7 +89,13 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
         	media = list[point];
         else if (standAlone) {
         	id = getIntent().getIntExtra("mediaID", 0);
-        	String title = DataManage.getTitleFromRegisteredID(id, this);
+        	String title = null;
+        	if (id != 0) 
+	        	title = DataManage.getTitleFromRegisteredID(id, this);
+        	else {
+        		title = getIntent().getStringExtra("title");
+        		id = DataManage.getID(title, this, type);
+        	}
         	for (MediaObject object : list) {
         		if (object.getTitle().equals(title)) {
         			media = object;
@@ -314,7 +308,8 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 	        	    ll.addView(et1);
 	                alert.setView(ll);
 	                alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-	                    public void onClick(DialogInterface dialog, int whichButton) {
+	                    @Override
+						public void onClick(DialogInterface dialog, int whichButton) {
 	                      term = et1.getText().toString();
 	                      if (term != null) {
 	      	            	switch (type) {
@@ -336,7 +331,8 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 	                    });
 	
 	                    alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-	                      public void onClick(DialogInterface dialog, int whichButton) {
+	                      @Override
+						public void onClick(DialogInterface dialog, int whichButton) {
 	                        // Cancel.
 	                      }
 	                    });
@@ -595,25 +591,30 @@ implements ActionBar.TabListener, ViewPager.OnPageChangeListener {
 	}
 
 
+	@Override
 	public int getCount() {
 		return mTabs.size();
 	}
 
+	@Override
 	public Fragment getItem(int position) {
 		TabInfo info = mTabs.get(position);
 		return Fragment.instantiate(mContext, info.clss.getName(), info.args);
 	}
 
 
+	@Override
 	public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 	}
 
 
+	@Override
 	public void onPageSelected(int position) {
 		mActionBar.setSelectedNavigationItem(position);
 	}
 
 
+	@Override
 	public void onPageScrollStateChanged(int state) {
 	}
 
@@ -633,6 +634,7 @@ implements ActionBar.TabListener, ViewPager.OnPageChangeListener {
 
 	public void onTabReselected(Tab tab, FragmentTransaction ft) {}
 
+	@Override
 	public void onTabReselected(Tab tab, android.app.FragmentTransaction ft) {}
 
 	@Override
@@ -645,6 +647,7 @@ implements ActionBar.TabListener, ViewPager.OnPageChangeListener {
 		}
 	}
 
+	@Override
 	public void onTabUnselected(Tab tab, android.app.FragmentTransaction ft) {}
 }
 

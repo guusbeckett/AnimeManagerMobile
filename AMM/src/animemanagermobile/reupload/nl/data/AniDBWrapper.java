@@ -2,14 +2,8 @@ package animemanagermobile.reupload.nl.data;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +11,6 @@ import java.util.List;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -31,7 +24,6 @@ import org.apache.http.util.EntityUtils;
 import android.app.Activity;
 import android.net.http.AndroidHttpClient;
 import android.os.StrictMode;
-import android.provider.ContactsContract.Contacts.Data;
 import android.util.Log;
 
 

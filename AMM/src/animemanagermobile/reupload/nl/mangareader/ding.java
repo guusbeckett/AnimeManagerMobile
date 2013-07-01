@@ -3,8 +3,6 @@ import android.app.Activity;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.os.Bundle;
-import android.test.TouchUtils;
-import android.text.method.Touch;
 import android.util.FloatMath;
 import android.util.Log;
 import android.view.MotionEvent;

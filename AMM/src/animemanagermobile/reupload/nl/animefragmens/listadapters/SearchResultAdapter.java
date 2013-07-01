@@ -8,19 +8,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import animemanagermobile.reupload.nl.MediaObject;
 import animemanagermobile.reupload.nl.R;
  
-public class CharacterListAdapter extends BaseAdapter {
+public class SearchResultAdapter extends BaseAdapter {
  
-    private String title;
     private static LayoutInflater inflater=null;
-    private int i;
-	private String[][] items;
+	private MediaObject[] items;
  
-    public CharacterListAdapter(Activity act, String[][] items) {
+    public SearchResultAdapter(Activity act, MediaObject[] items) {
         inflater = (LayoutInflater)act.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.items = items;
-        i = 0;
     }
     
     @Override
@@ -42,21 +40,17 @@ public class CharacterListAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
         View vi=convertView;
         if(convertView==null)
-            vi = inflater.inflate(R.layout.character_item, null);
+            vi = inflater.inflate(R.layout.search_result, null);
  
-        Log.d("ne", "e");
-        String[] item = items[position];
-        TextView title = (TextView)vi.findViewById(R.id.character_title); // title
-        TextView type = (TextView)vi.findViewById(R.id.character_type); // artist name
-        TextView gender = (TextView)vi.findViewById(R.id.GenderText); // duration
-        TextView seiyuu = (TextView)vi.findViewById(R.id.SeiyuuText); // duration
+        MediaObject item = items[position];
+        TextView title = (TextView)vi.findViewById(R.id.search_title); // title
+        TextView type = (TextView)vi.findViewById(R.id.search_type); // artist name
+        TextView status = (TextView)vi.findViewById(R.id.search_status); // duration
  
-        i++;
         // Setting all values in listview
-        title.setText(item[1]);
-        gender.setText(item[2]);
-        type.setText(item[0]);
-        seiyuu.setText(item[5]);
+        title.setText(item.getTitle()+"");
+        status.setText(item.getType()+"");
+        type.setText("unused"+"");
         //gender.setText((existence[position])?"available":"not available");
         return vi;
     }

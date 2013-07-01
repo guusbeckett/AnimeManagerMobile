@@ -1,10 +1,13 @@
 package animemanagermobile.reupload.nl;
 
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -28,6 +30,7 @@ public class ViewList extends Activity implements OnItemClickListener {
 	private DataManage data;
 	private MediaObject[] lel = null;
 	private int typeList;
+	private boolean sort;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,14 @@ public class ViewList extends Activity implements OnItemClickListener {
         typeList = this.getIntent().getIntExtra("type", 0);
         data = new DataManage();
         lel = data.getMediaList(this, typeList);
+        sort = true;
+        if (sort) {
+        	ArrayList<MediaObject> list = new ArrayList<MediaObject>();
+        	for (MediaObject item : lel)
+        		list.add(item);
+        	Collections.sort(list, new MediaObjectTitleComperator());
+        	lel = list.toArray(new MediaObject[0]);
+        }
         RelativeLayout rl = (RelativeLayout) findViewById(R.id.anime_relative);
         if (lel == null) {
         	Log.d("SEVERE", "getAnime returned NULL");
@@ -74,6 +85,7 @@ public class ViewList extends Activity implements OnItemClickListener {
 
     }
 	
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		final Activity act = this;
 	    switch (item.getItemId()) {
@@ -97,7 +109,8 @@ public class ViewList extends Activity implements OnItemClickListener {
         	    ll.addView(et1);
                 alert.setView(ll);
                 alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
+                    @Override
+					public void onClick(DialogInterface dialog, int whichButton) {
                     	MediaObject item = new MediaObject(et1.getText().toString(), 0,0);
     	            	data.addNewSeries(act, item, typeList, lel);
     	            	act.recreate();
@@ -105,7 +118,8 @@ public class ViewList extends Activity implements OnItemClickListener {
                     });
 
                     alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                      public void onClick(DialogInterface dialog, int whichButton) {
+                      @Override
+					public void onClick(DialogInterface dialog, int whichButton) {
                         // Cancel.
                       }
                     });
@@ -133,4 +147,13 @@ public class ViewList extends Activity implements OnItemClickListener {
 		}
 	}
 
+}
+
+class MediaObjectTitleComperator implements Comparator<MediaObject>
+{
+	@Override
+	public int compare(MediaObject lhs, MediaObject rhs) {
+		return (lhs.getTitle().compareToIgnoreCase(rhs.getTitle()));
+//		return 0;
+	}
 }

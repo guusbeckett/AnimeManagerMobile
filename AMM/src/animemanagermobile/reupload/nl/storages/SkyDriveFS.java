@@ -1,13 +1,8 @@
 package animemanagermobile.reupload.nl.storages;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -36,10 +31,8 @@ import com.microsoft.live.LiveAuthException;
 import com.microsoft.live.LiveAuthListener;
 import com.microsoft.live.LiveConnectClient;
 import com.microsoft.live.LiveConnectSession;
-import com.microsoft.live.LiveDownloadOperation;
 import com.microsoft.live.LiveOperation;
 import com.microsoft.live.LiveOperationException;
-import com.microsoft.live.LiveOperationListener;
 import com.microsoft.live.LiveStatus;
 
 

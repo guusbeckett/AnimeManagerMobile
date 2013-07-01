@@ -30,9 +30,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
 import android.util.Log;
-import android.widget.Toast;
 import animemanagermobile.reupload.nl.MediaObject;
-import animemanagermobile.reupload.nl.ViewList;
 import animemanagermobile.reupload.nl.storages.DropboxFS;
 import animemanagermobile.reupload.nl.storages.FileSystem;
 import animemanagermobile.reupload.nl.storages.MyAnimeListFS;
@@ -252,7 +250,7 @@ public class DataManage {
 			list2[i] = object;
 			i++;
 		}
-		list2[list.length] = (MediaObject) item;
+		list2[list.length] = item;
 		list = list2;
 		try {
 			writeAlltoFile(act, j, list);

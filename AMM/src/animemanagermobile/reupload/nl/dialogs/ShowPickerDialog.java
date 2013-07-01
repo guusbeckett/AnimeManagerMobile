@@ -8,9 +8,6 @@ import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
-import animemanagermobile.reupload.nl.data.AniDBWrapper;
-import animemanagermobile.reupload.nl.data.DataManage;
-import animemanagermobile.reupload.nl.dialogs.ShowPickerDialog.OnDialogSelectorListener;
 
 public class ShowPickerDialog extends DialogFragment implements OnClickListener {
 

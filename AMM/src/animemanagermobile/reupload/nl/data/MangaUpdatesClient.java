@@ -1,23 +1,13 @@
 package animemanagermobile.reupload.nl.data;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.ParseException;
-import org.apache.http.entity.HttpEntityWrapper;
-import org.apache.http.util.ByteArrayBuffer;
 import org.apache.http.util.EntityUtils;
 
 import android.app.Activity;
-import android.drm.DrmStore.Action;
-import android.net.http.AndroidHttpClient;
 import android.util.Log;
 
 public class MangaUpdatesClient {

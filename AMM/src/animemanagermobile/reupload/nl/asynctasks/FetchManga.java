@@ -1,7 +1,5 @@
 package animemanagermobile.reupload.nl.asynctasks;
 
-import java.net.URL;
-
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.widget.Toast;

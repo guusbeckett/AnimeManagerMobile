@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import animemanagermobile.reupload.nl.R;
-import animemanagermobile.reupload.nl.data.DataManage;
 
 public class MangaSelectionFragment extends Fragment {
 
@@ -29,7 +28,8 @@ public class MangaSelectionFragment extends Fragment {
 	    Button destroyMeta = new Button(this.getActivity());
 		destroyMeta.setText("Find folder");
         destroyMeta.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+            @Override
+			public void onClick(View v) {
             	Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("resource/folder");
                 startActivityForResult(intent,PICKFILE_RESULT_CODE);

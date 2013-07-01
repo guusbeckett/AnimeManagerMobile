@@ -1,10 +1,6 @@
 package animemanagermobile.reupload.nl.mangareader.sources;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-
 import org.apache.http.ParseException;
 import org.apache.http.util.EntityUtils;
 

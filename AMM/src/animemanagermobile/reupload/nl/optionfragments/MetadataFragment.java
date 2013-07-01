@@ -34,7 +34,8 @@ public class MetadataFragment extends Fragment {
         final Activity act = this.getActivity();
         destroyMeta.setText("Delete ALL metadata");
         destroyMeta.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+            @Override
+			public void onClick(View v) {
             	DataManage.deleteAllMeta(act);
             	
             }

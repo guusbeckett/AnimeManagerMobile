@@ -4,4 +4,5 @@
           android:icon="@drawable/ic_content_new"
           android:title="@string/menu_add"
           android:showAsAction="ifRoom|withText" />
+    
 </menu>
