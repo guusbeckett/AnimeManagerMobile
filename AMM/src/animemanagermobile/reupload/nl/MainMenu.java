@@ -19,14 +19,7 @@ public class MainMenu extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-    	startService(new Intent(this, ReleaseTrackingService.class));
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main_menu, menu);
+        startService(new Intent(this, ReleaseTrackingService.class));
         SharedPreferences settings = getSharedPreferences("AMMprefs", 0);
         int storageMethod = settings.getInt("storageMethod", 0);
         if (storageMethod == 2) {
@@ -92,6 +85,14 @@ public class MainMenu extends Activity {
 	        	}
 	        });
         }
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+    	
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
 
     }

@@ -16,12 +16,16 @@ public class MangaSelectionFragment extends Fragment {
 	private LinearLayout masll;
 	private LinearLayout ll;
 	private static final int PICKFILE_RESULT_CODE = 1;
+	
+	public MangaSelectionFragment() {
+		super();
+	}
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_settings , container, false);
+        ViewGroup v = (ViewGroup) inflater.inflate(R.layout.fragment_settings , container, false);
         masll = (LinearLayout) v.findViewById(R.id.setting_scroll_location);
         ll = new LinearLayout(getActivity());
 	    ll.setOrientation(LinearLayout.VERTICAL);
@@ -38,7 +42,6 @@ public class MangaSelectionFragment extends Fragment {
             }
         });
         ll.addView(destroyMeta);
-	    masll.addView(ll);
         return v;
     }
 }
