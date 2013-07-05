@@ -8,6 +8,9 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="edit_watch">Currently watching</string>
+    <string name="view_read">View read manga</string>
+    <string name="view_toread">View manga backlog</string>
+    <string name="view_towatch">View anime backlog</string>
     <string name="edit_read">Currently reading</string>
     <string name="menu_add">Add</string>
     <string name="list_location">List location</string>

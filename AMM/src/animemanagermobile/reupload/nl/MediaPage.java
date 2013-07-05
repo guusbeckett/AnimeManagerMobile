@@ -2,6 +2,7 @@ package animemanagermobile.reupload.nl;
 
 import java.util.ArrayList;
 
+import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.AlertDialog;
@@ -12,6 +13,7 @@ import android.content.DialogInterface;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -41,6 +43,7 @@ import animemanagermobile.reupload.nl.data.MangaUpdatesClient;
 import animemanagermobile.reupload.nl.dialogs.ShowPickerDialog;
 import animemanagermobile.reupload.nl.dialogs.ShowPickerDialog.OnDialogSelectorListener;
 
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class MediaPage extends FragmentActivity implements OnDialogSelectorListener {
 	
 	private MediaObject media;
@@ -126,7 +129,7 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
         Log.d("chechk", "3");
         if (!tempMode) {
 	        if (id != 0) {
-	        	if (type == 1 || type == 2) {
+	        	if (type == 1 || type == 2 || type == 5) {
 		        	if (AniDBWrapper.doesAniDBfileExist(id, this)){
 		        		metadataParse = AniDBWrapper.parseAniDBfile(id, this);
 		        		metadataParse[16]=type+"";
@@ -183,7 +186,7 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
         		FragmentDescription.class, null);
         mTabsAdapter.addTab(actionBar.newTab().setText(R.string.frag_cats),
         		FragmentCategories.class, null);
-        if (type == 1 || type == 2) {
+        if (type == 1 || type == 2 || type == 5) {
         	mTabsAdapter.addTab(actionBar.newTab().setText(R.string.frag_tags),
             		FragmentTags.class, null);
             mTabsAdapter.addTab(actionBar.newTab().setText(R.string.frag_eps),
@@ -199,6 +202,8 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
         else if (type == 3 || type == 4)
         	mTabsAdapter.addTab(actionBar.newTab().setText("Manga Reader"),
         			FragmentMangaRead.class, null);
+        
+        Log.d("id", media.getId()+"");
 	}
 	
 	@Override
@@ -261,6 +266,12 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 	            		case (4):
 	            			handleMangaMetadata(null, type);
 	            			break;
+	            		case (5):
+	            			handleAnimeMetadata(null, type);
+	            		break;
+	            		case (6):
+	            			handleMangaMetadata(null, type);
+	            		break;
 	            	}
 	                return true;
 	            case android.R.id.home:
@@ -325,6 +336,12 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 	      		        		case (4):
 	      		        			handleMangaMetadata(term, type);
 	      		        			break;
+	      		        		case (5):
+	      		        			handleAnimeMetadata(term, type);
+	      		        			break;
+	      		        		case (6):
+	      		        			handleMangaMetadata(term, type);
+	      		        			break;
 	      	            	}
 	                      }
 	                      }
@@ -347,7 +364,7 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 	            
 	        }
 		}
-		boolean manga = (type==3||type==4);
+		boolean manga = (type==3||type==4||type==6);
 		switch (item.getItemId()) {
 			case (1):
 				//Add to watching/reading
@@ -369,8 +386,8 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 				return true;
 			case (3):
 				//Add to backlog
-//				addTempToPerm(5);
-//				DataManage.register(media.getTitle(), media.getId(), this, 5);
+				addTempToPerm(((manga)?6:5));
+				DataManage.register(media.getTitle(), media.getId(), this, ((manga)?6:5));
 				finish();
 				return true;
 			case android.R.id.home:
@@ -490,7 +507,7 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 
 	private void destroyMetadata() {
 		if (id!=0) {
-			if (type == 1 || type == 2) {
+			if (type == 1 || type == 2 || type == 5) {
 				DataManage.deleteExternalFile(this.getExternalFilesDir(null) + "/images/" + metadataParse[10], this);
 				DataManage.deleteExternalFile(this.getExternalFilesDir(null) + "/anime" + media.getId()+".xml", this);
 			}
@@ -545,7 +562,7 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 			
 			if (media.getId() == 0)
         		DataManage.register(media.getTitle(), Integer.parseInt(title[selectedIndex].split("\\^")[1]), this, type);
-			if (type == 1 || type == 2)
+			if (type == 1 || type == 2 || type == 5)
 				AniDBWrapper.grabAnimeMetadata(Integer.parseInt(title[selectedIndex].split("\\^")[1]), this);
 			else 
 				MangaUpdatesClient.grabMangaMetadata(Integer.parseInt(title[selectedIndex].split("\\^")[1]), this);

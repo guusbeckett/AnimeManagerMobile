@@ -56,6 +56,8 @@ public class MainMenu extends Activity {
 	        final Button editMangaButton = (Button) findViewById(R.id.button2);
 	        final Button viewListButton = (Button) findViewById(R.id.button3);
 	        final Button viewReadManga = (Button) findViewById(R.id.button4);
+	        final Button viewMangaBacklog = (Button) findViewById(R.id.button6);
+	        final Button viewAnimeBacklog = (Button) findViewById(R.id.button5);
 	        editAnimeButton.setOnClickListener(new View.OnClickListener() {
 	            @Override
 				public void onClick(View v) {
@@ -81,6 +83,20 @@ public class MainMenu extends Activity {
 	        	@Override
 				public void onClick(View v) {
 	        		intent1.putExtra("type", 4);
+	        		startActivity(intent1);
+	        	}
+	        });
+	        viewMangaBacklog.setOnClickListener(new View.OnClickListener() {
+	        	@Override
+	        	public void onClick(View v) {
+	        		intent1.putExtra("type", 6);
+	        		startActivity(intent1);
+	        	}
+	        });
+	        viewAnimeBacklog.setOnClickListener(new View.OnClickListener() {
+	        	@Override
+	        	public void onClick(View v) {
+	        		intent1.putExtra("type", 5);
 	        		startActivity(intent1);
 	        	}
 	        });
@@ -125,7 +141,8 @@ public class MainMenu extends Activity {
  * cannot save progress on unregistered shows, causes ANR
  * 
  *TODO
- * [ ] BackLog support - Should not be hard to implement given the way lists are now
+ * [*] BackLog support - Should not be hard to implement given the way lists are now
+ * [ ] Next season support - should give the possibility to automatically start tracking and add to watching when show starts airing, also automatically updated metadata to make you sure you stay up to date
  * [*] Make deleting items also unregister them
  * [ ] Make the mangaCrawler more intelligent and more useful
  * [ ] Make the main menu nicer looking
@@ -153,8 +170,8 @@ public class MainMenu extends Activity {
  * [ ] only write to external when user has chosen to do so, it is available
  * [ ] simple stats screen, like MAL stats
  * [ ] Make actual list adapter for related shows
- * [ ] Make going to related anime or a searched anime/manga check if anime/manga is in users list and if yes open that
- * [ ] Make new menu for temp openened series
+ * [*] Make going to related anime or a searched anime/manga check if anime/manga is in users list and if yes open that
+ * [*] Make new menu for temp openened series
  * [ ] REMINDER, REFACTOR
  * 
  */

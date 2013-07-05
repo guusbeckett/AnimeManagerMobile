@@ -66,7 +66,7 @@ public class FragmentRelatedSeries extends Fragment {
 						Intent openTemp = new Intent(getActivity(), MediaPage.class);
 						openTemp.putExtra("tempMode", true);
 						openTemp.putExtra("mediaID", Integer.parseInt(titles[arg2].split("\\^")[1]));
-						openTemp.putExtra("type", ((type==1||type==2)?2:4));
+						openTemp.putExtra("type", ((type==1||type==2||type==5)?2:4));
 						openTemp.putExtra("title", titles[arg2].split("\\^")[0]);
 						if (!tempMode)
 							openTemp.putExtra("origin", origin);

@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -25,6 +27,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import animemanagermobile.reupload.nl.data.DataManage;
 
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class ViewList extends Activity implements OnItemClickListener {
 
 	private DataManage data;
@@ -32,6 +35,7 @@ public class ViewList extends Activity implements OnItemClickListener {
 	private int typeList;
 	private boolean sort;
 
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,13 +46,7 @@ public class ViewList extends Activity implements OnItemClickListener {
         data = new DataManage();
         lel = data.getMediaList(this, typeList);
         sort = true;
-        if (sort) {
-        	ArrayList<MediaObject> list = new ArrayList<MediaObject>();
-        	for (MediaObject item : lel)
-        		list.add(item);
-        	Collections.sort(list, new MediaObjectTitleComperator());
-        	lel = list.toArray(new MediaObject[0]);
-        }
+        
         RelativeLayout rl = (RelativeLayout) findViewById(R.id.anime_relative);
         if (lel == null) {
         	Log.d("SEVERE", "getAnime returned NULL");
@@ -58,6 +56,13 @@ public class ViewList extends Activity implements OnItemClickListener {
         else {
         	Log.d("what", "lel");
         	if (lel.length > 0) {
+        		if (sort) {
+                	ArrayList<MediaObject> list = new ArrayList<MediaObject>();
+                	for (MediaObject item : lel)
+                		list.add(item);
+                	Collections.sort(list, new MediaObjectTitleComperator());
+                	lel = list.toArray(new MediaObject[0]);
+                }
         		DataManage.setList(lel);
 	        	Log.d("SUCCESS", "media succesfully read");
 	        	ArrayAdapter adapter = new ArrayAdapter<String>(this, 
@@ -138,6 +143,7 @@ public class ViewList extends Activity implements OnItemClickListener {
 		startActivity(intent);
 	}
 	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	public void onResume() {
 		super.onResume();

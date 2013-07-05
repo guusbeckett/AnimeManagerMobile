@@ -2,11 +2,13 @@ package animemanagermobile.reupload.nl.animefragmens;
 
 import java.util.Calendar;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -25,6 +27,7 @@ import animemanagermobile.reupload.nl.data.AniDBWrapper;
 import animemanagermobile.reupload.nl.data.DataManage;
 import animemanagermobile.reupload.nl.data.MangaUpdatesClient;
 
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class FragmentGeneral extends Fragment {
 
 	private LinearLayout linlay;
@@ -69,7 +72,7 @@ public class FragmentGeneral extends Fragment {
         	type = Integer.parseInt(metadata[16]);
         	if (!tempMode) {
         		Log.d("type", type+"");
-	        	if (type == 1 || type == 2) {
+	        	if (type == 1 || type == 2 || type == 5) {
 	        		if (DataManage.doesExternalFileExist("/images/" + metadata[10], this.getActivity())) {
 	        			bm = DataManage.loadImageFromExternal(metadata[10], this.getActivity());
 	            	}

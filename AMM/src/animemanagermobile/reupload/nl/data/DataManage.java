@@ -99,7 +99,7 @@ public class DataManage {
 	public ArrayList<MediaObject> formatArray(String lel, int i) {
 		ArrayList<MediaObject> list = null;
 		if (lel != null) {
-			if (lel.contains("Seen:") || lel.contains("Watching:")) {
+			if (lel.contains("Seen:") || lel.contains("Watching:") || lel.contains("To Watch:")) {
 				Log.d("lel", "I decided it contains this");
 				Log.d("lel", lel);
 				list = new ArrayList<MediaObject>();
@@ -168,6 +168,40 @@ public class DataManage {
 								
 						}
 						break;
+					case (5):
+						for (String nya : lel.split("To Read:")[0].split("To Watch:")[1].split("\n")) {
+							if (!nya.isEmpty())
+							{
+								String prog = nya;
+								
+								if (prog.length() > 0) {
+									if (!prog.equals(""))
+										list.add(new MediaObject(prog));
+								}
+								else {
+//									list.add(new MediaObject(prog));
+								}
+							}
+							
+						}
+					break;
+					case (6):
+						for (String nya : lel.split("To Read:")[1].split("\n")) {
+							if (!nya.isEmpty())
+							{
+								String prog = nya;
+								
+								if (prog.length() > 0) {
+									if (!prog.equals(""))
+										list.add(new MediaObject(prog));
+								}
+								else {
+//									list.add(new MediaObject(prog));
+								}
+							}
+							
+						}
+					break;
 				}
 			}
 		}
@@ -266,7 +300,7 @@ public class DataManage {
 		String fname = null;
 		String split1 = null;
 		String split2 = null;
-		boolean manga=(type==3||type==4);
+		boolean manga=(type==3||type==4||type==6);
 		boolean done = false;
 		if (type == 1 || type == 3) {
 			fname = "watching.txt";
@@ -277,6 +311,12 @@ public class DataManage {
 			fname = "seen.txt";
 			split1 = "Read:";
 			split2 = "Seen:";
+			done = true;
+		}
+		else if (type == 5 || type == 6) {
+			fname = "backlog.txt";
+			split1 = "To Read:";
+			split2 = "To Watch:";
 			done = true;
 		}
 		String data = fs.readStringFromFile(fname);
@@ -378,7 +418,7 @@ public class DataManage {
 	}
 	
 	public static void register(String show, int id, Activity act, int i) {
-		if (i > 0 && i < 5) {
+		if (i >= 1 && i <= 6) {
 			SQLiteOpenHelper ammData = new AMMDatabase(act);
 			SQLiteDatabase ammDatabase =  ammData.getWritableDatabase();
 			Cursor c = ammDatabase.query("Registered", new String[]{"Tracking", "Subber", "Keyword"}, "Name='"+ show +"' AND Type='"+ i +"' AND ID='" + id + "'", null, null, null, null);
@@ -780,6 +820,12 @@ public class DataManage {
 	    	case (4):
 	    		formattedList = formatArray(fs.readStringFromFile("seen.txt"), 4);
 	    		break;
+	    	case (5):
+	    		formattedList = formatArray(fs.readStringFromFile("backlog.txt"), 5);
+	    	break;
+	    	case (6):
+	    		formattedList = formatArray(fs.readStringFromFile("backlog.txt"), 6);
+	    	break;
 		}
 		//TODO the numbers are mixed up
 		if (formattedList != null) {
