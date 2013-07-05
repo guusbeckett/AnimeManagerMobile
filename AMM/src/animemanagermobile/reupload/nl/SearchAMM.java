@@ -2,10 +2,12 @@ package animemanagermobile.reupload.nl;
 
 import java.util.ArrayList;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -21,6 +23,7 @@ import animemanagermobile.reupload.nl.data.AniDBWrapper;
 import animemanagermobile.reupload.nl.data.DataManage;
 import animemanagermobile.reupload.nl.data.MangaUpdatesClient;
 
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class SearchAMM extends Activity implements OnItemClickListener {
 	
 	private String query;
@@ -42,7 +45,7 @@ public class SearchAMM extends Activity implements OnItemClickListener {
 		      DataManage data = new DataManage();
 		      for (int i=1; i<=4; i++) {
 		    	  for (MediaObject item : data.getMediaList(this, i)) {
-		    		  if (item.getTitle().contains(query)) {
+		    		  if (item.getTitle().toLowerCase().contains(query.toLowerCase())) {
 		    			  item.setType(i);
 		    			  listOfAll.add(item);
 		    		  }
