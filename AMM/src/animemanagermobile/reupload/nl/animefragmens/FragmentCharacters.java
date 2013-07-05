@@ -69,8 +69,10 @@ public class FragmentCharacters extends Fragment {
 			            		
 			                }
 			            	else {
-			                	AniDBWrapper.fetchImage(((String[])adapt.getItem(arg2))[4], act, "character");
-			                	bm = DataManage.loadImageFromExternal("character/"+((String[])adapt.getItem(arg2))[4], act);
+			            		if (DataManage.isNetworkAvailable(act)) {
+				                	AniDBWrapper.fetchImage(((String[])adapt.getItem(arg2))[4], act, "character");
+				                	bm = DataManage.loadImageFromExternal("character/"+((String[])adapt.getItem(arg2))[4], act);
+			            		}
 			                	//Log.d("hai", "FnF");
 			            	}
 		        		}
@@ -139,7 +141,7 @@ public class FragmentCharacters extends Fragment {
 				if (character.contains("<picture>"))
 					chara[4] = character.split("<picture>")[1].split("</picture>")[0];
 				else
-					chara[4] = "not existent";
+					chara[4] = "";
 				if (character.contains("<seiyuu"))
 					chara[5] = character.split("<seiyuu")[1].split(">")[1].split("</seiyuu")[0];
 				else

@@ -844,6 +844,13 @@ public class DataManage {
 	public static boolean getRefresh() {
 		return refresh;
 	}
+	
+	public static boolean isNetworkAvailable(Activity act) {
+	    ConnectivityManager connectivityManager 
+	          = (ConnectivityManager) act.getSystemService(Context.CONNECTIVITY_SERVICE);
+	    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+	    return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+	}
 
 
 	public static OutputStream openOutputStreamToCache(File file,

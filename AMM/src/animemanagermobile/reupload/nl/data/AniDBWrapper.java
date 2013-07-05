@@ -126,7 +126,9 @@ public class AniDBWrapper {
 			e.printStackTrace();
 			Log.e("AMM", "IOException at HTTP GET");
 		}  
-	    return responseGet.getEntity(); 
+		if (responseGet != null)
+			return responseGet.getEntity(); 
+		else return null;
 	}
 	
 	public static HttpEntity httpPostBakaUpdates(String url, boolean fakeDesktop, String query) {

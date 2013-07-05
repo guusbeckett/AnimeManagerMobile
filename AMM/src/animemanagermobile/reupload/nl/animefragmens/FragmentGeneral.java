@@ -1,5 +1,6 @@
 package animemanagermobile.reupload.nl.animefragmens;
 
+import java.io.File;
 import java.util.Calendar;
 
 import android.annotation.TargetApi;
@@ -21,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 import animemanagermobile.reupload.nl.MediaObject;
 import animemanagermobile.reupload.nl.R;
 import animemanagermobile.reupload.nl.data.AniDBWrapper;
@@ -96,12 +98,22 @@ public class FragmentGeneral extends Fragment {
         	else {
         		switch (type) {
         			case (2):
-        				AniDBWrapper.fetchImage(metadata[10], true, this.getActivity(), "");
-            			bm = DataManage.loadImageFromExternal(metadata[10], true, this.getActivity());
+        				if (!new File(getActivity().getCacheDir(), "/tempimages/"+metadata[10]).exists()) {
+            				if (DataManage.isNetworkAvailable(getActivity())) {
+            					AniDBWrapper.fetchImage(metadata[10], true, this.getActivity(), "");
+            					bm = DataManage.loadImageFromExternal(metadata[10], true, this.getActivity());
+            				}
+            			}
+        				else bm = DataManage.loadImageFromExternal(metadata[10], true, this.getActivity());
             			break;
         			case (4):
-        				MangaUpdatesClient.fetchImage(metadata[10], true, this.getActivity());
-        				bm = DataManage.loadImageFromExternal(metadata[10].split("/")[metadata[10].split("/").length-1], true, this.getActivity());
+        				if (!new File(getActivity().getCacheDir(), "/tempimages/"+metadata[10]).exists()) {
+            				if (DataManage.isNetworkAvailable(getActivity())) {
+            					MangaUpdatesClient.fetchImage(metadata[10], true, this.getActivity());
+            					bm = DataManage.loadImageFromExternal(metadata[10].split("/")[metadata[10].split("/").length-1], true, this.getActivity());
+            				}
+            			}
+        				else bm = DataManage.loadImageFromExternal(metadata[10].split("/")[metadata[10].split("/").length-1], true, this.getActivity());
         				break;
         		}
         	}

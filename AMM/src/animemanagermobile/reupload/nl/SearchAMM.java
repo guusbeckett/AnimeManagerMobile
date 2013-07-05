@@ -1,6 +1,7 @@
 package animemanagermobile.reupload.nl;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -43,9 +44,9 @@ public class SearchAMM extends Activity implements OnItemClickListener {
 	      ArrayList<MediaObject> listOfAll = new ArrayList<MediaObject>();
 	      if (service == 0) {
 		      DataManage data = new DataManage();
-		      for (int i=1; i<=4; i++) {
+		      for (int i=1; i<=6; i++) {
 		    	  for (MediaObject item : data.getMediaList(this, i)) {
-		    		  if (item.getTitle().toLowerCase().contains(query.toLowerCase())) {
+		    		  if (item.getTitle().toLowerCase(Locale.US).contains(query.toLowerCase(Locale.US))) {
 		    			  item.setType(i);
 		    			  listOfAll.add(item);
 		    		  }

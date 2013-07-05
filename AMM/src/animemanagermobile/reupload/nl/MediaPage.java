@@ -1,5 +1,6 @@
 package animemanagermobile.reupload.nl;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import android.annotation.TargetApi;
@@ -151,20 +152,34 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
         else {
         	switch (type) {
         		case (2):
-//        			handleAnimeMetadata(null, type);
-        			AniDBWrapper.grabAnimeMetadata(id, true, this);	
+        			if (!new File(getCacheDir(), "/tempmetadata/tempanime"+id+".xml").exists()) {
+        				if (DataManage.isNetworkAvailable(this))
+        					AniDBWrapper.grabAnimeMetadata(id, true, this);	
+        				else {
+        					Toast.makeText(this, "This feature requires an internet connection if the page has not been opened before", Toast.LENGTH_SHORT).show();
+        					finish();
+        					return;
+        				}
+        			}
 	        		metadataParse = AniDBWrapper.parseAniDBfile(id, true, this);
 	        		metadataParse[16]=type+"";
 	        		metadataParse[17]="1";
 	        		DataManage.cacheObject2(metadataParse);
         			break;
         		case (4):
-        			MangaUpdatesClient.grabMangaMetadata(id, true, this);
+        			if (!new File(getCacheDir(), "/tempmetadata/tempmanga"+id+".xml").exists()) {
+        				if (DataManage.isNetworkAvailable(this))
+        					MangaUpdatesClient.grabMangaMetadata(id, true, this);
+        				else {
+        					Toast.makeText(this, "This feature requires an internet connection if the page has not been opened before", Toast.LENGTH_SHORT).show();
+        					finish();
+        					return;
+        				}
+        			}
 	        		metadataParse = MangaUpdatesClient.parseMangaUpdatesfile(id, true, this);
 	        		metadataParse[16]=type+"";
 	        		metadataParse[17]="1";
 	        		DataManage.cacheObject2(metadataParse);
-//        			handleMangaMetadata(null, type);
         			break;
         	}	
         }

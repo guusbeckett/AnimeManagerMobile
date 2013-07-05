@@ -172,6 +172,7 @@ public class MainMenu extends Activity {
  * [ ] Make actual list adapter for related shows
  * [*] Make going to related anime or a searched anime/manga check if anime/manga is in users list and if yes open that
  * [*] Make new menu for temp openened series
+ * [*] Fix Offline support
  * [ ] REMINDER, REFACTOR
  * 
  */
