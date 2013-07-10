@@ -34,8 +34,10 @@ public class ReleaseTrackingService extends Service {
 	                  try {
 	                	  parse.test(ctx);
 	                	  Log.d("lle", "service");
-	                	  wait(endTime - System.currentTimeMillis());
+	                	  Thread.sleep(endTime - System.currentTimeMillis());
 	                  } catch (Exception e) {
+	                	  e.printStackTrace();
+	                	  Log.e("AMM service", "the service reported failure");
 	                  }
 	              }
 	          }

@@ -3,6 +3,7 @@
 
     <string name="app_name">Anime Manager Mobile</string>
     <string name="app_label">AMM</string>
+    <string name="rss_main">RSS Reader</string>
     <string name="menu_search">Search</string>
     <string name="search_hint">Search Anime/Manga</string>
     <string name="action_settings">Settings</string>

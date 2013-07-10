@@ -58,10 +58,12 @@ public class MainMenu extends Activity {
 	        final Button viewReadManga = (Button) findViewById(R.id.button4);
 	        final Button viewMangaBacklog = (Button) findViewById(R.id.button6);
 	        final Button viewAnimeBacklog = (Button) findViewById(R.id.button5);
+	        final Button rssReader = (Button) findViewById(R.id.button7);
 	        editAnimeButton.setOnClickListener(new View.OnClickListener() {
 	            @Override
 				public void onClick(View v) {
 	            	intent1.putExtra("type", 1);
+	            	intent1.putExtra("rssMode", false);
 	            	startActivity(intent1);
 	            }
 	        });
@@ -69,6 +71,7 @@ public class MainMenu extends Activity {
 	        	@Override
 				public void onClick(View v) {
 	        		intent1.putExtra("type", 3);
+	        		intent1.putExtra("rssMode", false);
 	        		startActivity(intent1);
 	        	}
 	        });
@@ -76,6 +79,7 @@ public class MainMenu extends Activity {
 	        	@Override
 				public void onClick(View v) {
 	        		intent1.putExtra("type", 2);
+	        		intent1.putExtra("rssMode", false);
 	        		startActivity(intent1);
 	        	}
 	        });
@@ -83,6 +87,7 @@ public class MainMenu extends Activity {
 	        	@Override
 				public void onClick(View v) {
 	        		intent1.putExtra("type", 4);
+	        		intent1.putExtra("rssMode", false);
 	        		startActivity(intent1);
 	        	}
 	        });
@@ -90,6 +95,7 @@ public class MainMenu extends Activity {
 	        	@Override
 	        	public void onClick(View v) {
 	        		intent1.putExtra("type", 6);
+	        		intent1.putExtra("rssMode", false);
 	        		startActivity(intent1);
 	        	}
 	        });
@@ -97,6 +103,14 @@ public class MainMenu extends Activity {
 	        	@Override
 	        	public void onClick(View v) {
 	        		intent1.putExtra("type", 5);
+	        		intent1.putExtra("rssMode", false);
+	        		startActivity(intent1);
+	        	}
+	        });
+	        rssReader.setOnClickListener(new View.OnClickListener() {
+	        	@Override
+	        	public void onClick(View v) {
+	        		intent1.putExtra("rssMode", true);
 	        		startActivity(intent1);
 	        	}
 	        });
@@ -173,6 +187,7 @@ public class MainMenu extends Activity {
  * [*] Make going to related anime or a searched anime/manga check if anime/manga is in users list and if yes open that
  * [*] Make new menu for temp openened series
  * [*] Fix Offline support
+ * [ ] Create the "I'm bored function" - this function will give you advice on what to watch or read
  * [ ] REMINDER, REFACTOR
  * 
  */

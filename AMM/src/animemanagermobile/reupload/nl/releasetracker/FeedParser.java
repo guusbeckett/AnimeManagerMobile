@@ -24,39 +24,40 @@ public class FeedParser {
 	
 	private Cursor c;
 	private SQLiteDatabase ammDatabase;
+	private String feedname;
+	private final String TAG = "AMM FeedParser";
 
 	public void test(Context ctx) {
-		/*String feed = null;
-		  try {
-			feed = EntityUtils.toString(AniDBWrapper.httpget("http://fffansubs.org/?feed=rss2", false));
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		if (feed != null)
-			parseFeed(feed, ctx);*/
+		Log.d(TAG, "starting");
 		if (isOnline(ctx)) {
 			SQLiteOpenHelper ammData = new AMMDatabase(ctx);
 			ammDatabase =  ammData.getWritableDatabase();
 			Log.d("data", ammDatabase.getPath());
 			c = ammDatabase.query("Subteams", new String[]{"Name", "RSS_URL", "LastPost"}, null, null, null, null, null);
+			boolean first = true;
 			while (c.moveToNext()) {
-				Log.d("nee", "data run 1");
+				if (first)
+						c.moveToFirst();
+				Log.d(TAG, "doing a feed");
+				if (c.isAfterLast() == true) {
+					Log.d(TAG, "done handling feeds, there were " + c.getCount() + " feeds");
+					break;
+				}
 				String feed = null;
 				String url = c.getString(c.getColumnIndex("RSS_URL"));
+				if (!url.contains("http://"))
+					url = "http://" + url;
+				Log.d("nee", "data run "+url);
 				try {
 					feed = EntityUtils.toString(AniDBWrapper.httpget(url, false));
 				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Log.e(TAG, "ParseException occured");
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Log.e(TAG, "IOException occured");
 				}
-				Cursor c2 = ammDatabase.query("Registered", new String[]{"Name", "Keyword"}, "Tracking='1' AND Subber='" + c.getString(c.getColumnIndex("Name")) + "'", null, null, null, null);
+				feedname = c.getString(c.getColumnIndex("Name"));
+				Log.d(TAG, feedname+" is being handled");
+				Cursor c2 = ammDatabase.query("Registered", new String[]{"Name", "Keyword"}, "Tracking='1' AND Subber='" + feedname + "'", null, null, null, null);
 				if (c2.getCount() >= 1) {
 					String[] titles = new String[c2.getCount()];
 					int i = 0;
@@ -69,9 +70,15 @@ public class FeedParser {
 					}
 					parseFeed(feed, c.getString(c.getColumnIndex("Name")), titles, ctx);
 				}
+				else {
+					Log.d(TAG, feedname+" has no items");
+					parseFeed(feed, c.getString(c.getColumnIndex("Name")), null, ctx);
+				}
 			}
 			ammDatabase.close();
 		}
+		else
+			Log.d(TAG, "service stopped because android reported being offline");
 	}
 
 	public void parseFeed(String rawfeed, String feedname, String[] titles, Context ctx) {
@@ -79,11 +86,6 @@ public class FeedParser {
 		boolean first = true;
 		boolean veryfirst = true;
 		for (String item : rawfeed.split("<item>")) {
-//			if (item.contains("Nyarlko")) {
-//				parseItem(item, ctx);
-//				Log.d("ge", item);
-			
-//			}
 			if (!veryfirst) {
 				if (item.contains("<description>")) {
 					if (getHash(item.split("<title>")[1].split("</title>")[0]).equals(hash)) {
@@ -102,11 +104,19 @@ public class FeedParser {
 						first = false;
 					}
 					
-					for (String title : titles) {
-						if (item.contains(title)) {
-							parseItem(item, ctx);
+					if (titles != null) {
+						boolean parsed = false;
+						for (String title : titles) {
+							if (item.contains(title)) {
+								parseItem(item, ctx, true);
+								parsed = true;
+							}
+							if (!parsed)
+								parseItem(item, ctx, false);
 						}
 					}
+					else
+						parseItem(item, ctx, false);
 				}
 			}
 			else
@@ -129,12 +139,44 @@ public class FeedParser {
 		//return null;
 	}
 
-	public void parseItem(String rawitem, Context ctx) {
+	public void parseItem(String rawitem, Context ctx, boolean notify) {
 		Log.d("ge", "ads");
 		if (rawitem.contains("<title>") && rawitem.contains("<description>")) {
 			String title = rawitem.split("<title>")[1].split("</title>")[0];
-			//String description = rawitem.split("<description>")[1].split("</description>")[0];
-			notifyUser(title, "moii", ctx);
+			ContentValues cv = new ContentValues();
+			cv.put("Title", title);
+			cv.put("Description", rawitem.split("<description>")[1].split("</description>")[0]);
+			if (rawitem.contains("<link>"))
+				cv.put("Link", rawitem.split("<link>")[1].split("</link>")[0]);
+			if (rawitem.contains("<author>"))
+				cv.put("Author", rawitem.split("<author>")[1].split("</author>")[0]);
+			if (rawitem.contains("creator>"))
+				cv.put("Author", rawitem.split("creator>")[1].split("</")[0]);
+			String cats = null;
+			for (String cat : rawitem.split("<category>")) {
+				if (cat.contains("<category>"))
+					if (cats == null)
+						cats=rawitem.split("<category>")[1].split("</category>")[0];
+					else
+						cats+=" "+rawitem.split("<category>")[1].split("</category>")[0];
+			}
+			if (rawitem.contains("<pubDate>"))
+				cv.put("pubDate", rawitem.split("<pubDate>")[1].split("</pubDate>")[0]);
+			if (rawitem.contains("<enclosure>"))
+				cv.put("Enclosure", rawitem.split("<enclosure>")[1].split("</enclosure>")[0]);
+			if (rawitem.contains("<guid>"))
+				cv.put("guid", rawitem.split("<guid")[1].split(">")[1].split("</guid")[0]);
+			if (rawitem.contains("<source>"))
+				cv.put("Source", rawitem.split("<source>")[1].split("</source>")[0]);
+			if (rawitem.contains("<comments>"))
+				cv.put("Comments", rawitem.split("<comments>")[1].split("</comments>")[0]);
+			cv.put("Important", notify);
+			cv.put("feedname", feedname);
+			if (rawitem.contains("<content"))
+				cv.put("Content", rawitem.split("<content:encoded>")[1].split("</content:encoded>")[0]);
+			ammDatabase.insert("Feeds", null, cv);
+			if (notify)
+				notifyUser(title, "moii", ctx);
 		}
 		
 	}

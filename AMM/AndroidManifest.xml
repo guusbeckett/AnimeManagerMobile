@@ -43,6 +43,10 @@
             android:label="@string/app_name" >
         </activity>
         <activity
+            android:name="animemanagermobile.reupload.nl.RssItem"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
             android:name="animemanagermobile.reupload.nl.EditMediaObject"
             android:label="@string/app_name" >
         </activity>

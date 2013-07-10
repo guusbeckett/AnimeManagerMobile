@@ -5,12 +5,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +30,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import animemanagermobile.reupload.nl.data.AMMDatabase;
 import animemanagermobile.reupload.nl.data.DataManage;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -34,6 +40,11 @@ public class ViewList extends Activity implements OnItemClickListener {
 	private MediaObject[] lel = null;
 	private int typeList;
 	private boolean sort;
+	private boolean rssMode;
+	private boolean feedMode;
+	private String[] list;
+	private String feed;
+	private ArrayList<String> guids;
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
@@ -43,17 +54,25 @@ public class ViewList extends Activity implements OnItemClickListener {
         actionBar.setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_edit_anime);
         typeList = this.getIntent().getIntExtra("type", 0);
+        rssMode = this.getIntent().getBooleanExtra("rssMode", false);
         data = new DataManage();
-        lel = data.getMediaList(this, typeList);
+        if (!rssMode)
+        	lel = data.getMediaList(this, typeList);
+        else
+        	feedMode = this.getIntent().getBooleanExtra("feedMode", false);
+        if (feedMode) {
+        	feed = this.getIntent().getStringExtra("feed");
+        	actionBar.setTitle(feed);
+        }
         sort = true;
         
         RelativeLayout rl = (RelativeLayout) findViewById(R.id.anime_relative);
-        if (lel == null) {
+        if (lel == null && !rssMode) {
         	Log.d("SEVERE", "getAnime returned NULL");
         	TextView tv = new TextView(this);
         	tv.setText("No items found");
         }
-        else {
+        else if (!rssMode) {
         	Log.d("what", "lel");
         	if (lel.length > 0) {
         		if (sort) {
@@ -79,15 +98,74 @@ public class ViewList extends Activity implements OnItemClickListener {
 	        	tv.setText("No items found");
         	}
         }
+        else {
+        	if (!feedMode) {
+        		list = getFeeds();
+	        	ArrayAdapter adapter = new ArrayAdapter<String>(this, 
+	                    android.R.layout.simple_list_item_1, list);
+	        	ListView listView = new ListView(this);
+	        	listView.setAdapter(adapter);
+	        	rl.addView(listView);
+	        	listView.setOnItemClickListener(this);
+        	}
+        	else {
+        		list = getFeedHeaders();
+        		if (list != null) {
+		        	ArrayAdapter adapter = new ArrayAdapter<String>(this, 
+		                    android.R.layout.simple_list_item_1, list);
+		        	ListView listView = new ListView(this);
+		        	listView.setAdapter(adapter);
+		        	rl.addView(listView);
+		        	listView.setOnItemClickListener(this);
+        		}
+        	}
+        }
         
     }
 	
+	private String[] getFeedHeaders() {
+		ArrayList<String> list = new ArrayList<String>();
+		guids = new ArrayList<String>();
+		SQLiteOpenHelper ammData = new AMMDatabase(this);
+		SQLiteDatabase ammDatabase = ammData.getWritableDatabase();
+		Cursor c = ammDatabase.query("Feeds", new String[]{"Title", "guid"}, "feedname='" + feed + "'", null, null, null, null);
+		while (c.moveToNext()) {
+			if (c.isAfterLast())
+				break;
+			else  {
+				list.add(StringEscapeUtils.unescapeHtml4(c.getString(c.getColumnIndex("Title"))));
+				guids.add(c.getString(c.getColumnIndex("Title")));
+			}
+		}
+		ammDatabase.close();
+		return list.toArray(new String[0]);
+	}
+
+	private String[] getFeeds() {
+		ArrayList<String> list = new ArrayList<String>();
+		list.add("Important items");
+		SQLiteOpenHelper ammData = new AMMDatabase(this);
+		SQLiteDatabase ammDatabase = ammData.getWritableDatabase();
+		Cursor c = ammDatabase.query("Subteams", new String[]{"Name"}, null, null, null, null, null);
+		while (c.moveToNext()) {
+			if (c.isAfterLast())
+				break;
+			else {
+				list.add(c.getString(c.getColumnIndex("Name")));
+			}
+		}
+		ammDatabase.close();
+		return list.toArray(new String[0]);
+	}
+
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.edit_menu, menu);
+		if (!rssMode)
+			getMenuInflater().inflate(R.menu.edit_menu, menu);
+		else
+			getMenuInflater().inflate(R.menu.edit_menu_noadd, menu);
         return true;
-
     }
 	
 	@Override
@@ -96,9 +174,12 @@ public class ViewList extends Activity implements OnItemClickListener {
 	    switch (item.getItemId()) {
 	        case android.R.id.home:
 	            // app icon in action bar clicked; go home
-	            Intent intent = new Intent(this, MainMenu.class);
-	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	            startActivity(intent);
+	        	if (!rssMode) {
+		            Intent intent = new Intent(this, MainMenu.class);
+		            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		            startActivity(intent);
+	        	}
+	        	else finish();
 	            return true;
 	        case R.id.menu_add:
 //	        	Intent intent2 = new Intent(this, EditMediaObject.class);
@@ -137,10 +218,25 @@ public class ViewList extends Activity implements OnItemClickListener {
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		// TODO Auto-generated method stub
-		Intent intent = new Intent(getBaseContext(), MediaPage.class);
-		intent.putExtra("type", this.getIntent().getIntExtra("type", 0));
-		intent.putExtra("point", arg2);
-		startActivity(intent);
+		if (!rssMode) {
+			Intent intent = new Intent(getBaseContext(), MediaPage.class);
+			intent.putExtra("type", this.getIntent().getIntExtra("type", 0));
+			intent.putExtra("point", arg2);
+			startActivity(intent);
+		}
+		else if (!feedMode) {
+			Intent intent = new Intent(getBaseContext(), ViewList.class);
+			intent.putExtra("rssMode", true);
+			intent.putExtra("feedMode", true);
+			intent.putExtra("feed", list[arg2]);
+			startActivity(intent);
+		}
+		else {
+			Intent intent = new Intent(getBaseContext(), RssItem.class);
+			intent.putExtra("guid", guids.get(arg2));
+			intent.putExtra("feed", feed);
+			startActivity(intent);
+		}
 	}
 	
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)

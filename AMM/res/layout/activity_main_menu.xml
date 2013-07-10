@@ -63,5 +63,14 @@
         android:layout_below="@+id/button5"
         android:gravity="left"
         android:text="@string/view_toread" />
+    
+    <Button
+        android:id="@+id/button7"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/button2"
+        android:layout_below="@+id/button6"
+        android:gravity="left"
+        android:text="@string/rss_main" />
 
 </RelativeLayout>
