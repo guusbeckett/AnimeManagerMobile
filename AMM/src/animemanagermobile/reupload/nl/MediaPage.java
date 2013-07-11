@@ -214,7 +214,7 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
         	mTabsAdapter.addTab(actionBar.newTab().setText("Releases"),
         			FragmentRelease.class, null);
         }
-        else if (type == 3 || type == 4)
+        else if (type == 3 || type == 4 && !tempMode)
         	mTabsAdapter.addTab(actionBar.newTab().setText("Manga Reader"),
         			FragmentMangaRead.class, null);
         
@@ -253,7 +253,12 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 				case (2):
 					menu.add(0, 1, 0, "Add to watching");
 					menu.add(0, 2, 0, "Add to seen");
-					menu.add(0, 3, 0, "Add to backlog"); //TODO make
+					menu.add(0, 3, 0, "Add to backlog");
+					break;
+				case (4):
+					menu.add(0, 1, 0, "Add to reading");
+					menu.add(0, 2, 0, "Add to read");
+					menu.add(0, 3, 0, "Add to backlog");
 					break;
 			}
 			return true;
@@ -383,20 +388,16 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 		switch (item.getItemId()) {
 			case (1):
 				//Add to watching/reading
-				if (!manga) {
-					addTempToPerm(1);
-					DataManage.register(media.getTitle(), media.getId(), this, 1);
-					DataManage.moveFile(getCacheDir()+"/tempmetadata/", "tempanime"+media.getId()+".xml", getExternalFilesDir(null)+"/", "anime"+media.getId()+".xml");
-				}
+				addTempToPerm(((manga)?3:1));
+				DataManage.register(media.getTitle(), media.getId(), this, ((manga)?3:1));
+				DataManage.moveFile(getCacheDir()+"/tempmetadata/", ((manga)?"tempmanga":"tempanime")+media.getId()+".xml", getExternalFilesDir(null)+"/", ((manga)?"manga":"anime")+media.getId()+".xml");
 				finish();
 				return true;
 			case (2):
 				//Add to seen/read
-				if (!manga) {
-					addTempToPerm(2);
-					DataManage.register(media.getTitle(), media.getId(), this, 2);
-					DataManage.moveFile(getCacheDir()+"/tempmetadata/", "tempmanga"+media.getId()+".xml", getExternalFilesDir(null)+"/", "manga"+media.getId()+".xml");
-				}
+				addTempToPerm(((manga)?4:2));
+				DataManage.register(media.getTitle(), media.getId(), this, ((manga)?4:2));
+				DataManage.moveFile(getCacheDir()+"/tempmetadata/", ((manga)?"tempmanga":"tempanime")+media.getId()+".xml", getExternalFilesDir(null)+"/", ((manga)?"manga":"anime")+media.getId()+".xml");
 				finish();
 				return true;
 			case (3):

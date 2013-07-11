@@ -8,6 +8,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -47,7 +48,7 @@ public class AniDBWrapper {
 		        	if (item.contains("lang") && item.contains("aid")) {
 		        		String id = item.split("aid=\"")[1].split("\"")[0];
 		        		if (!id.equals("0")) {
-		        			title.add(item.split("CDATA\\[")[1].split("\\]")[0]+"^"+id);
+		        			title.add(StringEscapeUtils.unescapeHtml4(item.split("CDATA\\[")[1].split("\\]")[0]+"^"+id));
 		        		}
 		        	}
 		        	else

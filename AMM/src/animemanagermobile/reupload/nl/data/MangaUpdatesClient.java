@@ -3,6 +3,8 @@ package animemanagermobile.reupload.nl.data;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.ParseException;
 import org.apache.http.util.EntityUtils;
@@ -34,7 +36,7 @@ public class MangaUpdatesClient {
 		        				try {
 		        					int id = Integer.parseInt(showname.split("\\^")[1]);
 			        				if (!title.contains(showname) && id > 0) {
-			        					title.add(showname);
+			        					title.add(StringEscapeUtils.unescapeHtml4(showname));
 			        				}
 		        				} catch (Exception e) {
 									// TODO: handle exception
@@ -42,30 +44,10 @@ public class MangaUpdatesClient {
 		        			}
 		        		}
 		        }
-		       // DataManage.writeToExternal(response, "nope", this);
-		      //  Log.i("reject", item);
-		        //	if (item.contains("lang") && item.contains("aid")) {
-		       // 		title.add(item.split("CDATA\\[")[1].split("\\]")[0]+"^"+item.split("aid=\"")[1].split("\"")[0]);
-		        	//}
-		        //	else
-		        //		Log.i("reject", item);
-		      //  }
-		       // if (title.size() < 1) {
-		        	//try everything
-		        	/*for (String item : response) {
-			        	if (item.contains("lang") && item.contains("aid")) {
-			        		title.add(item.split("CDATA\\[")[1].split("\\]")[0]+"^"+item.split("aid=\"")[1].split("\"")[0]);
-			        	}
-		        	}*/
-		       // }
-		       
 		    }
 		} catch (Exception e) {
 		    e.printStackTrace();
 		}
-		
-		
-		// Do what you want with that stream
 		return title;
 	}
 
@@ -93,19 +75,20 @@ public class MangaUpdatesClient {
 		grabMangaMetadata(id, false, activ);
 	}
 
-	private static String convertHTMLToXML(String parsed) {
+	private static String convertHTMLToXML(String unparsed) {
 		// TODO Auto-generated method stub
 		String XML= "";
-		parsed = parsed.split("<span class=\"releasestitle tabletitle\">")[1].split("<!-- End:Series Info-->")[0];
-		parsed.replace("\n", "");
-		XML+="<title>"+parsed.split("</span>")[0]+"</title>";
-		XML+="\n<description>"+parsed.split("Description")[1].split("<div class=\"sContent\"")[1].split(">")[1].split("</div>")[0]+"</description>";
-		XML+="\n<type>"+parsed.split("<b>Type</b>")[1].split("<div class=\"sContent\"")[1].split(">")[1].split("</div")[0]+"</type>";
-		XML+="\n<titles>"+parsed.split("<b>Associated Names</b>")[1].split("<div class=\"sContent\"")[1].split(">")[1].split("</div")[0]+"</titles>";
-		XML+="\n<scanlators>"+parsed.split("<b>Groups Scanlating</b>")[1].split("<div class=\"sContent\"")[1].split(">")[1].split("</div")[0]+"</scanlators>";
-		XML+="\n<picture>"+parsed.split("<b>Image</b>")[1].split("<div class=\"sContent\"")[1].split("src=\'")[1].split("\'")[0]+"</picture>";
-		XML+="\n<genre>"+parsed.split("<b>Genre</b>")[1].split("<div class=\"sContent\"")[1].split(">")[1].split("</div")[0]+"</genre>";
-		XML+="\n<categories>"+parsed.split("<b>Categories</b>")[1].split("<div class=\"sContent\"")[1].split(">")[1].split("</div")[0]+"</categories>";
+		unparsed = unparsed.split("<span class=\"releasestitle tabletitle\">")[1].split("<!-- End:Series Info-->")[0];
+		unparsed.replace("\n", "");
+		XML+="<title>"+unparsed.split("</span>")[0]+"</title>";
+		XML+="\n<description>"+unparsed.split("Description")[1].split("<div class=\"sContent\"")[1].split(">")[1].split("</div>")[0]+"</description>";
+		XML+="\n<type>"+unparsed.split("<b>Type</b>")[1].split("<div class=\"sContent\"")[1].split(">")[1].split("</div")[0]+"</type>";
+		XML+="\n<titles>"+unparsed.split("<b>Associated Names</b>")[1].split("<div class=\"sContent\"")[1].split(">")[1].split("</div")[0]+"</titles>";
+		XML+="\n<scanlators>"+unparsed.split("<b>Groups Scanlating</b>")[1].split("<div class=\"sContent\"")[1].split(">")[1].split("</div")[0]+"</scanlators>";
+		if (unparsed.contains("<b>Image</b>"))
+			XML+="\n<picture>"+unparsed.split("<b>Image</b>")[1].split("<div class=\"sContent\"")[1].split("src=\'")[1].split("\'")[0]+"</picture>";
+		XML+="\n<genre>"+unparsed.split("<b>Genre</b>")[1].split("<div class=\"sContent\"")[1].split(">")[1].split("</div")[0]+"</genre>";
+		XML+="\n<categories>"+unparsed.split("<b>Categories</b>")[1].split("<div class=\"sContent\"")[1].split(">")[1].split("</div")[0]+"</categories>";
 		//XML+="\n<catagories>"+parsed.split("<b>Categories</b>")[1].split("<div class=\"sContent\"")[1].split(">")[1].split("</div")[0]+"</catagories>";
 		//Log.d("lel", parsed.split("<b>Author")[1]);
 		return XML;
