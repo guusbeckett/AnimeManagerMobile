@@ -221,7 +221,10 @@ public class AniDBWrapper {
 			data[9] = stream.split("<ratings>")[1].split("</ratings>")[0];
 			Log.d("check", "4");
 			data[10] = stream.split("<picture>")[1].split("</picture>")[0];
-			data[11] = stream.split("<categories>")[1].split("</categories>")[0];
+			if (stream.contains("<categories>"))
+				data[11] = stream.split("<categories>")[1].split("</categories>")[0];
+			else
+				data[11] = "";
 			data[12] = stream.split("<resources>")[1].split("</resources>")[0];
 			if (stream.contains("<tags>"))
 				data[13] = stream.split("<tags>")[1].split("</tags>")[0];
