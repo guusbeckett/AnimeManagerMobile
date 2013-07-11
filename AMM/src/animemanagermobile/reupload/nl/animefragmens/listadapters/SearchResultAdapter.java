@@ -55,7 +55,9 @@ public class SearchResultAdapter extends BaseAdapter {
         			  ((item.getType()==3)?"Reading":
         			  ((item.getType()==4)?"Read":
         			  ((item.getType()==6)?"Manga Backlog":
-        							 	   "Online"))))));
+        			 ((item.getType()==-1)?"Online Anime":	  
+        			 ((item.getType()==-2)?"Online Manga":	  
+        							 	   item.getType()+" was not recognized"))))))));
         type.setText("");
         return vi;
     }

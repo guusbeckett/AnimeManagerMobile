@@ -60,8 +60,8 @@ public class SearchAMM extends Activity implements OnItemClickListener {
 		    		  }
 		    	  }
 		      }
-		      listOfAll.add(new MediaObject("Search aniDB", -1));
-		      listOfAll.add(new MediaObject("Search MangaUpdates", -2));
+		      listOfAll.add(new MediaObject(-1 ,"Search aniDB", -1));
+		      listOfAll.add(new MediaObject(-2, "Search MangaUpdates", -2));
 	      }
 	      else if (service == 1) {
 	    	  for (String item : AniDBWrapper.getMostLikelyID(query, true)) {
@@ -69,7 +69,7 @@ public class SearchAMM extends Activity implements OnItemClickListener {
 		    		  String title = item.split("\\^")[0];
 		    		  int id = Integer.parseInt(item.split("\\^")[1]);
 		    		  if (!title.equals(""))
-		    			  listOfAll.add(new MediaObject(title, id));
+		    			  listOfAll.add(new MediaObject(-1, title, id));
 	    		  } catch (Exception e) {  }
 	    	  }
 	      }
@@ -79,7 +79,7 @@ public class SearchAMM extends Activity implements OnItemClickListener {
 	    			  String title = item.split("\\^")[0];
 	    			  int id = Integer.parseInt(item.split("\\^")[1]);
 	    			  if (!title.equals(""))
-	    				  listOfAll.add(new MediaObject(title, id));
+	    				  listOfAll.add(new MediaObject(-2, title, id));
 	    		  } catch (Exception e) {  }
 	    	  }
 	      }

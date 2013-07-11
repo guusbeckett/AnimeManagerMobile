@@ -34,6 +34,14 @@ public class MediaObject implements Serializable {
 		this.id = 0;
 	}
 	
+	public MediaObject(int type, String string, int ID) {
+		this.title = string;
+		this.progress = 0;
+		this.total = 0;
+		this.id = ID;
+		this.type = type;
+	}
+	
 	public MediaObject(String string, int ID) {
 		this.title = string;
 		this.progress = 0;
