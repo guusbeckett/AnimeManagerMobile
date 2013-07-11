@@ -44,13 +44,18 @@ public class SearchResultAdapter extends BaseAdapter {
  
         MediaObject item = items[position];
         TextView title = (TextView)vi.findViewById(R.id.search_title); // title
-        TextView type = (TextView)vi.findViewById(R.id.search_type); // artist name
-        TextView status = (TextView)vi.findViewById(R.id.search_status); // duration
+        TextView type = (TextView)vi.findViewById(R.id.search_type); // type
+        TextView status = (TextView)vi.findViewById(R.id.search_status); // status
  
         // Setting all values in listview
-        title.setText(item.getTitle()+"");
-        status.setText(item.getType()+"");
-        type.setText("unused"+"");
+        title.setText(item.getTitle());
+        status.setText((item.getType()==1)?"Watching":
+        		((item.getType()==2)?"Seen":
+        		((item.getType()==5)?"Anime Backlog":
+        		((item.getType()==3)?"Reading":
+        		((item.getType()==4)?"Read":
+        		((item.getType()==6)?"Manga Backlog":"Online"))))));
+        type.setText("");
         //gender.setText((existence[position])?"available":"not available");
         return vi;
     }

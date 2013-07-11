@@ -165,7 +165,8 @@ public class MainMenu extends Activity {
  * [ ] Make it possible to mass download metadata
  * [ ] Implemented a "sync services" system that works separate from the filesystem code for sites like aniDB MyList and MAL
  * [ ] Make notifications stack
- * [ ] Make proper RSS reader
+ * [*] Make RSS reader
+ * [ ] Make RSS reader nicer to look at
  * [ ] Make page for notifcations that links to the show
  * [ ] Make the notification system nagging
  * [ ] Make first run wizard

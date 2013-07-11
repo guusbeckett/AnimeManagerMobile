@@ -34,10 +34,7 @@ public class FeedParser {
 			ammDatabase =  ammData.getWritableDatabase();
 			Log.d("data", ammDatabase.getPath());
 			c = ammDatabase.query("Subteams", new String[]{"Name", "RSS_URL", "LastPost"}, null, null, null, null, null);
-			boolean first = true;
 			while (c.moveToNext()) {
-				if (first)
-						c.moveToFirst();
 				Log.d(TAG, "doing a feed");
 				if (c.isAfterLast() == true) {
 					Log.d(TAG, "done handling feeds, there were " + c.getCount() + " feeds");
