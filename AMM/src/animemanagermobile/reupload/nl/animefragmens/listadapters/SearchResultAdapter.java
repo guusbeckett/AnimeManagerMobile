@@ -50,13 +50,13 @@ public class SearchResultAdapter extends BaseAdapter {
         // Setting all values in listview
         title.setText(item.getTitle());
         status.setText((item.getType()==1)?"Watching":
-        		((item.getType()==2)?"Seen":
-        		((item.getType()==5)?"Anime Backlog":
-        		((item.getType()==3)?"Reading":
-        		((item.getType()==4)?"Read":
-        		((item.getType()==6)?"Manga Backlog":"Online"))))));
+        			  ((item.getType()==2)?"Seen":
+        			  ((item.getType()==5)?"Anime Backlog":
+        			  ((item.getType()==3)?"Reading":
+        			  ((item.getType()==4)?"Read":
+        			  ((item.getType()==6)?"Manga Backlog":
+        							 	   "Online"))))));
         type.setText("");
-        //gender.setText((existence[position])?"available":"not available");
         return vi;
     }
 }

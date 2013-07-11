@@ -1,7 +1,10 @@
 package animemanagermobile.reupload.nl;
 
 import android.os.Bundle;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.Menu;
@@ -9,15 +12,26 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 import animemanagermobile.reupload.nl.releasetracker.ReleaseTrackingService;
 import animemanagermobile.reupload.nl.storages.SkyDriveFS;
 
+@SuppressLint("NewApi")
 public class MainMenu extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent = getIntent();
+	    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+	    	Intent aniDBsearch = new Intent(this, SearchAMM.class);
+			aniDBsearch.putExtra(SearchManager.QUERY, intent.getStringExtra(SearchManager.QUERY));
+			aniDBsearch.setAction(Intent.ACTION_SEARCH);
+			startActivity(aniDBsearch);
+			finish();
+			return;
+	    }
         setContentView(R.layout.activity_main_menu);
         startService(new Intent(this, ReleaseTrackingService.class));
         SharedPreferences settings = getSharedPreferences("AMMprefs", 0);
@@ -123,6 +137,13 @@ public class MainMenu extends Activity {
     	
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_menu, menu);
+        
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+        // Assumes current activity is the searchable activity
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setIconifiedByDefault(true); // Do not iconify the widget; expand it by default
+        
         return true;
 
     }
