@@ -116,7 +116,7 @@ public class MangaUpdatesClient {
 	}
 	
 	public static String[] parseMangaUpdatesfile(int id, boolean temp, Activity act) {
-		if (doesMangaUpdatesfileExist(id, act)) {
+		if (doesMangaUpdatesfileExist(id, act) || temp) {
 			String stream = null;
 			if (!temp)
 				stream = DataManage.readFromExternal("manga"+id+".xml", act);
