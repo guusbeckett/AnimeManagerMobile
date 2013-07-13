@@ -1,15 +1,22 @@
 package nl.reupload.animemanagermobile.dialogs;
 
+import nl.reupload.animemanagermobile.dialogs.ShowPickerDialog.OnDialogSelectorListener;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 
-public class ShowPickerDialog extends DialogFragment implements OnClickListener {
+@Deprecated
+public class ShowPickerDialog extends AlertDialog implements OnClickListener {
+
+	protected ShowPickerDialog(Context context) {
+		super(context);
+	}
 
 	private static int mResourceArray;
 	private String[] names;
@@ -22,7 +29,7 @@ public class ShowPickerDialog extends DialogFragment implements OnClickListener 
 	    public void onSelectedOption(int selectedIndex);
 	}
 	
-	@Override
+/*	@Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
@@ -31,21 +38,25 @@ public class ShowPickerDialog extends DialogFragment implements OnClickListener 
         } catch (final ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnDialogSelectorListener");
         }
-    }
+    }*/
+	
+	public void setCallback(OnDialogSelectorListener listen) {
+		mDialogSelectorCallback = listen;
+	}
 
-	@Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        //builder.setMessage(R.string.show_options);
-       // for (String item : names)
-        //	Log.d(";_;", item);
-        final Activity ac = this.getActivity();
-        
-        builder.setItems(names, this);
-
-        // Create the AlertDialog object and return it
-        return builder.create();
-    }
+//	@Override
+//    public Dialog onCreateDialog(Bundle savedInstanceState) {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//        //builder.setMessage(R.string.show_options);
+//       // for (String item : names)
+//        //	Log.d(";_;", item);
+//        final Activity ac = this.getActivity();
+//        
+//        builder.setItems(names, this);
+//
+//        // Create the AlertDialog object and return it
+//        return builder.create();
+//    }
 	
 	public void setData(String[] data) {
 		names = new String[data.length];
@@ -78,6 +89,6 @@ public class ShowPickerDialog extends DialogFragment implements OnClickListener 
 		Log.d("na" , which+"");
 		
 	}
-	
+
 }
 

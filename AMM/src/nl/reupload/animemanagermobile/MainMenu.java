@@ -183,7 +183,7 @@ public class MainMenu extends Activity {
  * [ ] Make the mangaCrawler more intelligent and more useful
  * [ ] Make the main menu nicer looking
  * [ ] Make a mediafire client
- * [ ] Make it possible to download metadata in an asynctask
+ * [*] Make it possible to download metadata in an asynctask
  * [ ] Make it possible to mass download metadata
  * [ ] Implemented a "sync services" system that works separate from the filesystem code for sites like aniDB MyList and MAL
  * [ ] Make notifications stack

@@ -12,6 +12,7 @@ import nl.reupload.animemanagermobile.animefragmens.FragmentMangaRead;
 import nl.reupload.animemanagermobile.animefragmens.FragmentRelatedSeries;
 import nl.reupload.animemanagermobile.animefragmens.FragmentRelease;
 import nl.reupload.animemanagermobile.animefragmens.FragmentTags;
+import nl.reupload.animemanagermobile.asynctasks.MetaDataFetcher;
 import nl.reupload.animemanagermobile.data.AMMDatabase;
 import nl.reupload.animemanagermobile.data.AniDBWrapper;
 import nl.reupload.animemanagermobile.data.DataManage;
@@ -54,7 +55,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class MediaPage extends FragmentActivity implements OnDialogSelectorListener {
+public class MediaPage extends FragmentActivity {
 	
 	private MediaObject media;
 	private LinearLayout linlay;
@@ -284,26 +285,27 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 	        switch (item.getItemId()) {
 	            case R.id.fetch_metadata:
 	                //newGame();
-	            	switch (type) {
-	            		case (1):
-	            			handleAnimeMetadata(null, type);
-	            			break;
-	            		case (2):
-	            			handleAnimeMetadata(null, type);
-	            			break;
-	            		case (3):
-	            			handleMangaMetadata(null, type);
-	            			break;
-	            		case (4):
-	            			handleMangaMetadata(null, type);
-	            			break;
-	            		case (5):
-	            			handleAnimeMetadata(null, type);
-	            		break;
-	            		case (6):
-	            			handleMangaMetadata(null, type);
-	            		break;
-	            	}
+	            	handleMetadata(null, type);
+//	            	switch (type) {
+//	            		case (1):
+//	            			handleAnimeMetadata(null, type);
+//	            			break;
+//	            		case (2):
+//	            			handleAnimeMetadata(null, type);
+//	            			break;
+//	            		case (3):
+//	            			handleMangaMetadata(null, type);
+//	            			break;
+//	            		case (4):
+//	            			handleMangaMetadata(null, type);
+//	            			break;
+//	            		case (5):
+//	            			handleAnimeMetadata(null, type);
+//	            		break;
+//	            		case (6):
+//	            			handleMangaMetadata(null, type);
+//	            		break;
+//	            	}
 	                return true;
 	            case android.R.id.home:
 		            // app icon in action bar clicked; go home
@@ -354,26 +356,27 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 						public void onClick(DialogInterface dialog, int whichButton) {
 	                      term = et1.getText().toString();
 	                      if (term != null) {
-	      	            	switch (type) {
-	      		        		case (1):
-	      		        			handleAnimeMetadata(term, type);
-	      		        			break;
-	      		        		case (2):
-	      		        			handleAnimeMetadata(term, type);
-	      		        			break;
-	      		        		case (3):
-	      		        			handleMangaMetadata(term, type);
-	      		        			break;
-	      		        		case (4):
-	      		        			handleMangaMetadata(term, type);
-	      		        			break;
-	      		        		case (5):
-	      		        			handleAnimeMetadata(term, type);
-	      		        			break;
-	      		        		case (6):
-	      		        			handleMangaMetadata(term, type);
-	      		        			break;
-	      	            	}
+	                    	  handleMetadata(term, type);
+//	      	            	switch (type) {
+//	      		        		case (1):
+//	      		        			handleAnimeMetadata(term, type);
+//	      		        			break;
+//	      		        		case (2):
+//	      		        			handleAnimeMetadata(term, type);
+//	      		        			break;
+//	      		        		case (3):
+//	      		        			handleMangaMetadata(term, type);
+//	      		        			break;
+//	      		        		case (4):
+//	      		        			handleMangaMetadata(term, type);
+//	      		        			break;
+//	      		        		case (5):
+//	      		        			handleAnimeMetadata(term, type);
+//	      		        			break;
+//	      		        		case (6):
+//	      		        			handleMangaMetadata(term, type);
+//	      		        			break;
+//	      	            	}
 	                      }
 	                      }
 	                    });
@@ -457,7 +460,8 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 			DataManage.setRefresh(true);
 	}
 
-	private void handleMangaMetadata(String term, int type) {
+	@Deprecated
+	private void handleMangaMetadata(String term, final int type) {
 		AlertDialog mInitializeDialog = ProgressDialog.show(this, "", "Fetching metadata. Please wait...", true);
 		if (id == 0)
 			if (term == null)
@@ -486,13 +490,45 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
         	this.recreate();
         }
         else {
-        	temptype = 1;
+//        	temptype = 1;
         	mInitializeDialog.dismiss();
-        	DialogFragment newFragment = new ShowPickerDialog();
-        	((ShowPickerDialog) newFragment).setData(title);
-        	((ShowPickerDialog) newFragment).setTitle(media.getTitle());
-            newFragment.show(getSupportFragmentManager(), "show");
-            //this.recreate();
+        	QGramsDistance metric = new QGramsDistance();
+        	float high = 0;
+        	String win = "";
+        	for (String item : title) {
+        		float sim = metric.getSimilarity(item.split("\\^")[0], media.getTitle());
+        		if (sim > high) {
+        			high = sim;
+        			win = item;
+        		}
+        		Log.d("sim", "simmilarity between " + media.getTitle() + " and " + item.split("\\^")[0] + " is " + sim);
+        	}
+        	AlertDialog.Builder alert = new AlertDialog.Builder(this);
+    	    TextView tv = new TextView(this);
+    	    tv.setText("did you mean \"" + win.split("\\^")[0] + "\"?");
+            alert.setView(tv);
+            final String won = win.toString();
+            final Activity act = this;
+            alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            	@Override
+				public void onClick(DialogInterface dialog, int whichButton) {
+            		if (media.getId() == 0)
+                		DataManage.register(media.getTitle(), Integer.parseInt(won.split("\\^")[1]), act, type);
+                	AniDBWrapper.grabAnimeMetadata(Integer.parseInt(won.split("\\^")[1]), act);
+                	act.recreate();
+                }
+            });
+
+                alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                  @Override
+				public void onClick(DialogInterface dialog, int whichButton) {
+//                	DialogFragment newFragment = new ShowPickerDialog();
+//                  	((ShowPickerDialog) newFragment).setData(title);
+//                  	((ShowPickerDialog) newFragment).setTitle(media.getTitle());
+//                    newFragment.show(getSupportFragmentManager(), "show");
+                  }
+                });
+                alert.show();
             
         }
 		
@@ -570,6 +606,7 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 		}
 	}
 
+	@Deprecated
 	private void handleAnimeMetadata(String term, final int type2) {
 		if (term == null)
 			title = AniDBWrapper.getMostLikelyID(media.getTitle(), false).toArray(new String[0]);
@@ -601,11 +638,9 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
         	}
         	AlertDialog.Builder alert = new AlertDialog.Builder(this);
             LinearLayout ll = new LinearLayout(this);
-    	    ll.setOrientation(LinearLayout.VERTICAL);
     	    TextView tv = new TextView(this);
     	    tv.setText("did you mean \"" + win.split("\\^")[0] + "\"?");
-    	    ll.addView(tv);
-            alert.setView(ll);
+            alert.setView(tv);
             final String won = win.toString();
             final Activity act = this;
             alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -621,10 +656,10 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
                 alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
                   @Override
 				public void onClick(DialogInterface dialog, int whichButton) {
-                	DialogFragment newFragment = new ShowPickerDialog();
-                  	((ShowPickerDialog) newFragment).setData(title);
-                  	((ShowPickerDialog) newFragment).setTitle(media.getTitle());
-                    newFragment.show(getSupportFragmentManager(), "show");
+//                	DialogFragment newFragment = new ShowPickerDialog();
+//                  	((ShowPickerDialog) newFragment).setData(title);
+//                  	((ShowPickerDialog) newFragment).setTitle(media.getTitle());
+//                    newFragment.show(getSupportFragmentManager(), "show");
                   }
                 });
                 alert.show();
@@ -643,19 +678,10 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 			list = data.getMediaList(this, type);
 	}
 
-	@Override
-	public void onSelectedOption(int selectedIndex) {
-		if (selectedIndex >= 0) {
-			
-			if (media.getId() == 0)
-        		DataManage.register(media.getTitle(), Integer.parseInt(title[selectedIndex].split("\\^")[1]), this, type);
-			if (type == 1 || type == 2 || type == 5)
-				AniDBWrapper.grabAnimeMetadata(Integer.parseInt(title[selectedIndex].split("\\^")[1]), this);
-			else 
-				MangaUpdatesClient.grabMangaMetadata(Integer.parseInt(title[selectedIndex].split("\\^")[1]), this);
-			this.recreate();
-		}
-		Log.d("select", selectedIndex+"");
+	public void handleMetadata(String term2, int type2) {
+		final Activity act = this;
+		MetaDataFetcher fetcher = new MetaDataFetcher(this, term2, media, type2);
+		fetcher.execute(0);
 		
 	}
 }
