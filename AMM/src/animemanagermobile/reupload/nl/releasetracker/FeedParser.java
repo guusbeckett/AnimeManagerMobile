@@ -42,6 +42,8 @@ public class FeedParser {
 				}
 				String feed = null;
 				String url = c.getString(c.getColumnIndex("RSS_URL"));
+				if (url.equals(""))
+					continue;
 				if (!url.contains("http://"))
 					url = "http://" + url;
 				Log.d("nee", "data run "+url);

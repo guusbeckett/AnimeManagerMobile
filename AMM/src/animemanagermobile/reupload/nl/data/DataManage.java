@@ -112,10 +112,10 @@ public class DataManage {
 								String prog = nya.split(" ep ")[1].split("\\.")[0];
 								int progs =Integer.parseInt(prog);
 								if (prog.length() > 0) {
-									list.add(new MediaObject(nya.split(" ep ")[0], progs));
+									list.add(new MediaObject(nya.split(" ep ")[0], progs, 0));
 								}
 								else {
-									list.add(new MediaObject(nya.split(" ep ")[0], 0));
+									list.add(new MediaObject(nya.split(" ep ")[0], 0, 0));
 								}
 							}
 								
@@ -143,10 +143,10 @@ public class DataManage {
 							{
 								String prog = nya.split(" ch ")[1].split("\\.")[0];
 								if (prog.length() > 0) {
-									list.add(new MediaObject(nya.split(" ch ")[0], Integer.parseInt(prog)));
+									list.add(new MediaObject(nya.split(" ch ")[0], Integer.parseInt(prog), 0));
 								}
 								else {
-									list.add(new MediaObject(nya.split(" ch ")[0], 0));
+									list.add(new MediaObject(nya.split(" ch ")[0], 0, 0));
 								}
 							}
 								
@@ -377,7 +377,7 @@ public class DataManage {
 	}
 	
 	public static int getListWhereIDisRegistered(int ID, Activity act) {
-		/*String in = readRegistered(act);
+		/*String in = readRegistered(fact);
 	       //TODO fix
 		return false;*/
 		SQLiteOpenHelper ammData = new AMMDatabase(act);
