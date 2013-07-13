@@ -3,9 +3,14 @@ package animemanagermobile.reupload.nl;
 import java.io.File;
 import java.util.ArrayList;
 
+import uk.ac.shef.wit.simmetrics.TestMetrics;
+import uk.ac.shef.wit.simmetrics.metrichandlers.MetricHandler;
+import uk.ac.shef.wit.simmetrics.similaritymetrics.QGramsDistance;
+
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
@@ -27,6 +32,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import animemanagermobile.reupload.nl.animefragmens.FragmentCategories;
 import animemanagermobile.reupload.nl.animefragmens.FragmentCharacters;
@@ -536,7 +542,7 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
 		}
 	}
 
-	private void handleAnimeMetadata(String term, int type2) {
+	private void handleAnimeMetadata(String term, final int type2) {
 		if (term == null)
 			title = AniDBWrapper.getMostLikelyID(media.getTitle(), false).toArray(new String[0]);
 		else
@@ -554,10 +560,47 @@ public class MediaPage extends FragmentActivity implements OnDialogSelectorListe
         	this.recreate();
         }
         else {
-        	DialogFragment newFragment = new ShowPickerDialog();
-        	((ShowPickerDialog) newFragment).setData(title);
-        	((ShowPickerDialog) newFragment).setTitle(media.getTitle());
-            newFragment.show(getSupportFragmentManager(), "show");
+        	QGramsDistance metric = new QGramsDistance();
+        	float high = 0;
+        	String win = "";
+        	for (String item : title) {
+        		float sim = metric.getSimilarity(item.split("\\^")[0], media.getTitle());
+        		if (sim > high) {
+        			high = sim;
+        			win = item;
+        		}
+        		Log.d("sim", "simmilarity between " + media.getTitle() + " and " + item.split("\\^")[0] + " is " + sim);
+        	}
+        	AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            LinearLayout ll = new LinearLayout(this);
+    	    ll.setOrientation(LinearLayout.VERTICAL);
+    	    TextView tv = new TextView(this);
+    	    tv.setText("did you mean \"" + win.split("\\^")[0] + "\"?");
+    	    ll.addView(tv);
+            alert.setView(ll);
+            final String won = win.toString();
+            final Activity act = this;
+            alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            	@Override
+				public void onClick(DialogInterface dialog, int whichButton) {
+            		if (media.getId() == 0)
+                		DataManage.register(media.getTitle(), Integer.parseInt(won.split("\\^")[1]), act, type2);
+                	AniDBWrapper.grabAnimeMetadata(Integer.parseInt(won.split("\\^")[1]), act);
+                	act.recreate();
+                }
+            });
+
+                alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                  @Override
+				public void onClick(DialogInterface dialog, int whichButton) {
+                	DialogFragment newFragment = new ShowPickerDialog();
+                  	((ShowPickerDialog) newFragment).setData(title);
+                  	((ShowPickerDialog) newFragment).setTitle(media.getTitle());
+                    newFragment.show(getSupportFragmentManager(), "show");
+                  }
+                });
+                alert.show();
+        	
             //this.recreate();
             
         }
