@@ -34,6 +34,7 @@ public class MetaDataFetcher extends AsyncTask<Integer, Integer, Boolean> {
 	private String term;
 	private String won;
 	private ProgressDialog mInitializeDialog;
+	private boolean noClose;
 
 	
 	public MetaDataFetcher(Activity act, String term2, MediaObject media, int type) {
@@ -41,6 +42,7 @@ public class MetaDataFetcher extends AsyncTask<Integer, Integer, Boolean> {
 		this.media = media;
 		this.type = type;
 		this.term = term2;
+		noClose = false;
 	}
 	
 	@Override
@@ -55,12 +57,13 @@ public class MetaDataFetcher extends AsyncTask<Integer, Integer, Boolean> {
 //		Toast.makeText(act, "link " + progress[0] + " found!", Toast.LENGTH_SHORT).show();
 		switch (progress[0]) {
 			case (0):
-				act.recreate();
+				if (!noClose)
+					act.recreate();
 				break;
 			case (1):
 				AlertDialog.Builder alert = new AlertDialog.Builder(act);
 		  	    TextView tv = new TextView(act);
-		  	    tv.setText("did you mean \"" + won.split("\\^")[0] + "\"?");
+		  	    tv.setText("did you mean \"" + won.split("\\^")[0] + "\" instead of \"" + (term!=null?term:media.getTitle()) + "\"?");
 		          alert.setView(tv);
 		          alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 		          	@Override
@@ -68,7 +71,8 @@ public class MetaDataFetcher extends AsyncTask<Integer, Integer, Boolean> {
 		          		if (media.getId() == 0)
 		              		DataManage.register(media.getTitle(), Integer.parseInt(won.split("\\^")[1]), act, type);
 		              	AniDBWrapper.grabAnimeMetadata(Integer.parseInt(won.split("\\^")[1]), act);
-		              	act.recreate();
+		              	if (!noClose)
+		              		act.recreate();
 		              }
 		          });
 	
@@ -191,5 +195,9 @@ public class MetaDataFetcher extends AsyncTask<Integer, Integer, Boolean> {
 				
       }	
       publishProgress(3);
+	}
+
+	public void noClose() {
+		this.noClose = true;
 	}
 }

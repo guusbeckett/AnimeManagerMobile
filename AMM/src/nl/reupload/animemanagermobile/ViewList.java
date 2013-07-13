@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import nl.reupload.animemanagermobile.R;
+import nl.reupload.animemanagermobile.asynctasks.MetaDataFetcher;
 import nl.reupload.animemanagermobile.data.AMMDatabase;
 import nl.reupload.animemanagermobile.data.DataManage;
 
@@ -163,8 +164,10 @@ public class ViewList extends Activity implements OnItemClickListener {
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-		if (!rssMode)
+		if (!rssMode) {
 			getMenuInflater().inflate(R.menu.edit_menu, menu);
+			menu.add(0, 5, 0, "RGet missing metadata");
+		}
 		else
 			getMenuInflater().inflate(R.menu.edit_menu_noadd, menu);
         return true;
@@ -212,6 +215,16 @@ public class ViewList extends Activity implements OnItemClickListener {
                       }
                     });
                     alert.show();
+                    return true;
+	        case (5):
+	        	for (MediaObject object : lel) { //I hope this doesn't get me banned
+	        		if (!DataManage.isRegistered(object.getTitle(), typeList, this)) {
+	        			MetaDataFetcher fetch = new MetaDataFetcher(this, null, object, typeList);
+	        			fetch.noClose();
+	        			fetch.execute(0);
+	        		}
+	        	}
+	        	return true;
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
