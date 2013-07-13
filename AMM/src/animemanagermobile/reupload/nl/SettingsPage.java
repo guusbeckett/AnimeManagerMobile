@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
+import animemanagermobile.reupload.nl.optionfragments.DevOptFragment;
 import animemanagermobile.reupload.nl.optionfragments.FileLocationFrag;
 import animemanagermobile.reupload.nl.optionfragments.MangaSelectionFragment;
 import animemanagermobile.reupload.nl.optionfragments.MetadataFragment;
@@ -43,6 +44,8 @@ public class SettingsPage extends FragmentActivity {
 	        		MetadataFragment.class, null);
 	        mTabsAdapter.addTab(actionBar.newTab().setText("Manga Storage"),
 	        		MangaSelectionFragment.class, null);
+	        mTabsAdapter.addTab(actionBar.newTab().setText("Dev Options"),
+	        		DevOptFragment.class, null);
 		}
 		else onCreateOld(savedInstanceState);
 	}
