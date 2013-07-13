@@ -18,6 +18,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -58,6 +59,19 @@ public class SearchAMM extends Activity implements OnItemClickListener {
 		    		  if (item.getTitle().toLowerCase(Locale.US).contains(query.toLowerCase(Locale.US))) {
 		    			  item.setType(i);
 		    			  listOfAll.add(item);
+		    		  }
+		    		  else if (i==1||i==2||i==5) {
+		    			  int id = DataManage.getID(item.getTitle(), this, i);
+		    			  if (id != 0) {
+		    				  String titles = AniDBWrapper.parseAniDBfile(id, this)[3];
+		    				  for (String item1 : titles.split("\n")) {
+		  	            		 if (item1.split("\\^")[0].toLowerCase(Locale.US).contains(query.toLowerCase(Locale.US))) {
+		  			    			  item.setType(i);
+		  			    			  listOfAll.add(item);
+		  			    			  break;
+		  	            		 }
+		  	            	}
+		    			  }
 		    		  }
 		    	  }
 		      }

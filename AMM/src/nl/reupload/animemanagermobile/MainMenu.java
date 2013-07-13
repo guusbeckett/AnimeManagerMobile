@@ -210,6 +210,8 @@ public class MainMenu extends Activity {
  * [*] Make going to related anime or a searched anime/manga check if anime/manga is in users list and if yes open that
  * [*] Make new menu for temp openened series
  * [*] Fix Offline support
+ * [*] Ability to search for alternative titles - does slow down searching
+ * [ ] Speed up searching
  * [ ] Create the "I'm bored function" - this function will give you advice on what to watch or read
  * [ ] REMINDER, REFACTOR
  * 

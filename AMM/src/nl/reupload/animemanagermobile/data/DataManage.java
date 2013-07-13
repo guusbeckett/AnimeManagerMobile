@@ -412,10 +412,15 @@ public class DataManage {
 		
 		if (c.getCount() > 0) {
 			c.moveToFirst();
-			return c.getInt(c.getColumnIndex("ID"));
+			int ret = c.getInt(c.getColumnIndex("ID"));
+			ammDatabase.close();
+			return ret;
 		}
-		else
+		else {
+			ammDatabase.close();
 			return 0;
+		}
+			
 		
 	}
 	
