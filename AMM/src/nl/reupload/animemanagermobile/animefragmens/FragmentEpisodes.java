@@ -4,7 +4,9 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -23,6 +25,7 @@ import nl.reupload.animemanagermobile.MediaObject;
 import nl.reupload.animemanagermobile.R;
 import nl.reupload.animemanagermobile.animefragmens.listadapters.EpisodeListAdapter;
 import nl.reupload.animemanagermobile.data.DataManage;
+import nl.reupload.animemanagermobile.data.VideoFetcher;
 
 public class FragmentEpisodes extends Fragment {
 
@@ -54,21 +57,35 @@ public class FragmentEpisodes extends Fragment {
 				@Override
 				public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 						long arg3) {
-					AlertDialog.Builder alert = new AlertDialog.Builder(act);
-	                LinearLayout ll = new LinearLayout(getActivity());
-	        	    ll.setOrientation(LinearLayout.VERTICAL);
-	                alert.setView(ll);
-	                TextView title = new TextView(act);
-	                TextView rest = new TextView(act);
-	                rest.setText("Type: " + ((String[])adapt.getItem(arg2))[0] 
-						+ "\nGender: " + ((String[])adapt.getItem(arg2))[2]
-						+ "\nSeiyuu: " + ((String[])adapt.getItem(arg2))[5]);
-	                title.setGravity(Gravity.CENTER);
-	            	title.setText(((String[])adapt.getItem(arg2))[1]);
-	            	title.setTypeface(null, Typeface.BOLD);
-	            	ll.addView(title);
-	            	ll.addView(rest);
-                    alert.show();
+					if (((String[]) adapt.getItem(arg2))[0].startsWith("C")) {
+						String extra = "";
+						for (String item : ((String[]) adapt.getItem(arg2))[3].split("\n")) {
+							Log.d("lel", item);
+							if (item!=null) {
+								if (item!=""&&item!="null"&&isNotOnlySpaces(item)) {
+									extra = item;
+									break;
+								}
+							}
+						}
+						Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(VideoFetcher.getVideoURLFromYoutube(media.getTitle() + " " + extra, true)[0]));
+						startActivity(browserIntent);
+					}
+//					AlertDialog.Builder alert = new AlertDialog.Builder(act);
+//	                LinearLayout ll = new LinearLayout(getActivity());
+//	        	    ll.setOrientation(LinearLayout.VERTICAL);
+//	                alert.setView(ll);
+//	                TextView title = new TextView(act);
+//	                TextView rest = new TextView(act);
+//	                rest.setText("Type: " + ((String[])adapt.getItem(arg2))[0] 
+//						+ "\nGender: " + ((String[])adapt.getItem(arg2))[2]
+//						+ "\nSeiyuu: " + ((String[])adapt.getItem(arg2))[5]);
+//	                title.setGravity(Gravity.CENTER);
+//	            	title.setText(((String[])adapt.getItem(arg2))[1]);
+//	            	title.setTypeface(null, Typeface.BOLD);
+//	            	ll.addView(title);
+//	            	ll.addView(rest);
+//                    alert.show();
 					// TODO Auto-generated method stub
 //					Intent intent = new Intent(activ, MangaView.class);
 //					intent.putExtra("title", media.getTitle());
@@ -99,6 +116,14 @@ public class FragmentEpisodes extends Fragment {
         return v;
     }
 	
+	public boolean isNotOnlySpaces(String string) {
+		for (char c : string.toCharArray()) {
+			if (!(c==32))
+				return true;
+		}
+		return false;
+	}
+	
 	public String[][] parseEps(String stream) {
 		//Log.d("nee", stream);
 		ArrayList<String[]> eps = new ArrayList<String[]>();
@@ -114,8 +139,19 @@ public class FragmentEpisodes extends Fragment {
 					chara[2] = ep.split("<airdate>")[1].split("</airdate>")[0];
 				else
 					chara[2] = "No airdate is known";
-				for (String title : ep.split("<title "))
-					chara[3]+="\n"+title.split(">")[1].split("<")[0];
+				boolean first = true;
+				for (String title : ep.split("<title ")) {
+					if (!title.contains("null")) {
+						if (!title.equals("")) {
+							if (first) {
+								chara[3]=title.split(">")[1].split("<")[0];
+								first = false;
+							}
+							else
+								chara[3]+="\n"+title.split(">")[1].split("<")[0];
+						}
+					}
+				}
 				eps.add(chara);
 			}
 		}

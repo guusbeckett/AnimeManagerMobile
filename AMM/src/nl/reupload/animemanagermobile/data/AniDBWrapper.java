@@ -203,13 +203,15 @@ public class AniDBWrapper {
 			boolean first = true;
 			for (String item : stream.split("<titles>")[1].split("</titles>")[0].split("<title")) {
 				if (item.contains("</title>")) {
-					if (first) {
-						data[3] = item.split(">")[1].split("</title")[0]+"^"+item.split("\"")[1];
-						first = false;
+					if (!item.isEmpty()) {
+						if (first) {
+							data[3] = item.split("\">")[1].split("</title")[0]+"^"+item.split("\"")[1];
+							first = false;
+						}
+						else
+							data[3] += "\n"+item.split("\">")[1].split("</title")[0]+"^"+item.split("\"")[1];
+						Log.d("title", item);
 					}
-					else
-						data[3] += "\n"+item.split(">")[1].split("</title")[0]+"^"+item.split("\"")[1];
-					Log.d("title", item);
 				}
 			}
 			if (stream.contains("<relatedanime>"))
