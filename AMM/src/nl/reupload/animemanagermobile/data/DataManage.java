@@ -326,7 +326,7 @@ public class DataManage {
 			Log.d("ne", "war");
 			if (manga) {
 				String data2 = data.split(split1)[0];
-				data = split2+"\n"+split1+"\n";
+				data = split1+"\n";
 				Log.d("ne", "war2");
 				for (MediaObject item : list) {
 					if (item!=null)
