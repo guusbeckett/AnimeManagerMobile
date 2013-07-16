@@ -2,6 +2,8 @@ package nl.reupload.animemanagermobile.animefragmens;
 
 import java.util.ArrayList;
 
+import uk.ac.shef.wit.simmetrics.similaritymetrics.QGramsDistance;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -68,7 +70,19 @@ public class FragmentEpisodes extends Fragment {
 								}
 							}
 						}
-						Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(VideoFetcher.getVideoURLFromYoutube(media.getTitle() + " " + extra, true)[0]));
+//						QGramsDistance metric = new QGramsDistance();
+//				      	float high = 0;
+//				      	String win = "";
+				      	String compiled = media.getTitle() + " " + extra;
+//				      	for (String item : VideoFetcher.getVideoURLFromYoutube(compiled, true)) {
+//				      		float sim = metric.getSimilarity(compiled, item.split("\\^")[1]);
+//				      		if (sim > high) {
+//				      			high = sim;
+//				      			win = item.split("\\^")[0];This part is due for removal. this algorithm, should not be used on youtube's (google's) search system
+//				      		}
+//				      		Log.d("sim", "simmilarity between " + compiled + " and " + item.split("\\^")[1] + " is " + sim);
+//				      	}
+						Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(VideoFetcher.getVideoURLFromYoutube(compiled, true)[0]));
 						startActivity(browserIntent);
 					}
 //					AlertDialog.Builder alert = new AlertDialog.Builder(act);

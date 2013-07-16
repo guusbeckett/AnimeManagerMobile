@@ -22,7 +22,7 @@ public class AMMDatabase extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(DICTIONARY_TABLE_CREATE);
         db.execSQL("CREATE TABLE IF NOT EXISTS Registered (Name TEXT, Type INTEGER, ID INTEGER, Tracking BOOLEAN, Subber TEXT, Keyword TEXT);");
-        db.execSQL("CREATE TABLE IF NOT EXISTS Feeds (Title TEXT, Link TEXT, Description TEXT, Author TEXT, Category TEXT, Comments TEXT, Enclosure TEXT, guid TEXT, pubDate TEXT, Source TEXT, Content TEXT, Important BOOLEAN, feedname TEXT);");
+        db.execSQL("CREATE TABLE IF NOT EXISTS Feeds (Title TEXT, Link TEXT, Description TEXT, Author TEXT, Category TEXT, Comments TEXT, Enclosure TEXT, guid TEXT, pubDate TEXT, Source TEXT, Content TEXT, Important BOOLEAN, feedname TEXT, Read BOOLEAN, _id INTEGER PRIMARY KEY);");
     }
 
 	@Override

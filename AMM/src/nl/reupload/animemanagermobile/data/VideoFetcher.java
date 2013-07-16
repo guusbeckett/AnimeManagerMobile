@@ -31,7 +31,7 @@ public class VideoFetcher {
 						if (!item.contains("<yt:hd/>"))
 							continue;
 					}
-					urls.add(item.split("<media:player url='")[1].split("'/>")[0]);
+					urls.add(item.split("<media:player url='")[1].split("'/>")[0]);//+"^"+item.split("<title type='text'>")[1].split("</title>")[0]);
 				}
 			}
 		} catch (UnsupportedEncodingException e) {
