@@ -173,6 +173,7 @@ public class FeedParser {
 			cv.put("feedname", feedname);
 			if (rawitem.contains("<content"))
 				cv.put("Content", rawitem.split("<content:encoded>")[1].split("</content:encoded>")[0]);
+			cv.put("Read", false);
 			ammDatabase.insert("Feeds", null, cv);
 			if (notify)
 				notifyUser(title, "moii", ctx);
