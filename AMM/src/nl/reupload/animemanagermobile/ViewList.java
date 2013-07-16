@@ -154,7 +154,8 @@ public class ViewList extends Activity implements OnItemClickListener {
 			if (c.isAfterLast())
 				break;
 			else {
-				list.add(c.getString(c.getColumnIndex("Name")));
+				Cursor c2 = ammDatabase.query("Feeds", new String[]{"Read"}, "Read='False'", null, null, null, null);
+				list.add(c.getString(c.getColumnIndex("Name")) + ((c2.getCount()>0)?" (" + c2.getCount() + ")":""));
 			}
 		}
 		ammDatabase.close();
