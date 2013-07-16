@@ -7,6 +7,9 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 import nl.reupload.animemanagermobile.R;
+import nl.reupload.animemanagermobile.data.AMMDatabase;
 import nl.reupload.animemanagermobile.releasetracker.ReleaseTrackingService;
 import nl.reupload.animemanagermobile.storages.SkyDriveFS;
 
@@ -74,6 +78,13 @@ public class MainMenu extends Activity {
 	        final Button viewMangaBacklog = (Button) findViewById(R.id.button6);
 	        final Button viewAnimeBacklog = (Button) findViewById(R.id.button5);
 	        final Button rssReader = (Button) findViewById(R.id.button7);
+	        SQLiteOpenHelper ammData = new AMMDatabase(this);
+			SQLiteDatabase ammDatabase = ammData.getWritableDatabase();
+	        Cursor c = ammDatabase.query("Feeds", new String[]{"Read"}, "Read='0'", null, null, null, null);
+	        if (c.getCount() > 0) {
+	        	rssReader.setText(rssReader.getText() + " (" + c.getCount() + ")");
+	        }
+	        ammDatabase.close();
 	        editAnimeButton.setOnClickListener(new View.OnClickListener() {
 	            @Override
 				public void onClick(View v) {
