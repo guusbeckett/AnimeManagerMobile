@@ -35,6 +35,7 @@ public class MetaDataFetcher extends AsyncTask<Integer, Integer, Boolean> {
 	private String won;
 	private ProgressDialog mInitializeDialog;
 	private boolean noClose;
+	private boolean noBan;
 
 	
 	public MetaDataFetcher(Activity act, String term2, MediaObject media, int type) {
@@ -43,6 +44,7 @@ public class MetaDataFetcher extends AsyncTask<Integer, Integer, Boolean> {
 		this.type = type;
 		this.term = term2;
 		noClose = false;
+		noBan = false;
 	}
 	
 	@Override
@@ -131,6 +133,14 @@ public class MetaDataFetcher extends AsyncTask<Integer, Integer, Boolean> {
   }
 
   protected void onPostExecute(Long result) {
+	  if (noBan) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} //ban prevention
+	  }
 //      showDialog("Downloaded " + result + " bytes");
   }
   
@@ -199,5 +209,9 @@ public class MetaDataFetcher extends AsyncTask<Integer, Integer, Boolean> {
 
 	public void noClose() {
 		this.noClose = true;
+	}
+
+	public void banPrevent() {
+		noBan = true;
 	}
 }
