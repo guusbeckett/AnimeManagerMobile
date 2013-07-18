@@ -58,6 +58,7 @@ public class DataManage {
 	private static String watchingfileLocation;
 	private static String seenfileLocation;
 	private static boolean refresh;
+	private static boolean banned;
 	
 	public static final int NoFS = 0;
 	public static final int DropboxFS = 1;
@@ -889,5 +890,14 @@ public class DataManage {
 				e.printStackTrace();
 			}
 		return fos;
+	}
+
+
+	public static void setBanned(boolean b) {
+		banned = b;
+	}
+	
+	public static boolean getBanned() {
+		return banned;
 	}
 }

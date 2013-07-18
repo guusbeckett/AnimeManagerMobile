@@ -26,6 +26,7 @@ import android.app.Activity;
 import android.net.http.AndroidHttpClient;
 import android.os.StrictMode;
 import android.util.Log;
+import android.widget.Toast;
 
 
 public class AniDBWrapper {
@@ -99,6 +100,11 @@ public class AniDBWrapper {
 		}
 		parsed = new String(baf.toByteArray());
 	    Log.d("wow", parsed);
+	    if (parsed.contains("Banned")) {
+	    	Toast.makeText(act, "aniDB ban detected", Toast.LENGTH_SHORT);
+	    	DataManage.setBanned(true);
+	    	return;
+	    }
 	    if (!temp)
 	    	DataManage.writeToExternal(parsed, "anime"+aid+".xml", act);
 	    else

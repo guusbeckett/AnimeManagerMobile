@@ -49,7 +49,8 @@ public class MetaDataFetcher extends AsyncTask<Integer, Integer, Boolean> {
 	
 	@Override
 	protected Boolean doInBackground(Integer... params) {
-		handleMetadata(type, media.getId());
+		if (!DataManage.getBanned())
+			handleMetadata(type, media.getId());
 		return true;
 	}
 	
