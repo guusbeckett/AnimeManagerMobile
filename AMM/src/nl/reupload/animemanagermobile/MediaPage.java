@@ -143,17 +143,21 @@ public class MediaPage extends FragmentActivity {
 	        	if (type == 1 || type == 2 || type == 5) {
 		        	if (AniDBWrapper.doesAniDBfileExist(id, this)){
 		        		metadataParse = AniDBWrapper.parseAniDBfile(id, this);
-		        		metadataParse[16]=type+"";
-		        		metadataParse[17]="0";
-		        		DataManage.cacheObject2(metadataParse);
+		        		if (metadataParse != null) {
+			        		metadataParse[16]=type+"";
+			        		metadataParse[17]="0";
+			        		DataManage.cacheObject2(metadataParse);
+		        		}
 		        	}
 	        	}
 	        	else {
 	        		if (MangaUpdatesClient.doesMangaUpdatesfileExist(id, this)){
 		        		metadataParse = MangaUpdatesClient.parseMangaUpdatesfile(id, this);
-		        		metadataParse[16]=type+"";
-		        		metadataParse[17]="0";
-		        		DataManage.cacheObject2(metadataParse);
+		        		if (metadataParse != null) {
+			        		metadataParse[16]=type+"";
+			        		metadataParse[17]="0";
+			        		DataManage.cacheObject2(metadataParse);
+		        		}
 		        	}
 	        	}
 	        		
