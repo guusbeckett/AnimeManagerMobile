@@ -223,6 +223,12 @@ public class ViewList extends Activity implements OnItemClickListener {
 	        			MetaDataFetcher fetch = new MetaDataFetcher(this, null, object, typeList);
 	        			fetch.noClose();
 	        			fetch.execute(0);
+	        			try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} //ban prevention
 	        		}
 	        	}
 	        	return true;
