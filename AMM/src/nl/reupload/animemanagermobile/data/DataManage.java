@@ -508,6 +508,10 @@ public class DataManage {
 		 return new String(baf.toByteArray());
 	}
 	
+	public static void deleteFromCache(String filename, Activity act) {
+		new File(act.getCacheDir(), filename).delete();
+	}
+	
 	public static String getHash (String in) {
 		try {
 			in = URLEncoder.encode(in, "UTF-8");
@@ -601,6 +605,16 @@ public class DataManage {
 		}
 		else
 			return null;
+	}
+	
+	public static void deleteFromExternal(String filename, Activity act) {
+		String state = Environment.getExternalStorageState();
+		
+		if (Environment.MEDIA_MOUNTED.equals(state) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+			File approot = act.getExternalFilesDir(null);
+			File file = new File(approot , filename);
+			file.delete();
+		}
 	}
 	
 	public static void cacheObject(Object item) {

@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -51,9 +52,27 @@ public class RssItem extends Activity {
 		String item = null;
 		SQLiteOpenHelper ammData = new AMMDatabase(this);
 		SQLiteDatabase ammDatabase = ammData.getWritableDatabase();
-		Cursor c = ammDatabase.query("Feeds", new String[]{"Title", "Description", "Link", "Author", "Content"}, "feedname='" + feed + "' AND Title='" + guid + "'", null, null, null, null);
+		Cursor c = ammDatabase.query("Feeds", new String[]{"Title", "Description", "Link", "Author", "Content", "Read", "_id", "Category", "Comments", "Enclosure", "guid" , "pubDate", "Source", "Important", "feedname"}, "feedname='" + feed + "' AND Title='" + guid + "'", null, null, null, null);
 		if (c.getCount() > 0) {
 			c.moveToFirst();
+			if (c.getInt(c.getColumnIndex("Read"))==0) {
+				ContentValues cv = new ContentValues();
+				cv.put("Title", c.getString(c.getColumnIndex("Title")));
+				cv.put("Description", c.getString(c.getColumnIndex("Description")));
+				cv.put("Link", c.getString(c.getColumnIndex("Link")));
+				cv.put("Author", c.getString(c.getColumnIndex("Author")));
+				cv.put("Read", true);
+				cv.put("Category", c.getString(c.getColumnIndex("Category")));
+				cv.put("Comments", c.getString(c.getColumnIndex("Comments")));
+				cv.put("Enclosure", c.getString(c.getColumnIndex("Enclosure")));
+				cv.put("guid", c.getString(c.getColumnIndex("guid")));
+				cv.put("pubDate", c.getString(c.getColumnIndex("pubDate")));
+				cv.put("Source", c.getString(c.getColumnIndex("Source")));
+				cv.put("Important", c.getInt(c.getColumnIndex("Important")));
+				cv.put("feedname", c.getInt(c.getColumnIndex("feedname")));
+				cv.put("_id", c.getString(c.getColumnIndex("_id")));
+				ammDatabase.replace("Feeds", null, cv);
+			}
 			String content = c.getString(c.getColumnIndex("Content"));
 			if (content != "")
 				if (unescape)

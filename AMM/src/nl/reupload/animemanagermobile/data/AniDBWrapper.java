@@ -192,61 +192,73 @@ public class AniDBWrapper {
 			 * category 15 are the episodes of the show
 			 * 
 			 */
-			data[0] = stream.split("<type>")[1].split("</type>")[0];
-			Log.d("check", "0");
-			data[1] = stream.split("<episodecount>")[1].split("</episodecount>")[0];
-			if (stream.contains("<startdate>"))
-				data[2] = stream.split("<startdate>")[1].split("</startdate>")[0];
-			else
-				data[2] = "";
-			Log.d("check", "2");
-			boolean first = true;
-			for (String item : stream.split("<titles>")[1].split("</titles>")[0].split("<title")) {
-				if (item.contains("</title>")) {
-					if (!item.isEmpty()) {
-						if (first) {
-							data[3] = item.split("\">")[1].split("</title")[0]+"^"+item.split("\"")[1];
-							first = false;
+			if (!stream.contains("Banned")) {
+				data[0] = stream.split("<type>")[1].split("</type>")[0];
+				Log.d("check", "0");
+				data[1] = stream.split("<episodecount>")[1].split("</episodecount>")[0];
+				if (stream.contains("<startdate>"))
+					data[2] = stream.split("<startdate>")[1].split("</startdate>")[0];
+				else
+					data[2] = "";
+				Log.d("check", "2");
+				boolean first = true;
+				for (String item : stream.split("<titles>")[1].split("</titles>")[0].split("<title")) {
+					if (item.contains("</title>")) {
+						if (!item.isEmpty()) {
+							if (first) {
+								data[3] = item.split("\">")[1].split("</title")[0]+"^"+item.split("\"")[1];
+								first = false;
+							}
+							else
+								data[3] += "\n"+item.split("\">")[1].split("</title")[0]+"^"+item.split("\"")[1];
+							Log.d("title", item);
 						}
-						else
-							data[3] += "\n"+item.split("\">")[1].split("</title")[0]+"^"+item.split("\"")[1];
-						Log.d("title", item);
 					}
 				}
+				if (stream.contains("<relatedanime>"))
+					data[4] = stream.split("<relatedanime>")[1].split("</relatedanime>")[0];
+				else
+					data[4] = "";
+				data[5] = "similaranime";
+				Log.d("check", "3");
+				if (stream.contains("<url>"))
+					data[6] = stream.split("<url>")[1].split("</url>")[0];
+				else
+					data[6] = "";
+				if (stream.contains("<creators>"))
+					data[7] = stream.split("<creators>")[1].split("</creators>")[0];
+				else
+					data[7] = "";
+				data[8] = stream.split("<description>")[1].split("</description>")[0];
+				data[9] = stream.split("<ratings>")[1].split("</ratings>")[0];
+				Log.d("check", "4");
+				data[10] = stream.split("<picture>")[1].split("</picture>")[0];
+				if (stream.contains("<categories>"))
+					data[11] = stream.split("<categories>")[1].split("</categories>")[0];
+				else
+					data[11] = "";
+				data[12] = stream.split("<resources>")[1].split("</resources>")[0];
+				if (stream.contains("<tags>"))
+					data[13] = stream.split("<tags>")[1].split("</tags>")[0];
+				else
+					data[13] = "";
+				Log.d("check", "5");
+				if (stream.contains("<characters>"))
+					data[14] = stream.split("<characters>")[1].split("</characters>")[0];
+				data[15] = stream.split("<episodes>")[1].split("</episodes>")[0];
+				Log.d("check", "6");
+				return data;
+			} else {
+				//This is a ban, remove file
+				if (!temp) {
+					DataManage.deleteFromExternal("anime"+aid+".xml", act);
+				}
+				else
+					DataManage.deleteFromCache("/tempmetadata/tempanime"+aid+".xml", act);
+				//stop window from opening and return null
+				act.finish();
+				return null;
 			}
-			if (stream.contains("<relatedanime>"))
-				data[4] = stream.split("<relatedanime>")[1].split("</relatedanime>")[0];
-			else
-				data[4] = "";
-			data[5] = "similaranime";
-			Log.d("check", "3");
-			if (stream.contains("<url>"))
-				data[6] = stream.split("<url>")[1].split("</url>")[0];
-			else
-				data[6] = "";
-			if (stream.contains("<creators>"))
-				data[7] = stream.split("<creators>")[1].split("</creators>")[0];
-			else
-				data[7] = "";
-			data[8] = stream.split("<description>")[1].split("</description>")[0];
-			data[9] = stream.split("<ratings>")[1].split("</ratings>")[0];
-			Log.d("check", "4");
-			data[10] = stream.split("<picture>")[1].split("</picture>")[0];
-			if (stream.contains("<categories>"))
-				data[11] = stream.split("<categories>")[1].split("</categories>")[0];
-			else
-				data[11] = "";
-			data[12] = stream.split("<resources>")[1].split("</resources>")[0];
-			if (stream.contains("<tags>"))
-				data[13] = stream.split("<tags>")[1].split("</tags>")[0];
-			else
-				data[13] = "";
-			Log.d("check", "5");
-			if (stream.contains("<characters>"))
-				data[14] = stream.split("<characters>")[1].split("</characters>")[0];
-			data[15] = stream.split("<episodes>")[1].split("</episodes>")[0];
-			Log.d("check", "6");
-			return data;
 		}
 		else
 			return null;
