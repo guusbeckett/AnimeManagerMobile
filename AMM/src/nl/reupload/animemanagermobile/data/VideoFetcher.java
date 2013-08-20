@@ -21,6 +21,7 @@ public class VideoFetcher {
 
 
 	public static String[] getVideoURLFromYoutube(String query, boolean hdonly) {
+		query = query.replace("Opening", "OP").replace("Ending", "ED");
 		Log.d("YouTube URL finder", "Searching for " + query + ".hd is " + ((hdonly)?"":"not ") + "enforced");
 		ArrayList<String> urls = new ArrayList<String>();
 		try {

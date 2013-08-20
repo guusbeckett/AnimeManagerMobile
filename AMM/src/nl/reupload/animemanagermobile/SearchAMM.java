@@ -63,7 +63,10 @@ public class SearchAMM extends Activity implements OnItemClickListener {
 		    		  else if (i==1||i==2||i==5) {
 		    			  int id = DataManage.getID(item.getTitle(), this, i);
 		    			  if (id != 0) {
-		    				  String titles = AniDBWrapper.parseAniDBfile(id, this)[3];
+		    				  String[] lel = AniDBWrapper.parseAniDBfile(id, this);
+		    				  if (lel == null)
+		    					  continue;
+		    				  String titles = lel[3];
 		    				  for (String item1 : titles.split("\n")) {
 		  	            		 if (item1.split("\\^")[0].toLowerCase(Locale.US).contains(query.toLowerCase(Locale.US))) {
 		  			    			  item.setType(i);
