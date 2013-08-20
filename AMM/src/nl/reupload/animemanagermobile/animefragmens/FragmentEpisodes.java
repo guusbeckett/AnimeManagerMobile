@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
 import nl.reupload.animemanagermobile.MediaObject;
 import nl.reupload.animemanagermobile.R;
 import nl.reupload.animemanagermobile.animefragmens.listadapters.EpisodeListAdapter;
@@ -157,12 +158,15 @@ public class FragmentEpisodes extends Fragment {
 				for (String title : ep.split("<title ")) {
 					if (!title.contains("null")) {
 						if (!title.equals("")) {
-							if (first) {
-								chara[3]=title.split(">")[1].split("<")[0];
-								first = false;
+							String titleCandidate = title.split(">")[1].split("<")[0];
+							if (!titleCandidate.equals("\n")) {
+								if (first) {
+									chara[3]=titleCandidate;
+									first = false;
+								}
+								else
+									chara[3]+="\n"+titleCandidate;
 							}
-							else
-								chara[3]+="\n"+title.split(">")[1].split("<")[0];
 						}
 					}
 				}

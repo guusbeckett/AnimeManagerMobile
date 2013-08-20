@@ -47,16 +47,17 @@ public class EpisodeListAdapter extends BaseAdapter {
         Log.d("ne", "e");
         String[] item = items[position];
         TextView title = (TextView)vi.findViewById(R.id.character_title); // title
-        TextView type = (TextView)vi.findViewById(R.id.character_type); // artist name
-        TextView gender = (TextView)vi.findViewById(R.id.GenderText); // duration
-        TextView seiyuu = (TextView)vi.findViewById(R.id.SeiyuuText); // duration
+        TextView altTitles = (TextView)vi.findViewById(R.id.character_type); // artist name
+        TextView epNumber = (TextView)vi.findViewById(R.id.GenderText); // duration
+        TextView someNumber = (TextView)vi.findViewById(R.id.SeiyuuText); // duration
  
         i++;
         // Setting all values in listview
-        title.setText(item[0]);
-        gender.setText(item[1]);
-        type.setText(item[2]);
-        seiyuu.setText(item[3]);
+        String realtitle = item[3].split("\n")[0];
+        title.setText(realtitle);
+        epNumber.setText(item[0]);
+        altTitles.setText(item[3].replace(realtitle, ""));
+        someNumber.setText(item[1]);
         //gender.setText((existence[position])?"available":"not available");
         return vi;
     }
