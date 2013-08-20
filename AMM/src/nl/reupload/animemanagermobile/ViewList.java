@@ -131,7 +131,7 @@ public class ViewList extends Activity implements OnItemClickListener {
 		guids = new ArrayList<String>();
 		SQLiteOpenHelper ammData = new AMMDatabase(this);
 		SQLiteDatabase ammDatabase = ammData.getWritableDatabase();
-		Cursor c = ammDatabase.query("Feeds", new String[]{"Title", "guid"}, "feedname='" + feed + "'", null, null, null, null);
+		Cursor c = ammDatabase.query("Feeds", new String[]{"Title", "guid"}, "feedname='" + feed + "'", null, null, null, "_id DESC");
 		while (c.moveToNext()) {
 			if (c.isAfterLast())
 				break;
@@ -154,7 +154,7 @@ public class ViewList extends Activity implements OnItemClickListener {
 			if (c.isAfterLast())
 				break;
 			else {
-				Cursor c2 = ammDatabase.query("Feeds", new String[]{"Read"}, "Read='0' AND feedname='" + c.getString(c.getColumnIndex("Name")) + "'", null, null, null, null);
+				Cursor c2 = ammDatabase.query("Feeds", new String[]{"Read"}, "Read='0' AND feedname='" + c.getString(c.getColumnIndex("Name")) + "'", null, null, null, "_id DESC");
 				list.add(c.getString(c.getColumnIndex("Name")) + ((c2.getCount()>0)?" (" + c2.getCount() + ")":""));
 			}
 		}

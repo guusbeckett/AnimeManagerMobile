@@ -83,7 +83,6 @@ public class FeedParser {
 	public void parseFeed(String rawfeed, String feedname, String[] titles, Context ctx) {
 		String hash = c.getString(c.getColumnIndex("LastPost"));
 		boolean first = true;
-		boolean veryfirst = true;
 		String[] items =  reverseArray(rawfeed.split("<item>"), true);
 		for (String item : items) {
 			if (item.contains("<description>")) {
@@ -124,9 +123,11 @@ public class FeedParser {
 		int size = array.length-((removeFirst)?1:0);
 		String[] newArray = new String[size];
 		boolean first = true;
-		for (int i=0; i<array.length-((removeFirst)?1:0); i++) {
-			if (first&&removeFirst)
+		for (int i=((removeFirst)?-1:0); i<size; i++) {
+			if (first&&removeFirst) {
 				first = false;
+				continue;
+			}
 			else {
 				newArray[i] = array[size-i];
 			}
