@@ -68,8 +68,9 @@ public class RssItem extends Activity {
 				cv.put("guid", c.getString(c.getColumnIndex("guid")));
 				cv.put("pubDate", c.getString(c.getColumnIndex("pubDate")));
 				cv.put("Source", c.getString(c.getColumnIndex("Source")));
+				cv.put("Content", c.getString(c.getColumnIndex("Content")));
 				cv.put("Important", c.getInt(c.getColumnIndex("Important")));
-				cv.put("feedname", c.getInt(c.getColumnIndex("feedname")));
+				cv.put("feedname", feed);
 				cv.put("_id", c.getString(c.getColumnIndex("_id")));
 				ammDatabase.replace("Feeds", null, cv);
 			}
