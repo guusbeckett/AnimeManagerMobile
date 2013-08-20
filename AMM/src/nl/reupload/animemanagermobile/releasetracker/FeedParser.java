@@ -84,43 +84,54 @@ public class FeedParser {
 		String hash = c.getString(c.getColumnIndex("LastPost"));
 		boolean first = true;
 		boolean veryfirst = true;
-		for (String item : rawfeed.split("<item>")) {
-			if (!veryfirst) {
-				if (item.contains("<description>")) {
-					if (getHash(item.split("<title>")[1].split("</title>")[0]).equals(hash)) {
-						Log.d("break", "ya blew it");
-						Log.d("lel", item.split("<title>")[1].split("</title>")[0]);
-						break;
-					}
-					if (first) {
-						ContentValues cv = new ContentValues();
-				    	cv.put("Name", c.getString(c.getColumnIndex("Name")));
-				    	cv.put("RSS_URL", c.getString(c.getColumnIndex("RSS_URL")));
-				    	cv.put("LastPost", getHash(item.split("<title>")[1].split("</title>")[0]));
-				    	ammDatabase.delete("Subteams", "Name='"+ c.getString(c.getColumnIndex("Name")) +"'", null);
-						ammDatabase.insert("Subteams", null, cv);
-						Log.d("lel", item.split("<title>")[1].split("</title>")[0]);
-						first = false;
-					}
-					
-					if (titles != null) {
-						boolean parsed = false;
-						for (String title : titles) {
-							if (item.contains(title)) {
-								parseItem(item, ctx, true);
-								parsed = true;
-							}
-							if (!parsed)
-								parseItem(item, ctx, false);
-						}
-					}
-					else
-						parseItem(item, ctx, false);
+		String[] items =  reverseArray(rawfeed.split("<item>"), true);
+		for (String item : items) {
+			if (item.contains("<description>")) {
+				if (getHash(item.split("<title>")[1].split("</title>")[0]).equals(hash)) {
+					Log.d("break", "ya blew it");
+					Log.d("lel", item.split("<title>")[1].split("</title>")[0]);
+					break;
 				}
+				if (first) {
+					ContentValues cv = new ContentValues();
+			    	cv.put("Name", c.getString(c.getColumnIndex("Name")));
+			    	cv.put("RSS_URL", c.getString(c.getColumnIndex("RSS_URL")));
+			    	cv.put("LastPost", getHash(item.split("<title>")[1].split("</title>")[0]));
+			    	ammDatabase.delete("Subteams", "Name='"+ c.getString(c.getColumnIndex("Name")) +"'", null);
+					ammDatabase.insert("Subteams", null, cv);
+					Log.d("lel", item.split("<title>")[1].split("</title>")[0]);
+					first = false;
+				}
+				
+				if (titles != null) {
+					boolean parsed = false;
+					for (String title : titles) {
+						if (item.contains(title)) {
+							parseItem(item, ctx, true);
+							parsed = true;
+						}
+						if (!parsed)
+							parseItem(item, ctx, false);
+					}
+				}
+				else
+					parseItem(item, ctx, false);
 			}
-			else
-				veryfirst = false;
 		}
+	}
+
+	private String[] reverseArray(String[] array, boolean removeFirst) {
+		int size = array.length-((removeFirst)?1:0);
+		String[] newArray = new String[size];
+		boolean first = true;
+		for (int i=0; i<array.length-((removeFirst)?1:0); i++) {
+			if (first&&removeFirst)
+				first = false;
+			else {
+				newArray[i] = array[size-i];
+			}
+		}
+		return newArray;
 	}
 	
 	public boolean isOnline(Context ctx) {
