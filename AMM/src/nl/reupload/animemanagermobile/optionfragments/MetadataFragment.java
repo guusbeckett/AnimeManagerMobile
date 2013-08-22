@@ -1,13 +1,18 @@
 package nl.reupload.animemanagermobile.optionfragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import nl.reupload.animemanagermobile.R;
 import nl.reupload.animemanagermobile.data.DataManage;
@@ -19,6 +24,7 @@ public class MetadataFragment extends Fragment {
 	private LinearLayout masll;
 	private LinearLayout ll;
 
+	@SuppressLint("NewApi")
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -41,6 +47,22 @@ public class MetadataFragment extends Fragment {
             }
         });
         ll.addView(destroyMeta);
+        Switch storageLoc = new Switch(this.getActivity());
+        storageLoc.setText("Metadata storage");
+        storageLoc.setTextOff("Internal");
+        storageLoc.setTextOn("External");
+        storageLoc.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				SharedPreferences settings = act.getSharedPreferences("AMMprefs", 0);
+				SharedPreferences.Editor editor = settings.edit();
+			    editor.putBoolean("MetadataExtStorage", isChecked);
+				
+				
+			}
+		});
+        ll.addView(storageLoc);
         masll.addView(ll);
         return v;
     }
