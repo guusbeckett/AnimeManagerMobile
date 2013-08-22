@@ -210,7 +210,7 @@ public class MainMenu extends Activity {
  * [ ] Make it possible to save files in SkyDrive
  * [ ] Fix Google Drive support
  * [ ] Make pop-out thingy for images with zoom
- * [ ] YouTube/NicoVideo linking to OP/ED
+ * [*] YouTube/NicoVideo linking to OP/ED
  * [ ] Inline links for aniDB descriptions
  * [ ] Proper multiple metadata source system
  * [*] able to open shows temporary from metadata source
