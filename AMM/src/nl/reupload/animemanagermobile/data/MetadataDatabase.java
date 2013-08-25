@@ -30,22 +30,23 @@ public class MetadataDatabase extends SQLiteOpenHelper {
 	        		"ID INTEGER, " +
 	        		"SeriesType TEXT, " +
 	        		"EPorCHcnt INTEGER, " +
-	        		"StartDate INTEGER" +
-	        		"EndDate INTEGER" +
-	        		"Titles TEXT" +
-	        		"Related TEXT" +
-	        		"Similar TEXT" +
-	        		"Reccomendations TEXT" +
-	        		"URL TEXT" +
-	        		"Creators TEXT" +
-	        		"Description TEXT" +
-	        		"Ratings TEXT" +
-	        		"Picture TEXT" +
-	        		"Categories TEXT" +
-	        		"Resources TEXT" +
-	        		"Tags TEXT" +
-	        		"Characters TEXT" +
-	        		"EPsorCHs TEXT" +
+	        		"StartDate INTEGER, " +
+	        		"EndDate INTEGER, " +
+	        		"Titles TEXT, " +
+	        		"Related TEXT, " +
+	        		"Similar TEXT, " +
+	        		"Reccomendations TEXT, " +
+	        		"URL TEXT, " +
+	        		"Creators TEXT, " +
+	        		"Description TEXT, " +
+	        		"Ratings TEXT, " +
+	        		"Picture TEXT, " +
+	        		"Categories TEXT, " +
+	        		"Resources TEXT, " +
+	        		"Tags TEXT, " +
+	        		"Characters TEXT, " +
+	        		"EPsorCHs TEXT, " +
+	        		"_id INTEGER PRIMARY KEY" +
 	        		");");
     }
 

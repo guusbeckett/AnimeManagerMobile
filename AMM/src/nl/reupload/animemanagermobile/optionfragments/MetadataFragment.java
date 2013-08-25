@@ -58,6 +58,7 @@ public class MetadataFragment extends Fragment {
 				SharedPreferences settings = act.getSharedPreferences("AMMprefs", 0);
 				SharedPreferences.Editor editor = settings.edit();
 			    editor.putBoolean("MetadataExtStorage", isChecked);
+			    //TODO move DB
 				
 				
 			}

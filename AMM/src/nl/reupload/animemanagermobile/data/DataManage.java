@@ -45,6 +45,11 @@ public class DataManage {
 	public static final int readingManga = 3;
 	public static final int readManga = 4;
 	
+	public static final int srcAniDB = 1;
+	public static final int srcMangaUpdates = 2;
+	public static final int srcMALAnime = 3;
+	public static final int srcMALManga = 4;
+	
 	
 	private FileSystem fs;
 	private static Object cached;

@@ -23,6 +23,11 @@ import org.apache.http.util.ByteArrayBuffer;
 import org.apache.http.util.EntityUtils;
 
 import android.app.Activity;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.net.http.AndroidHttpClient;
 import android.os.StrictMode;
 import android.util.Log;
@@ -77,7 +82,7 @@ public class AniDBWrapper {
 	public static void grabAnimeMetadata(int aid, boolean temp, Activity act) {
 		String getURL = "http://api.anidb.net:9001/httpapi?request=anime&client=animemanagermob&clientver=1&protover=1&aid=" + aid;
 	    HttpEntity resEntityGet = httpget(getURL, false);
-	    String parsed = "";
+	    String raw = "";
 	    InputStream ungzip = null;
 	    try {
 			ungzip = AndroidHttpClient.getUngzippedContent(resEntityGet);
@@ -98,19 +103,57 @@ public class AniDBWrapper {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		parsed = new String(baf.toByteArray());
-	    Log.d("wow", parsed);
-	    if (parsed.contains("Banned")) {
+		raw = new String(baf.toByteArray());
+//	    Log.d("wow", raw);
+	    if (raw.contains("Banned")) {
 	    	Toast.makeText(act, "aniDB ban detected", Toast.LENGTH_SHORT);
 	    	DataManage.setBanned(true);
 	    	return;
 	    }
 	    if (!temp)
-	    	DataManage.writeToExternal(parsed, "anime"+aid+".xml", act);
+	    	//DataManage.writeToExternal(parsed, "anime"+aid+".xml", act);
+	    	parseAndPutInMetaDB(raw, act, aid);
 	    else
-	    	DataManage.writeToCache(parsed, "/tempmetadata/tempanime"+aid+".xml", act);
+	    	DataManage.writeToCache(raw, "/tempmetadata/tempanime"+aid+".xml", act);
 	}
 	
+	private static void parseAndPutInMetaDB(String raw, Activity act, int ID) {
+		String[] vals = parseAniDBStream(raw);
+		ContentValues cv = new ContentValues();
+		cv.put("Type", DataManage.watchingAnime);
+		cv.put("Source", DataManage.srcAniDB);
+		cv.put("ID", ID);
+		cv.put("SeriesType", vals[0]);
+		cv.put("EPorCHcnt", vals[1]);
+		cv.put("StartDate", vals[2].replace("-", ""));
+//		cv.put("EndDate", vals[3].replace("-", ""));
+		cv.put("Titles", vals[3]);
+		cv.put("Related", vals[4]);
+		cv.put("Similar", vals[5]);
+		cv.put("Reccomendations", "null");
+		cv.put("URL", vals[6]);
+		cv.put("Creators", vals[7]);
+		cv.put("Description", vals[8]);
+//		cv.put("Ratings", vals[8]); TODO find out more about ratings
+		cv.put("Picture", vals[10]);
+		cv.put("Categories", vals[11]);
+		cv.put("Resources", "null");
+		cv.put("Tags", vals[13]);
+		cv.put("Characters", vals[14]);
+		cv.put("EPsorCHs", vals[15]);
+		SQLiteOpenHelper metadataDB = new MetadataDatabase(act);
+		SQLiteDatabase metaDB =  metadataDB.getWritableDatabase();
+		Cursor c = metaDB.query("MetaData", new String[]{"_id"}, "Type="+ DataManage.watchingAnime  +" AND Source='"+ DataManage.srcAniDB +"'", null, null, null, null);
+		if (c.getCount()>0) {
+			c.moveToFirst();
+			cv.put("_id", c.getInt(c.getColumnIndex("_id")));
+		}
+		metaDB.replace("MetaData", null, cv);
+		metadataDB.close();
+			
+		
+	}
+
 	public static void grabAnimeMetadata(int aid, Activity act) {
 		grabAnimeMetadata(aid, false, act);
 	}
@@ -169,6 +212,249 @@ public class AniDBWrapper {
 		return DataManage.doesExternalFileExist("anime"+aid+".xml", act);
 	}
 	
+	public static String[] parseAniDBStream(String stream) {
+		String[] data = new String[18];
+		/**
+		 * Explanation for this array:
+		 * I parse the xml per category of data with a total of 15 categories
+		 * 
+		 * category 1 is type of the show
+		 * category 2 is the episode count of the show
+		 * category 3 is the starting date of the show
+		 * category 4 are the titles of the show
+		 * category 5 are related anime to the show
+		 * category 6 are anime similar to the show
+		 * category 7 is the official URL of the show
+		 * category 8 is the description of the show
+		 * category 9 are the ratings for the show
+		 * category 10 is the picture of the show
+		 * category 11 are the categories of the show
+		 * category 12 are the resources of the show?
+		 * category 13 are the tags of the show
+		 * category 14 are the characters of the show
+		 * category 15 are the episodes of the show
+		 * 
+		 */
+		if (!stream.contains("Banned")) {
+			data[0] = stream.split("<type>")[1].split("</type>")[0];
+			Log.d("check", "0");
+			data[1] = stream.split("<episodecount>")[1].split("</episodecount>")[0];
+			if (stream.contains("<startdate>"))
+				data[2] = stream.split("<startdate>")[1].split("</startdate>")[0];
+			else
+				data[2] = "";
+			Log.d("check", "2");
+			boolean first = true;
+			for (String item : stream.split("<titles>")[1].split("</titles>")[0].split("<title")) {
+				if (item.contains("</title>")) {
+					if (!item.isEmpty()) {
+						if (first) {
+//							data[3] = item.split("\">")[1].split("</title")[0]+"^"+item.split("\"")[1]+"^"+item.split("\"")[3];
+							data[3] = "[lang=\"" + item.split("\"")[1] + "\" type=\"" + item.split("\"")[3] + "\"] " + item.split("\">")[1].split("</title")[0];
+							first = false;
+						}
+						else
+//							data[3] += "\n"+item.split("\">")[1].split("</title")[0]+"^"+item.split("\"")[1]+"^"+item.split("\"")[3];
+							data[3] += ", [lang=\"" + item.split("\"")[1] + "\" type=\"" + item.split("\"")[3] + "\"] " + item.split("\">")[1].split("</title")[0];
+						Log.d("title", item);
+					}
+				}
+			}
+			if (stream.contains("<relatedanime>")) {
+//				data[4] = stream.split("<relatedanime>")[1].split("</relatedanime>")[0];
+				first = true;
+				for (String show : stream.split("<relatedanime>")[1].split("</relatedanime>")[0].split("<anime id=\"")) {
+					if (show.contains("anime")) {
+						String show2 = show.split(">")[1].split("</anime")[0];
+						if (!show2.split("\\^")[0].equals("")) {
+							String[] bits = show.split("\"");
+							if (first) {
+								data[4] = "[ id=\"" + bits[0] + "\" type=\"" + bits[2] + "\" ] " + show2;
+								first = false;
+							}
+							else
+								data[4] += ", [ id=\"" + bits[0] + "\" type=\"" + bits[2] + "\" ] " + show2;
+						}
+					}
+				}
+			}
+			
+			else
+				data[4] = "";
+			if (stream.contains("<similaranime>")) {
+				first = true;
+				for (String show : stream.split("<similaranime>")[1].split("</similaranime>")[0].split("<anime id=\"")) {
+					if (show.contains("anime")) {
+						String show2 = show.split(">")[1].split("</anime")[0];
+						if (!show2.split("\\^")[0].equals("")) {
+							String[] bits = show.split("\"");
+							if (first) {
+								data[5] = "[ id=\"" + bits[0] + "\" approval=\"" + bits[2] + "\" total=\"" + bits[4] + "\" ] " + show2;
+								first = false;
+							}
+							else
+								data[5] += ", [ id=\"" + bits[0] + "\" approval=\"" + bits[2] + "\" total=\"" + bits[4] + "\" ] " + show2;
+						}
+					}
+				}
+			}
+			Log.d("check", "3");
+			if (stream.contains("<url>"))
+				data[6] = stream.split("<url>")[1].split("</url>")[0];
+			else
+				data[6] = "";
+			if (stream.contains("<creators>")) {
+//				data[7] = stream.split("<creators>")[1].split("</creators>")[0];
+				first = true;
+				for (String show : stream.split("<creators>")[1].split("</creators>")[0].split("<name id=\"")) {
+					if (show.contains("name")) {
+						String show2 = show.split(">")[1].split("</name")[0];
+						if (!show2.split("\\^")[0].equals("")) {
+							String[] bits = show.split("\"");
+							if (first) {
+								data[7] = "[ id=\"" + bits[0] + "\" type=\"" + bits[2] + "\" ] " + show2;
+								first = false;
+							}
+							else
+								data[7] += ", [ id=\"" + bits[0] + "\" type=\"" + bits[2] + "\" ] " + show2;
+						}
+					}
+				}
+			}
+			else
+				data[7] = "";
+			data[8] = stream.split("<description>")[1].split("</description>")[0];
+			data[9] = stream.split("<ratings>")[1].split("</ratings>")[0];
+			Log.d("check", "4");
+			data[10] = stream.split("<picture>")[1].split("</picture>")[0];
+			if (stream.contains("<categories>")) {
+//				data[11] = stream.split("<categories>")[1].split("</categories>")[0];
+				first = true;
+				for (String show : stream.split("<categories>")[1].split("</categories>")[0].split("<category id=\"")) {
+					if (show.contains("name")) {
+						String show2 = show.split("name>")[1].split("</")[0];
+						String show3 = show.split("description>")[1].split("</")[0];
+						if (!show2.equals("")) {
+							String[] bits = show.split("\"");
+							if (first) {
+								data[11] = "[ id=\"" + bits[0] + "\" parentid=\"" + bits[2] + "\" hentai=\"" + bits[4] + "\" weight=\"" + bits[6] + "\" title=\"" + show2 + "\" ] " + show3;
+								first = false;
+							}
+							else
+								data[11] += ", [ id=\"" + bits[0] + "\" parentid=\"" + bits[2] + "\" hentai=\"" + bits[4] + "\" weight=\"" + bits[6] + "\" title=\"" + show2 + "\" ] " + show3;
+						}
+					}
+				}
+			}
+			else
+				data[11] = "";
+//			data[12] = stream.split("<resources>")[1].split("</resources>")[0];
+			if (stream.contains("<tags>")) {
+//				data[13] = stream.split("<tags>")[1].split("</tags>")[0];
+				first = true;
+				for (String show : stream.split("<tags>")[1].split("</tags>")[0].split("<tag id=\"")) {
+					if (show.contains("name")) {
+						String show2 = show.split("name>")[1].split("</")[0];
+						String show4 = show.split("count>")[1].split("</")[0];
+						String show3;
+						if (show.contains("<description>"))
+							show3 = show.split("description>")[1].split("</")[0];
+						else
+							show3 = "";
+						if (!show2.equals("")) {
+							String[] bits = show.split("\"");
+							if (first) {
+								data[13] = "[ id=\"" + bits[0] + "\" approval=\"" + bits[2] + "\" spoiler=\"" + bits[4] + "\" localspoiler=\"" + bits[6] + "\" globalspoiler=\"" + bits[8] + "\" update=\"" + bits[10] + "\" title=\"" + show2 + "\" count=\"" + show4 + "\" ] " + show3;
+								first = false;
+							}
+							else
+								data[13] += ", [ id=\"" + bits[0] + "\" parentid=\"" + bits[2] + "\" hentai=\"" + bits[4] + "\" localspoiler=\"" + bits[6] + "\" globalspoiler=\"" + bits[8] + "\" update=\"" + bits[10] + "\" title=\"" + show2 + "\" count=\"" + show4 + "\" ] " + show3;
+						}
+					}
+				}
+			}
+			else
+				data[13] = "";
+			Log.d("check", "5");
+			if (stream.contains("<characters>")) {
+//				data[14] = stream.split("<characters>")[1].split("</characters>")[0];
+				first = true;
+				for (String show : stream.split("<characters>")[1].split("</characters>")[0].split("<character id=\"")) {
+					if (show.contains("name")) {
+						String show2 = show.split("name>")[1].split("</")[0];
+						String show4 = "";
+						if (show.contains("<rating"))
+							show4 = show.split("rating")[1].split(">")[1].split("</")[0];
+						String show3 = "";
+						if (show.contains("<description"))
+							show3 = show.split("description>")[1].split("</")[0];
+						String show5 = show.split("charactertype")[1].split(">")[1].split("</")[0];
+						String show6 = show.split("gender>")[1].split("</")[0];
+						String show7 = show.split("picture>")[1].split("</")[0];
+						String show8 = "";
+						if (show.contains("<seiyuu"))
+							show8 = show.split("seiyuu")[1].split(">")[1].split("</")[0];
+						if (!show2.equals("")) {
+							String[] bits = show.replace(show3, "").split("\"");
+							if (bits.length >= 8) {
+								if (first) {
+									data[14] = "[ id=\"" + bits[0] + "\" type=\"" + bits[2] + "\" update=\"" + bits[4] + "\" votes=\"" + bits[6] + "\" charatypeid=\"" + bits[8] + (show.contains("<seiyuu")?"\" seiyuuid=\"" + bits[((show.contains("<rating"))?10:9)] + "\" seiyuupic=\"" + bits[((show.contains("<rating"))?12:11)] + "\" name=\"":"") + show2 + "\" rating=\"" + show4 + "\" gender=\"" + show6 + "\" charactertype=\"" + show5 + "\" picture=\"" + show7 + "\" seiyuu=\"" + show8 + "\" ] " + show3;
+									first = false;
+								}
+								else
+									data[14] += ", [ id=\"" + bits[0] + "\" type=\"" + bits[2] + "\" update=\"" + bits[4] + "\" votes=\"" + bits[6] + "\" charatypeid=\"" + bits[8] + (show.contains("<seiyuu")?"\" seiyuuid=\"" + bits[((show.contains("<rating"))?10:9)] + "\" seiyuupic=\"" + bits[((show.contains("<rating"))?12:11)] + "\" name=\"":"") + show2 + "\" rating=\"" + show4 + "\" gender=\"" + show6 + "\" charactertype=\"" + show5 + "\" picture=\"" + show7 + "\" seiyuu=\"" + show8 + "\" ] " + show3;
+							}
+						}
+					}
+				}
+			}
+//			data[15] = stream.split("<episodes>")[1].split("</episodes>")[0];
+			first = true;
+			for (String show : stream.split("<episodes>")[1].split("</episodes>")[0].split("<episode id=\"")) {
+				if (show.contains("epno")) {
+					String show2 = show.split("epno")[1].split(">")[1].split("</")[0];
+					String show4 = show.split("length>")[1].split("</")[0];
+					String show3;
+					if (show.contains("<airdate>"))
+						show3 = show.split("airdate>")[1].split("</")[0];
+					else
+						show3 = "";
+					String show5;
+					if (show.contains("<rating>"))
+						show5 = show.split("rating>")[1].split("</")[0];
+					else
+						show5 = "";
+					if (!show2.equals("")) {
+						String[] bits = show.split("\"");
+						String titles = "";
+						for (String titleraw : show.split("<title")) {
+							if (titleraw.contains("xml")) {
+								titles+= titleraw.split("\"")[1] + "^" + titleraw.split("\">")[1].split("<title")[0];
+							}
+						}
+						if (first) {
+							data[15] = "[ id=\"" + bits[0] + "\" update=\"" + bits[2] + "\" eptype=\"" + bits[4] + ((bits.length >= 6)?"\" ratingvotes=\"" + bits[6]:"") + "\" rating=\"" + show5 + "\" epno=\"" + show2 + "\" length=\"" + show4 + "\" airdate=\"" + show3 + "\" ] " + titles;
+							first = false;
+						}
+						else
+							data[15] += ", [ id=\"" + bits[0] + "\" update=\"" + bits[2] + "\" eptype=\"" + bits[4] + ((bits.length >= 6)?"\" ratingvotes=\"" + bits[6]:"") + "\" rating=\"" + show5 + "\" epno=\"" + show2 + "\" length=\"" + show4 + "\" airdate=\"" + show3 + "\" ] " + titles;
+					}
+				}
+			}
+			Log.d("check", "6");
+			return data;
+		} else return null;
+//		} else {
+//			//This is a ban, remove file
+//			if (!temp) {
+//				DataManage.deleteFromExternal("anime"+aid+".xml", act);
+//			} else { DataManage.deleteFromCache("/tempmetadata/tempanime"+aid+".xml", act); }
+//			//stop window from opening and return null
+////			act.finish();
+//			return null;
+//		}
+	}
+	
 	public static String[] parseAniDBfile(int aid, boolean temp, Activity act) {
 		if (doesAniDBfileExist(aid, act) || temp) {
 			String stream = null;
@@ -176,95 +462,12 @@ public class AniDBWrapper {
 				stream = DataManage.readFromExternal("anime"+aid+".xml", act);
 			else
 				stream = DataManage.readFromCache("/tempmetadata/tempanime"+aid+".xml", act);
-			String[] data = new String[18];
-			/**
-			 * Explanation for this array:
-			 * I parse the xml per category of data with a total of 15 categories
-			 * 
-			 * category 1 is type of the show
-			 * category 2 is the episode count of the show
-			 * category 3 is the starting date of the show
-			 * category 4 are the titles of the show
-			 * category 5 are related anime to the show
-			 * category 6 are anime similar to the show
-			 * category 7 is the official URL of the show
-			 * category 8 is the description of the show
-			 * category 9 are the ratings for the show
-			 * category 10 is the picture of the show
-			 * category 11 are the categories of the show
-			 * category 12 are the resources of the show?
-			 * category 13 are the tags of the show
-			 * category 14 are the characters of the show
-			 * category 15 are the episodes of the show
-			 * 
-			 */
-			if (!stream.contains("Banned")) {
-				data[0] = stream.split("<type>")[1].split("</type>")[0];
-				Log.d("check", "0");
-				data[1] = stream.split("<episodecount>")[1].split("</episodecount>")[0];
-				if (stream.contains("<startdate>"))
-					data[2] = stream.split("<startdate>")[1].split("</startdate>")[0];
-				else
-					data[2] = "";
-				Log.d("check", "2");
-				boolean first = true;
-				for (String item : stream.split("<titles>")[1].split("</titles>")[0].split("<title")) {
-					if (item.contains("</title>")) {
-						if (!item.isEmpty()) {
-							if (first) {
-								data[3] = item.split("\">")[1].split("</title")[0]+"^"+item.split("\"")[1];
-								first = false;
-							}
-							else
-								data[3] += "\n"+item.split("\">")[1].split("</title")[0]+"^"+item.split("\"")[1];
-							Log.d("title", item);
-						}
-					}
-				}
-				if (stream.contains("<relatedanime>"))
-					data[4] = stream.split("<relatedanime>")[1].split("</relatedanime>")[0];
-				else
-					data[4] = "";
-				data[5] = "similaranime";
-				Log.d("check", "3");
-				if (stream.contains("<url>"))
-					data[6] = stream.split("<url>")[1].split("</url>")[0];
-				else
-					data[6] = "";
-				if (stream.contains("<creators>"))
-					data[7] = stream.split("<creators>")[1].split("</creators>")[0];
-				else
-					data[7] = "";
-				data[8] = stream.split("<description>")[1].split("</description>")[0];
-				data[9] = stream.split("<ratings>")[1].split("</ratings>")[0];
-				Log.d("check", "4");
-				data[10] = stream.split("<picture>")[1].split("</picture>")[0];
-				if (stream.contains("<categories>"))
-					data[11] = stream.split("<categories>")[1].split("</categories>")[0];
-				else
-					data[11] = "";
-				data[12] = stream.split("<resources>")[1].split("</resources>")[0];
-				if (stream.contains("<tags>"))
-					data[13] = stream.split("<tags>")[1].split("</tags>")[0];
-				else
-					data[13] = "";
-				Log.d("check", "5");
-				if (stream.contains("<characters>"))
-					data[14] = stream.split("<characters>")[1].split("</characters>")[0];
-				data[15] = stream.split("<episodes>")[1].split("</episodes>")[0];
-				Log.d("check", "6");
-				return data;
-			} else {
-				//This is a ban, remove file
-				if (!temp) {
-					DataManage.deleteFromExternal("anime"+aid+".xml", act);
-				}
-				else
-					DataManage.deleteFromCache("/tempmetadata/tempanime"+aid+".xml", act);
-				//stop window from opening and return null
-				act.finish();
-				return null;
-			}
+			String[] vals = parseAniDBStream(stream);
+			if (vals!=null)
+				return vals;
+			else if (temp)
+				DataManage.deleteFromCache("/tempmetadata/tempanime"+aid+".xml", act);
+			return null;
 		}
 		else
 			return null;
