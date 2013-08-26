@@ -143,7 +143,7 @@ public class AniDBWrapper {
 		cv.put("EPsorCHs", vals[15]);
 		SQLiteOpenHelper metadataDB = new MetadataDatabase(act);
 		SQLiteDatabase metaDB =  metadataDB.getWritableDatabase();
-		Cursor c = metaDB.query("MetaData", new String[]{"_id"}, "Type="+ DataManage.watchingAnime  +" AND Source='"+ DataManage.srcAniDB +"'", null, null, null, null);
+		Cursor c = metaDB.query("MetaData", new String[]{"_id"}, "Type="+ DataManage.watchingAnime  +" AND Source='"+ DataManage.srcAniDB +"' AND ID='" + ID + "'", null, null, null, null);
 		if (c.getCount()>0) {
 			c.moveToFirst();
 			cv.put("_id", c.getInt(c.getColumnIndex("_id")));
@@ -398,7 +398,7 @@ public class AniDBWrapper {
 							show8 = show.split("seiyuu")[1].split(">")[1].split("</")[0];
 						if (!show2.equals("")) {
 							String[] bits = show.replace(show3, "").split("\"");
-							if (bits.length >= 8) {
+							if (bits.length >= 9) {
 								if (first) {
 									data[14] = "[ id=\"" + bits[0] + "\" type=\"" + bits[2] + "\" update=\"" + bits[4] + "\" votes=\"" + bits[6] + "\" charatypeid=\"" + bits[8] + (show.contains("<seiyuu")?"\" seiyuuid=\"" + bits[((show.contains("<rating"))?10:9)] + "\" seiyuupic=\"" + bits[((show.contains("<rating"))?12:11)]:"") + "\" name=\"" + show2 + "\" rating=\"" + show4 + "\" gender=\"" + show6 + "\" charactertype=\"" + show5 + "\" picture=\"" + show7 + "\" seiyuu=\"" + show8 + "\" ] " + show3;
 									first = false;
@@ -479,7 +479,20 @@ public class AniDBWrapper {
 	}
 	
 	public static String[] parseAniDBfile(int aid, Activity act) {
-		return parseAniDBfile(aid, false, act);
+//		return parseAniDBfile(aid, false, act); 
+		//this is only called when it is already registered so it is safe to load from DB
+		String[] data = new String[18];
+		SQLiteOpenHelper metadataDB = new MetadataDatabase(act);
+		SQLiteDatabase metaDB =  metadataDB.getWritableDatabase();
+		Cursor c = metaDB.query("MetaData", new String[]{"SeriesType", "EPorCHcnt", "StartDate", "Titles", "Related", "Similar", "URL", "Creators", "Description", "Ratings", "Picture", "Categories", "Resources", "Tags", "Characters", "EPsorCHs"}, "Type="+ DataManage.watchingAnime  +" AND Source='"+ DataManage.srcAniDB +"' AND ID='" + aid + "'", null, null, null, null);
+		if (c.getCount() > 0) {
+			c.moveToFirst();
+			for (int i=0; i<16; i++) {
+				data[i] = c.getString(i);
+			}
+		}
+		metadataDB.close();
+		return data;
 	}
 	
 	public static void fetchImage(String filename, boolean temp, Activity act, String string) {
@@ -501,17 +514,19 @@ public class AniDBWrapper {
 	}
 	
 	public static String findEpisodeNearestAfterDate(String date, String rawEpisodeList) {
+		if (rawEpisodeList == null)
+			return null;
 		String nearest = null;
-		for (String item : rawEpisodeList.split("<episode id")) {
-			if (item.contains("<airdate>") && item.contains("<epno type=\"1\">")) {
-				String itemdate = item.split("<airdate>")[1].split("</airdate>")[0];
+		for (String item : rawEpisodeList.split("\\| \\[ id=\"")) {
+			if (item.contains("type=\"1\"")) {
+				String itemdate = item.split("airdate=\"")[1].split("\"")[0];
 				if ((Integer.parseInt(itemdate.split("-")[0]) >= Integer.parseInt(date.split("-")[0])) && (Integer.parseInt(itemdate.split("-")[1]) >= Integer.parseInt(date.split("-")[1])) && (Integer.parseInt(itemdate.split("-")[2]) >= Integer.parseInt(date.split("-")[2])))  {
 					if (nearest == null) {
-						nearest = item.split("<epno type=\"1\">")[1].split("</epno>")[0] + "^" + itemdate;
+						nearest = item.split("epno=\"")[1].split("\"")[0] + "^" + itemdate;
 					}
 					else {
 						if (Integer.parseInt(itemdate.split("-")[0]) <= Integer.parseInt(nearest.split("\\^")[1].split("-")[0]) && (Integer.parseInt(itemdate.split("-")[1])) <= Integer.parseInt(nearest.split("\\^")[1].split("-")[0]) && (Integer.parseInt(itemdate.split("-")[2])) <= Integer.parseInt(nearest.split("\\^")[1].split("-")[0])) {
-							nearest = item.split("<epno type=\"1\">")[1].split("</epno>")[0] + "^" + itemdate;
+							nearest = item.split("epno=\"")[1].split("\"")[0] + "^" + itemdate;
 						}
 					}
 						
@@ -521,6 +536,5 @@ public class AniDBWrapper {
 		//TODO do stuff
 		return nearest;
 	}
-	
-	
+
 }

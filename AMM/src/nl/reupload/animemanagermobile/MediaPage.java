@@ -141,14 +141,14 @@ public class MediaPage extends FragmentActivity {
         if (!tempMode) {
 	        if (id != 0) {
 	        	if (type == 1 || type == 2 || type == 5) {
-		        	if (AniDBWrapper.doesAniDBfileExist(id, this)){
+//		        	if (AniDBWrapper.doesAniDBfileExist(id, this)){
 		        		metadataParse = AniDBWrapper.parseAniDBfile(id, this);
 		        		if (metadataParse != null) {
 			        		metadataParse[16]=type+"";
 			        		metadataParse[17]="0";
 			        		DataManage.cacheObject2(metadataParse);
 		        		}
-		        	}
+//		        	}
 	        	}
 	        	else {
 	        		if (MangaUpdatesClient.doesMangaUpdatesfileExist(id, this)){
