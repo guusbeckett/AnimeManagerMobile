@@ -55,17 +55,16 @@ public class FragmentTags extends Fragment {
 	
 	public String[][] parseTags(String stream) {
 		ArrayList<String[]> tags = new ArrayList<String[]>();
-		for (String tag : stream.split("<tag id=\"")) {
-			if (tag.contains("<name>")) {
-				String[] chara = new String[3];
-				chara[0] = tag.split("<name>")[1].split("</name>")[0];
-				chara[1] = tag.split("<count>")[1].split("</count>")[0];
-				if (tag.contains("<description>"))
-					chara[2] = tag.split("<description>")[1].split("</description>")[0];
-				else
-					chara[2] = "None available";
-				tags.add(chara);
-			}
+		for (String tag : stream.split("\\| \\[ id=\"")) {
+			String[] chara = new String[3];
+			chara[0] = tag.split("title=\"")[1].split("\"")[0];
+			chara[1] = tag.split("count=\"")[1].split("\"")[0];
+			chara[2] = tag.split("\" \\] ")[1];
+//			if (tag.contains("<description>"))
+//				chara[2] = tag.split("<description>")[1].split("</description>")[0];
+//			else
+//				chara[2] = "None available";
+			tags.add(chara);
 		}
 		return tags.toArray(new String[0][]);
 	}

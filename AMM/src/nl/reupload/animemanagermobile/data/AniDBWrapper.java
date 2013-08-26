@@ -255,7 +255,7 @@ public class AniDBWrapper {
 						}
 						else
 //							data[3] += "\n"+item.split("\">")[1].split("</title")[0]+"^"+item.split("\"")[1]+"^"+item.split("\"")[3];
-							data[3] += ", [lang=\"" + item.split("\"")[1] + "\" type=\"" + item.split("\"")[3] + "\"] " + item.split("\">")[1].split("</title")[0];
+							data[3] += "| [lang=\"" + item.split("\"")[1] + "\" type=\"" + item.split("\"")[3] + "\"] " + item.split("\">")[1].split("</title")[0];
 						Log.d("title", item);
 					}
 				}
@@ -273,7 +273,7 @@ public class AniDBWrapper {
 								first = false;
 							}
 							else
-								data[4] += ", [ id=\"" + bits[0] + "\" type=\"" + bits[2] + "\" ] " + show2;
+								data[4] += "| [ id=\"" + bits[0] + "\" type=\"" + bits[2] + "\" ] " + show2;
 						}
 					}
 				}
@@ -293,7 +293,7 @@ public class AniDBWrapper {
 								first = false;
 							}
 							else
-								data[5] += ", [ id=\"" + bits[0] + "\" approval=\"" + bits[2] + "\" total=\"" + bits[4] + "\" ] " + show2;
+								data[5] += "| [ id=\"" + bits[0] + "\" approval=\"" + bits[2] + "\" total=\"" + bits[4] + "\" ] " + show2;
 						}
 					}
 				}
@@ -316,7 +316,7 @@ public class AniDBWrapper {
 								first = false;
 							}
 							else
-								data[7] += ", [ id=\"" + bits[0] + "\" type=\"" + bits[2] + "\" ] " + show2;
+								data[7] += "| [ id=\"" + bits[0] + "\" type=\"" + bits[2] + "\" ] " + show2;
 						}
 					}
 				}
@@ -333,7 +333,7 @@ public class AniDBWrapper {
 				for (String show : stream.split("<categories>")[1].split("</categories>")[0].split("<category id=\"")) {
 					if (show.contains("name")) {
 						String show2 = show.split("name>")[1].split("</")[0];
-						String show3 = show.split("description>")[1].split("</")[0];
+						String show3 = show.split("description>")[1].split("</")[0].replace("&#13;", "\n");
 						if (!show2.equals("")) {
 							String[] bits = show.split("\"");
 							if (first) {
@@ -341,7 +341,7 @@ public class AniDBWrapper {
 								first = false;
 							}
 							else
-								data[11] += ", [ id=\"" + bits[0] + "\" parentid=\"" + bits[2] + "\" hentai=\"" + bits[4] + "\" weight=\"" + bits[6] + "\" title=\"" + show2 + "\" ] " + show3;
+								data[11] += "| [ id=\"" + bits[0] + "\" parentid=\"" + bits[2] + "\" hentai=\"" + bits[4] + "\" weight=\"" + bits[6] + "\" title=\"" + show2 + "\" ] " + show3;
 						}
 					}
 				}
@@ -364,11 +364,11 @@ public class AniDBWrapper {
 						if (!show2.equals("")) {
 							String[] bits = show.split("\"");
 							if (first) {
-								data[13] = "[ id=\"" + bits[0] + "\" approval=\"" + bits[2] + "\" spoiler=\"" + bits[4] + "\" localspoiler=\"" + bits[6] + "\" globalspoiler=\"" + bits[8] + "\" update=\"" + bits[10] + "\" title=\"" + show2 + "\" count=\"" + show4 + "\" ] " + show3;
+								data[13] = "[ id=\"" + bits[0] + "\" approval=\"" + bits[2] + "\" spoiler=\"" + bits[4] + "\" localspoiler=\"" + bits[6] + "\" globalspoiler=\"" + bits[8] + "\" update=\"" + bits[10] + "\" title=\"" + show2 + "\" count=\"" + show4 + "\" ] " + show3 + " ";
 								first = false;
 							}
 							else
-								data[13] += ", [ id=\"" + bits[0] + "\" parentid=\"" + bits[2] + "\" hentai=\"" + bits[4] + "\" localspoiler=\"" + bits[6] + "\" globalspoiler=\"" + bits[8] + "\" update=\"" + bits[10] + "\" title=\"" + show2 + "\" count=\"" + show4 + "\" ] " + show3;
+								data[13] += "| [ id=\"" + bits[0] + "\" parentid=\"" + bits[2] + "\" hentai=\"" + bits[4] + "\" localspoiler=\"" + bits[6] + "\" globalspoiler=\"" + bits[8] + "\" update=\"" + bits[10] + "\" title=\"" + show2 + "\" count=\"" + show4 + "\" ] " + show3 + " ";
 						}
 					}
 				}
@@ -390,7 +390,9 @@ public class AniDBWrapper {
 							show3 = show.split("description>")[1].split("</")[0];
 						String show5 = show.split("charactertype")[1].split(">")[1].split("</")[0];
 						String show6 = show.split("gender>")[1].split("</")[0];
-						String show7 = show.split("picture>")[1].split("</")[0];
+						String show7 = "";
+						if (show.contains("<picture>"))
+							show7 = show.split("picture>")[1].split("</")[0];
 						String show8 = "";
 						if (show.contains("<seiyuu"))
 							show8 = show.split("seiyuu")[1].split(">")[1].split("</")[0];
@@ -398,11 +400,11 @@ public class AniDBWrapper {
 							String[] bits = show.replace(show3, "").split("\"");
 							if (bits.length >= 8) {
 								if (first) {
-									data[14] = "[ id=\"" + bits[0] + "\" type=\"" + bits[2] + "\" update=\"" + bits[4] + "\" votes=\"" + bits[6] + "\" charatypeid=\"" + bits[8] + (show.contains("<seiyuu")?"\" seiyuuid=\"" + bits[((show.contains("<rating"))?10:9)] + "\" seiyuupic=\"" + bits[((show.contains("<rating"))?12:11)] + "\" name=\"":"") + show2 + "\" rating=\"" + show4 + "\" gender=\"" + show6 + "\" charactertype=\"" + show5 + "\" picture=\"" + show7 + "\" seiyuu=\"" + show8 + "\" ] " + show3;
+									data[14] = "[ id=\"" + bits[0] + "\" type=\"" + bits[2] + "\" update=\"" + bits[4] + "\" votes=\"" + bits[6] + "\" charatypeid=\"" + bits[8] + (show.contains("<seiyuu")?"\" seiyuuid=\"" + bits[((show.contains("<rating"))?10:9)] + "\" seiyuupic=\"" + bits[((show.contains("<rating"))?12:11)]:"") + "\" name=\"" + show2 + "\" rating=\"" + show4 + "\" gender=\"" + show6 + "\" charactertype=\"" + show5 + "\" picture=\"" + show7 + "\" seiyuu=\"" + show8 + "\" ] " + show3;
 									first = false;
 								}
 								else
-									data[14] += ", [ id=\"" + bits[0] + "\" type=\"" + bits[2] + "\" update=\"" + bits[4] + "\" votes=\"" + bits[6] + "\" charatypeid=\"" + bits[8] + (show.contains("<seiyuu")?"\" seiyuuid=\"" + bits[((show.contains("<rating"))?10:9)] + "\" seiyuupic=\"" + bits[((show.contains("<rating"))?12:11)] + "\" name=\"":"") + show2 + "\" rating=\"" + show4 + "\" gender=\"" + show6 + "\" charactertype=\"" + show5 + "\" picture=\"" + show7 + "\" seiyuu=\"" + show8 + "\" ] " + show3;
+									data[14] += "| [ id=\"" + bits[0] + "\" type=\"" + bits[2] + "\" update=\"" + bits[4] + "\" votes=\"" + bits[6] + "\" charatypeid=\"" + bits[8] + (show.contains("<seiyuu")?"\" seiyuuid=\"" + bits[((show.contains("<rating"))?10:9)] + "\" seiyuupic=\"" + bits[((show.contains("<rating"))?12:11)]:"")  + "\" name=\"" + show2 + "\" rating=\"" + show4 + "\" gender=\"" + show6 + "\" charactertype=\"" + show5 + "\" picture=\"" + show7 + "\" seiyuu=\"" + show8 + "\" ] " + show3;
 							}
 						}
 					}
@@ -426,10 +428,13 @@ public class AniDBWrapper {
 						show5 = "";
 					if (!show2.equals("")) {
 						String[] bits = show.split("\"");
-						String titles = "";
+						String titles = null;
 						for (String titleraw : show.split("<title")) {
 							if (titleraw.contains("xml")) {
-								titles+= titleraw.split("\"")[1] + "^" + titleraw.split("\">")[1].split("<title")[0];
+								if (titles==null)
+									titles= titleraw.split("\"")[1] + "^" + titleraw.split("\">")[1].split("</title")[0];
+								else
+									titles+= "\n" + titleraw.split("\"")[1] + "^" + titleraw.split("\">")[1].split("</title")[0];
 							}
 						}
 						if (first) {
@@ -437,7 +442,7 @@ public class AniDBWrapper {
 							first = false;
 						}
 						else
-							data[15] += ", [ id=\"" + bits[0] + "\" update=\"" + bits[2] + "\" eptype=\"" + bits[4] + ((bits.length >= 6)?"\" ratingvotes=\"" + bits[6]:"") + "\" rating=\"" + show5 + "\" epno=\"" + show2 + "\" length=\"" + show4 + "\" airdate=\"" + show3 + "\" ] " + titles;
+							data[15] += "| [ id=\"" + bits[0] + "\" update=\"" + bits[2] + "\" eptype=\"" + bits[4] + ((bits.length >= 6)?"\" ratingvotes=\"" + bits[6]:"") + "\" rating=\"" + show5 + "\" epno=\"" + show2 + "\" length=\"" + show4 + "\" airdate=\"" + show3 + "\" ] " + titles;
 					}
 				}
 			}

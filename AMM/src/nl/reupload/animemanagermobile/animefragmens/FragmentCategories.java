@@ -57,13 +57,12 @@ public class FragmentCategories extends Fragment {
 	
 	public String[][] parseCats(String stream) {
 		ArrayList<String[]> cats = new ArrayList<String[]>();
-		for (String cat : stream.split("<category id=\"")) {
-			if (cat.contains("<name>")) {
-				String[] chara = new String[2];
-				chara[0] = cat.split("<name>")[1].split("</name>")[0];
-				chara[1] = cat.split("<description>")[1].split("</description>")[0];
-				cats.add(chara);
-			}
+		for (String cat : stream.split("\\| \\[ id=\"")) {
+//			cat = "[ id=\"" +cat;
+			String[] chara = new String[2];
+			chara[0] = cat.split("title=\"")[1].split("\"")[0];
+			chara[1] = cat.split("\" \\] ")[1];
+			cats.add(chara);
 		}
 		return cats.toArray(new String[0][]);
 	}

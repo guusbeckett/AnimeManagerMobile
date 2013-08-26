@@ -121,15 +121,11 @@ public class FragmentRelatedSeries extends Fragment {
 	
 	private String[] getTitleArray(String stream) {
 		ArrayList<String> titles = new ArrayList<String>();
-		for (String show : stream.split("<anime id=\"")) {
-			Log.d("lel", show);
-			//String newshow = show.split(">")[1].split("</anime")[0].replace(">", "")+"^"+show.split("\"")[0];
-			if (show.contains("anime")) {
-				show = show.split(">")[1].split("</anime")[0]+"^"+show.split("\"")[0];
-				if (!show.split("\\^")[0].equals(""))
-					titles.add(show);
-	//			titles.add(show.split(">")[1].split("</anime")[0]+"^"+show.split("\"")[0]);
-				Log.d("lel", show);
+		if (!stream.equals("")) {
+			for (String show : stream.split("\\| \\[ id=")) {
+				//String newshow = show.split(">")[1].split("</anime")[0].replace(">", "")+"^"+show.split("\"")[0];
+				titles.add(show.split("\" \\] ")[1]+"^"+show.split("\"")[1]);
+		//			titles.add(show.split(">")[1].split("</anime")[0]+"^"+show.split("\"")[0]);
 			}
 		}
 		return titles.toArray(new String[0]);
@@ -138,22 +134,28 @@ public class FragmentRelatedSeries extends Fragment {
 	public String[][] parseEps(String stream) {
 		//Log.d("nee", stream);
 		ArrayList<String[]> eps = new ArrayList<String[]>();
-		for (String ep : stream.split("<episode id=\"")) {
-			if (ep.contains("<epno")) {
-				String[] chara = new String[4];
-				chara[0] = ep.split("<epno")[1].split(">")[1].split("</epno")[0];
-				if (ep.contains("<length>"))
-					chara[1] = ep.split("<length>")[1].split("</length>")[0];
-				else
-					chara[1] = "Lenght is unknown";
-				if (ep.contains("<airdate>"))
-					chara[2] = ep.split("<airdate>")[1].split("</airdate>")[0];
-				else
-					chara[2] = "No airdate is known";
-				for (String title : ep.split("<title "))
-					chara[3]+="\n"+title.split(">")[1].split("<")[0];
-				eps.add(chara);
-			}
+		for (String series : stream.split("<episode id=\"")) {
+			String[] seriesContent = new String[4];
+			seriesContent[0] = series.split("epno=\"")[1].split("\"")[0];
+			seriesContent[1] = series.split("length=\"")[1].split("\"")[0];
+			seriesContent[2] = series.split("airdate=\"")[1].split("\"")[0];
+			seriesContent[3] = series.split("\" \\] ")[1];
+			eps.add(seriesContent);
+//			if (ep.contains("<epno")) {
+//				String[] chara = new String[4];
+//				chara[0] = ep.split("<epno")[1].split(">")[1].split("</epno")[0];
+//				if (ep.contains("<length>"))
+//					chara[1] = ep.split("<length>")[1].split("</length>")[0];
+//				else
+//					chara[1] = "Lenght is unknown";
+//				if (ep.contains("<airdate>"))
+//					chara[2] = ep.split("<airdate>")[1].split("</airdate>")[0];
+//				else
+//					chara[2] = "No airdate is known";
+//				for (String title : ep.split("<title "))
+//					chara[3]+="\n"+title.split(">")[1].split("<")[0];
+//				eps.add(chara);
+//			}
 		}
 		return eps.toArray(new String[0][]);
 	}

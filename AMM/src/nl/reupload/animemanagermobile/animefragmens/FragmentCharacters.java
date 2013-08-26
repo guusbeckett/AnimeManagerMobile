@@ -131,23 +131,31 @@ public class FragmentCharacters extends Fragment {
 	
 	public String[][] parseCharacters(String stream) {
 		ArrayList<String[]> chars = new ArrayList<String[]>();
-		for (String character : stream.split("<character id=\"")) {
-			if (character.contains("<name>")) {
-				String[] chara = new String[6];
-				chara[0] = character.split("type=\"")[1].split("\"")[0];
-				chara[1] = character.split("<name>")[1].split("</name>")[0];
-				chara[2] = character.split("<gender>")[1].split("</gender>")[0];
-				chara[3] = character.split("<charactertype")[1].split(">")[1].split("</charactertype")[0];
-				if (character.contains("<picture>"))
-					chara[4] = character.split("<picture>")[1].split("</picture>")[0];
-				else
-					chara[4] = "";
-				if (character.contains("<seiyuu"))
-					chara[5] = character.split("<seiyuu")[1].split(">")[1].split("</seiyuu")[0];
-				else
-					chara[5] = "not existent";
-				chars.add(chara);
-			}
+		for (String character : stream.split("\\| \\[ id=\"")) {
+			String[] chara = new String[6];
+			chara[0] = character.split("type=\"")[1].split("\"")[0];
+			chara[1] = character.split("name=\"")[1].split("\"")[0];
+			chara[2] = character.split("gender=\"")[1].split("\"")[0];
+			chara[3] = character.split("charactertype=\"")[1].split("\"")[0];
+			chara[4] = character.split("picture=\"")[1].split("\"")[0];
+			chara[5] = character.split("seiyuu=\"")[1].split("\"")[0];
+			chars.add(chara);
+//			if (character.contains("<name>")) {
+//				String[] chara = new String[6];
+//				chara[0] = character.split("type=\"")[1].split("\"")[0];
+//				chara[1] = character.split("<name>")[1].split("</name>")[0];
+//				chara[2] = character.split("<gender>")[1].split("</gender>")[0];
+//				chara[3] = character.split("<charactertype")[1].split(">")[1].split("</charactertype")[0];
+//				if (character.contains("<picture>"))
+//					chara[4] = character.split("<picture>")[1].split("</picture>")[0];
+//				else
+//					chara[4] = "";
+//				if (character.contains("<seiyuu"))
+//					chara[5] = character.split("<seiyuu")[1].split(">")[1].split("</seiyuu")[0];
+//				else
+//					chara[5] = "not existent";
+//				chars.add(chara);
+//			}
 		}
 		return chars.toArray(new String[0][]);
 	}
