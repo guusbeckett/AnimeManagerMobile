@@ -17,6 +17,7 @@ import nl.reupload.animemanagermobile.data.AMMDatabase;
 import nl.reupload.animemanagermobile.data.AniDBWrapper;
 import nl.reupload.animemanagermobile.data.DataManage;
 import nl.reupload.animemanagermobile.data.MangaUpdatesClient;
+import nl.reupload.animemanagermobile.data.MetadataDatabase;
 import nl.reupload.animemanagermobile.dialogs.ShowPickerDialog;
 import nl.reupload.animemanagermobile.dialogs.ShowPickerDialog.OnDialogSelectorListener;
 
@@ -597,16 +598,27 @@ public class MediaPage extends FragmentActivity {
 
 	private void destroyMetadata() {
 		if (id!=0) {
-			if (type == 1 || type == 2 || type == 5) {
-				DataManage.deleteExternalFile(this.getExternalFilesDir(null) + "/images/" + metadataParse[10], this);
-				DataManage.deleteExternalFile(this.getExternalFilesDir(null) + "/anime" + media.getId()+".xml", this);
-			}
-			else {
-				DataManage.deleteExternalFile(this.getExternalFilesDir(null) + "/images/" + metadataParse[10].split("/")[metadataParse[10].split("/").length-1], this);
-				DataManage.deleteExternalFile(this.getExternalFilesDir(null) + "/manga" + media.getId()+".xml", this);
+			SQLiteOpenHelper metadatabase = new MetadataDatabase(this);
+			SQLiteDatabase metaDB =  metadatabase.getWritableDatabase();
+			int intID = 0;
+			Cursor c = metaDB.query("MetaData", new String[]{"_id"}, "Type="+ DataManage.watchingAnime  +" AND Source='"+ DataManage.srcAniDB +"' AND ID='" + id + "'", null, null, null, null);
+			if (c.getCount()>0) {
+				c.moveToFirst();
+				intID = c.getInt(c.getColumnIndex("_id"));
+				metaDB.delete("MetaData", "Type="+ DataManage.watchingAnime  +" AND Source='"+ DataManage.srcAniDB +"' AND ID='" + intID + "'", null);
+				DataManage.unregister(media.getTitle(), type, this);
 			}
 			
-			DataManage.unregister(media.getTitle(), type, this);
+//			if (type == 1 || type == 2 || type == 5) {
+//				DataManage.deleteExternalFile(this.getExternalFilesDir(null) + "/images/" + metadataParse[10], this);
+//				DataManage.deleteExternalFile(this.getExternalFilesDir(null) + "/anime" + media.getId()+".xml", this);
+//			}
+//			else {
+//				DataManage.deleteExternalFile(this.getExternalFilesDir(null) + "/images/" + metadataParse[10].split("/")[metadataParse[10].split("/").length-1], this);
+//				DataManage.deleteExternalFile(this.getExternalFilesDir(null) + "/manga" + media.getId()+".xml", this);
+//			}
+			
+			
 		}
 	}
 

@@ -399,12 +399,15 @@ public class AniDBWrapper {
 						if (!show2.equals("")) {
 							String[] bits = show.replace(show3, "").split("\"");
 							if (bits.length >= 9) {
-								if (first) {
-									data[14] = "[ id=\"" + bits[0] + "\" type=\"" + bits[2] + "\" update=\"" + bits[4] + "\" votes=\"" + bits[6] + "\" charatypeid=\"" + bits[8] + (show.contains("<seiyuu")?"\" seiyuuid=\"" + bits[((show.contains("<rating"))?10:9)] + "\" seiyuupic=\"" + bits[((show.contains("<rating"))?12:11)]:"") + "\" name=\"" + show2 + "\" rating=\"" + show4 + "\" gender=\"" + show6 + "\" charactertype=\"" + show5 + "\" picture=\"" + show7 + "\" seiyuu=\"" + show8 + "\" ] " + show3;
-									first = false;
+								//TODO fix tempfix
+								if (show.contains("votes=")) {
+									if (first) {
+										data[14] = "[ id=\"" + bits[0] + "\" type=\"" + bits[2] + "\" update=\"" + bits[4] + "\" votes=\"" + bits[6] + "\" charatypeid=\"" + bits[8] + (show.contains("<seiyuu")?"\" seiyuuid=\"" + bits[((show.contains("<rating"))?10:9)] + ((show.contains("seiyuupic="))?"\" seiyuupic=\"" + bits[((show.contains("<rating"))?12:11)]:""):"") + "\" name=\"" + show2 + "\" rating=\"" + show4 + "\" gender=\"" + show6 + "\" charactertype=\"" + show5 + "\" picture=\"" + show7 + "\" seiyuu=\"" + show8 + "\" ] " + show3;
+										first = false;
+									}
+									else
+										data[14] += "| [ id=\"" + bits[0] + "\" type=\"" + bits[2] + "\" update=\"" + bits[4] + "\" votes=\"" + bits[6] + "\" charatypeid=\"" + bits[8] + (show.contains("<seiyuu")?"\" seiyuuid=\"" + bits[((show.contains("<rating"))?10:9)] + ((show.contains("seiyuupic="))?"\" seiyuupic=\"" + bits[((show.contains("<rating"))?12:11)]:""):"")  + "\" name=\"" + show2 + "\" rating=\"" + show4 + "\" gender=\"" + show6 + "\" charactertype=\"" + show5 + "\" picture=\"" + show7 + "\" seiyuu=\"" + show8 + "\" ] " + show3;
 								}
-								else
-									data[14] += "| [ id=\"" + bits[0] + "\" type=\"" + bits[2] + "\" update=\"" + bits[4] + "\" votes=\"" + bits[6] + "\" charatypeid=\"" + bits[8] + (show.contains("<seiyuu")?"\" seiyuuid=\"" + bits[((show.contains("<rating"))?10:9)] + "\" seiyuupic=\"" + bits[((show.contains("<rating"))?12:11)]:"")  + "\" name=\"" + show2 + "\" rating=\"" + show4 + "\" gender=\"" + show6 + "\" charactertype=\"" + show5 + "\" picture=\"" + show7 + "\" seiyuu=\"" + show8 + "\" ] " + show3;
 							}
 						}
 					}
@@ -498,7 +501,9 @@ public class AniDBWrapper {
 	public static void fetchImage(String filename, boolean temp, Activity act, String string) {
 		String url = "http://img7.anidb.net/pics/anime/" + filename;
 	    HttpEntity resEntityGet = httpget(url, false);
-
+	    if (filename == null) {
+	    	return;
+	    }
 	    try {
 	    	if (!temp)
 	    		resEntityGet.writeTo(DataManage.openOutputStreamToExternal(new File(act.getExternalFilesDir(null), "/images/" + string), filename));

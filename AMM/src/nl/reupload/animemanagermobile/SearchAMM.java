@@ -68,7 +68,7 @@ public class SearchAMM extends Activity implements OnItemClickListener {
 		    					  continue;
 		    				  String titles = lel[3];
 		    				  for (String item1 : titles.split("\n")) {
-		  	            		 if (item1.split("\\^")[0].toLowerCase(Locale.US).contains(query.toLowerCase(Locale.US))) {
+		  	            		 if (item1.split("\"\\] ")[1].toLowerCase(Locale.US).contains(query.toLowerCase(Locale.US))) {
 		  			    			  item.setType(i);
 		  			    			  listOfAll.add(item);
 		  			    			  break;

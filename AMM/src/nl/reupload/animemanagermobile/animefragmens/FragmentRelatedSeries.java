@@ -139,7 +139,7 @@ public class FragmentRelatedSeries extends Fragment {
 			seriesContent[0] = series.split("epno=\"")[1].split("\"")[0];
 			seriesContent[1] = series.split("length=\"")[1].split("\"")[0];
 			seriesContent[2] = series.split("airdate=\"")[1].split("\"")[0];
-			seriesContent[3] = series.split("\" \\] ")[1];
+			seriesContent[3] = series.split("\"\\] ")[1];
 			eps.add(seriesContent);
 //			if (ep.contains("<epno")) {
 //				String[] chara = new String[4];
