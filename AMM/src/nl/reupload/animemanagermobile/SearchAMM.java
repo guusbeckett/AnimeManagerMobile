@@ -7,6 +7,7 @@ import nl.reupload.animemanagermobile.animefragmens.listadapters.SearchResultAda
 import nl.reupload.animemanagermobile.data.AniDBWrapper;
 import nl.reupload.animemanagermobile.data.DataManage;
 import nl.reupload.animemanagermobile.data.MangaUpdatesClient;
+import nl.reupload.animemanagermobile.data.MetadataDatabase;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
@@ -16,6 +17,9 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -55,26 +59,44 @@ public class SearchAMM extends Activity implements OnItemClickListener {
 	      if (service == 0) {
 		      DataManage data = new DataManage();
 		      for (int i=1; i<=6; i++) {
-		    	  for (MediaObject item : data.getMediaList(this, i)) {
-		    		  if (item.getTitle().toLowerCase(Locale.US).contains(query.toLowerCase(Locale.US))) {
+		    	  MediaObject[] list = data.getMediaList(this, i);
+		    	  if (list == null)
+		    		  continue;
+		    	  for (MediaObject item : list) {
+		    		  if (item.getTitle().toLowerCase(Locale.US).equals(query.toLowerCase(Locale.US))) {
 		    			  item.setType(i);
 		    			  listOfAll.add(item);
 		    		  }
 		    		  else if (i==1||i==2||i==5) {
-		    			  int id = DataManage.getID(item.getTitle(), this, i);
-		    			  if (id != 0) {
-		    				  String[] lel = AniDBWrapper.parseAniDBfile(id, this);
-		    				  if (lel == null)
-		    					  continue;
-		    				  String titles = lel[3];
-		    				  for (String item1 : titles.split("\n")) {
-		  	            		 if (item1.split("\"\\] ")[1].toLowerCase(Locale.US).contains(query.toLowerCase(Locale.US))) {
+		    			  SQLiteOpenHelper metadataDB = new MetadataDatabase(this);
+		    			  SQLiteDatabase metaDB =  metadataDB.getWritableDatabase();
+		    			  Cursor c = metaDB.query("MetaData", new String[]{"Titles"}, "Type="+ DataManage.watchingAnime, null, null, null, null);
+		    			  while (c.moveToNext()) {
+		    				  if (c.isAfterLast())
+		    					  break;
+		  	            	  for (String item1 : c.getString(0).split("\\|")) {
+//		  	            		 item1.split("\" \\] ")[1];
+		  	            		if (item1.split("\"\\] ")[1].toLowerCase(Locale.US).equals(query.toLowerCase(Locale.US))) {
 		  			    			  item.setType(i);
 		  			    			  listOfAll.add(item);
 		  			    			  break;
 		  	            		 }
-		  	            	}
+		  	            	  }
 		    			  }
+//		    			  int id = DataManage.getID(item.getTitle(), this, i);
+//		    			  if (id != 0) {
+//		    				  String[] lel = AniDBWrapper.parseAniDBfile(id, this);
+//		    				  if (lel == null)
+//		    					  continue;
+//		    				  String titles = lel[3];
+//		    				  for (String item1 : titles.split("\n")) {
+//		  	            		 if (item1.split("\"\\] ")[1].toLowerCase(Locale.US).contains(query.toLowerCase(Locale.US))) {
+//		  			    			  item.setType(i);
+//		  			    			  listOfAll.add(item);
+//		  			    			  break;
+//		  	            		 }
+//		  	            	}
+//		    			  }
 		    		  }
 		    	  }
 		      }

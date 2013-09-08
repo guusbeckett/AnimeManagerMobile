@@ -400,11 +400,14 @@ public class MediaPage extends FragmentActivity {
 	            	return true;
 	            case (11):
 	            	AlertDialog.Builder alert1 = new AlertDialog.Builder(this);
-	            	final String[] items = new String[metadataParse[3].split("\n").length];
+	            	final String[] items = new String[metadataParse[3].split("|").length];
 	            	int i = 0;
-	            	for (String item1 : metadataParse[3].split("\n")) {
-	            		items[i] = item1.split("\\^")[0];
-	            		i++;
+	            	for (String item1 : metadataParse[3].split("\\|")) {
+	            		if (true)
+	            		{
+		            		items[i] = item1.split("\"\\] ")[1];
+		            		i++;
+	            		}
 	            	}
 	            	final Activity act = this;
 	            	alert1.setItems(items, new OnClickListener() {
