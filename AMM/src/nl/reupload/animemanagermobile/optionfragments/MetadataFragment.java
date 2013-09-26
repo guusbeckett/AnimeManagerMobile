@@ -18,6 +18,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import nl.reupload.animemanagermobile.R;
 import nl.reupload.animemanagermobile.data.DataManage;
+import nl.reupload.animemanagermobile.data.MetadataDatabase;
 
 public class MetadataFragment extends Fragment {
 
@@ -64,13 +66,17 @@ public class MetadataFragment extends Fragment {
         storageLoc.setText("Metadata storage");
         storageLoc.setTextOff("Internal");
         storageLoc.setTextOn("External");
+        final SharedPreferences settings = act.getSharedPreferences("AMMprefs", 0);
+        storageLoc.setChecked(settings.getBoolean("MetadataExtStorage", false));
         storageLoc.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				SharedPreferences settings = act.getSharedPreferences("AMMprefs", 0);
+				
 				SharedPreferences.Editor editor = settings.edit();
 			    editor.putBoolean("MetadataExtStorage", isChecked);
+			    Log.d("heh", MetadataDatabase.getPath(getActivity()));
+//			    editor.commit();
 			    //TODO move DB
 				
 				
