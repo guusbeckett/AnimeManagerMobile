@@ -13,6 +13,8 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the Reupload Open Source Licence along with this library; if not, contact the distrubutor of this program*/
 package nl.reupload.animemanagermobile.optionfragments;
 
+import java.nio.channels.FileLockInterruptionException;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -67,7 +69,7 @@ public class MetadataFragment extends Fragment {
         storageLoc.setTextOff("Internal");
         storageLoc.setTextOn("External");
         final SharedPreferences settings = act.getSharedPreferences("AMMprefs", 0);
-        storageLoc.setChecked(settings.getBoolean("MetadataExtStorage", false));
+        storageLoc.setChecked(settings.getBoolean("MetadataExtStorage", true));
         storageLoc.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
 			@Override
@@ -76,6 +78,7 @@ public class MetadataFragment extends Fragment {
 				SharedPreferences.Editor editor = settings.edit();
 			    editor.putBoolean("MetadataExtStorage", isChecked);
 			    Log.d("heh", MetadataDatabase.getPath(getActivity()));
+			    Log.d("heh", "nee");
 //			    editor.commit();
 			    //TODO move DB
 				

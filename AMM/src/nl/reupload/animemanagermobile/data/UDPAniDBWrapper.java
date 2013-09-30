@@ -14,9 +14,14 @@ You should have received a copy of the Reupload Open Source Licence along with t
 package nl.reupload.animemanagermobile.data;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -553,6 +558,26 @@ public class UDPAniDBWrapper {
 		}
 		//TODO do stuff
 		return nearest;
+	}
+	
+	public void listenUDP() {
+		try{
+			BufferedReader inFromUser =
+			         new BufferedReader(new InputStreamReader(System.in));
+			DatagramSocket clientSocket = new DatagramSocket();
+			byte[] sendData = new byte[1024];
+			byte[] receiveData = new byte[1024];
+			InetAddress IPAddress = InetAddress.getByName("api.anidb.net");
+			String sentence = "PING";
+			sendData = sentence.getBytes();
+			DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, 9000);
+			clientSocket.send(sendPacket);
+			DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+			clientSocket.receive(receivePacket);
+			String modifiedSentence = new String(receivePacket.getData());
+			System.out.println("FROM SERVER:" + modifiedSentence);
+			clientSocket.close(); // - See more at: http://systembash.com/content/a-simple-java-udp-server-and-udp-client/#sthash.bClEj1F3.dpuf
+		} catch (Exception e) {}
 	}
 
 }
