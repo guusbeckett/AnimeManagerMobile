@@ -15,11 +15,14 @@ package nl.reupload.animemanagermobile.animefragmens.listadapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.support.v4.util.LruCache;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import nl.reupload.animemanagermobile.MediaObject;
 import nl.reupload.animemanagermobile.R;
+import nl.reupload.animemanagermobile.asynctasks.LoadImage;
 import nl.reupload.animemanagermobile.data.AniDBWrapper;
 import nl.reupload.animemanagermobile.data.DataManage;
 import nl.reupload.animemanagermobile.data.MangaUpdatesClient;
@@ -34,12 +37,26 @@ public class AnimeCardListAdapter extends BaseAdapter {
     private static LayoutInflater inflater=null;
 	private MediaObject[] list;
 	private Activity act;
+	private LruCache<String, Bitmap> mMemoryCache;
  
     public AnimeCardListAdapter(Activity act, MediaObject[] list, int type) {
         inflater = (LayoutInflater)act.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         appendListWithMetadata(list, act, type);
         this.list = list;
         this.act = act;
+        final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+
+        // Use 1/8th of the available memory for this memory cache.
+        final int cacheSize = maxMemory / 8;
+
+        mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
+            @Override
+            protected int sizeOf(String key, Bitmap bitmap) {
+                // The cache size will be measured in kilobytes rather than
+                // number of items.
+                return bitmap.getByteCount() / 1024;
+            }
+        };
     }
     
     private void appendListWithMetadata(MediaObject[] list2, Activity act, int type) {
@@ -81,6 +98,11 @@ public class AnimeCardListAdapter extends BaseAdapter {
 	public long getItemId(int position) {
         return position;
     }
+    
+    public Activity getActivity()
+    {
+    	return act;
+    }
  
     @Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -92,15 +114,38 @@ public class AnimeCardListAdapter extends BaseAdapter {
         MediaObject item = list[position];
         TextView title = (TextView)vi.findViewById(R.id.anime_card_title); // title
         TextView subTitle = (TextView)vi.findViewById(R.id.anime_card_subtitle); // artist name
-        ImageView image = (ImageView)vi.findViewById(R.id.anime_card_image);
+        
  
         // Setting all values in listview
 	    title.setText(item.getTitle());
 	    subTitle.setText(item.getProgress()+"/"+item.getTotal());
+	    ImageView image = (ImageView)vi.findViewById(R.id.anime_card_image);
 	    if (item.getImageLoc()!=null) {
-	    	image.setImageBitmap(DataManage.loadImageFromExternal(item.getImageLoc(), act));
-	    }
+	    	
+	    	final String imageKey = String.valueOf(item.getImageLoc());
+
+	        final Bitmap bitmap = getBitmapFromMemCache(imageKey);
+	        if (bitmap != null) {
+	            image.setImageBitmap(bitmap);
+	        } else {
+	            image.setImageBitmap(null);
+		    	new LoadImage(this, image, false, false).execute(item.getImageLoc());
+	        }
+
+	    	
+//	    	image.setImageBitmap(DataManage.loadImageFromExternal(item.getImageLoc(), act));
+	    } else image.setImageBitmap(null);
         //gender.setText((existence[position])?"available":"not available");
         return vi;
+    }
+    
+    public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
+        if (getBitmapFromMemCache(key) == null) {
+            mMemoryCache.put(key, bitmap);
+        }
+    }
+
+    public Bitmap getBitmapFromMemCache(String key) {
+        return mMemoryCache.get(key);
     }
 }
