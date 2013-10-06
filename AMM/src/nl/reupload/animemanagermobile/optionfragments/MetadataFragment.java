@@ -31,6 +31,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MetadataFragment extends Fragment {
 
@@ -67,7 +68,7 @@ public class MetadataFragment extends Fragment {
         storageLoc.setTextOff("Internal");
         storageLoc.setTextOn("External");
         final SharedPreferences settings = act.getSharedPreferences("AMMprefs", 0);
-        storageLoc.setChecked(settings.getBoolean("MetadataExtStorage", true));
+        storageLoc.setChecked(settings.getBoolean("MetadataExtStorage", false));
         storageLoc.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
 			@Override
@@ -77,6 +78,9 @@ public class MetadataFragment extends Fragment {
 			    editor.putBoolean("MetadataExtStorage", isChecked);
 			    Log.d("heh", MetadataDatabase.getPath(getActivity()));
 			    Log.d("heh", "nee");
+			    if (MetadataDatabase.moveDB(getActivity(), false)) {
+			    	editor.commit();
+			    } else Toast.makeText(getActivity(), "Moving DB failed", Toast.LENGTH_LONG).show();
 //			    editor.commit();
 			    //TODO move DB
 				
