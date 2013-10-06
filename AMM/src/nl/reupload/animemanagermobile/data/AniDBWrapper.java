@@ -38,7 +38,6 @@ import org.apache.http.util.EntityUtils;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.http.AndroidHttpClient;

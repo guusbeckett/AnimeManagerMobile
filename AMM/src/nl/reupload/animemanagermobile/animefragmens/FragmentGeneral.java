@@ -16,6 +16,10 @@ package nl.reupload.animemanagermobile.animefragmens;
 import java.io.File;
 import java.util.Calendar;
 
+import nl.reupload.animemanagermobile.MediaObject;
+import nl.reupload.animemanagermobile.data.AniDBWrapper;
+import nl.reupload.animemanagermobile.data.DataManage;
+import nl.reupload.animemanagermobile.data.MangaUpdatesClient;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -29,18 +33,13 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import nl.reupload.animemanagermobile.R;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
-import nl.reupload.animemanagermobile.MediaObject;
-import nl.reupload.animemanagermobile.R;
-import nl.reupload.animemanagermobile.data.AniDBWrapper;
-import nl.reupload.animemanagermobile.data.DataManage;
-import nl.reupload.animemanagermobile.data.MangaUpdatesClient;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class FragmentGeneral extends Fragment {

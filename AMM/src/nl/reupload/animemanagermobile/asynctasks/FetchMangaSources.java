@@ -16,7 +16,6 @@ package nl.reupload.animemanagermobile.asynctasks;
 import java.net.URL;
 
 import nl.reupload.animemanagermobile.mangareader.sources.MangaUpdatesSource;
-
 import android.app.Activity;
 import android.os.AsyncTask;
 

@@ -13,6 +13,13 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the Reupload Open Source Licence along with this library; if not, contact the distrubutor of this program*/
 package nl.reupload.animemanagermobile.animefragmens;
 
+import nl.reupload.animemanagermobile.MediaObject;
+import nl.reupload.animemanagermobile.asynctasks.FetchManga;
+import nl.reupload.animemanagermobile.asynctasks.FetchMangaSources;
+import nl.reupload.animemanagermobile.asynctasks.FetchMangaSources.fetchManga;
+import nl.reupload.animemanagermobile.data.DataManage;
+import nl.reupload.animemanagermobile.mangareader.MangaListAdapter;
+import nl.reupload.animemanagermobile.mangareader.MangaView;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,6 +28,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import nl.reupload.animemanagermobile.R;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
@@ -28,14 +36,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-import nl.reupload.animemanagermobile.MediaObject;
-import nl.reupload.animemanagermobile.R;
-import nl.reupload.animemanagermobile.asynctasks.FetchManga;
-import nl.reupload.animemanagermobile.asynctasks.FetchMangaSources;
-import nl.reupload.animemanagermobile.asynctasks.FetchMangaSources.fetchManga;
-import nl.reupload.animemanagermobile.data.DataManage;
-import nl.reupload.animemanagermobile.mangareader.MangaListAdapter;
-import nl.reupload.animemanagermobile.mangareader.MangaView;
 
 public class FragmentMangaRead extends Fragment implements fetchManga {
 

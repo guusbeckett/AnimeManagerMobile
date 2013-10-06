@@ -13,6 +13,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the Reupload Open Source Licence along with this library; if not, contact the distrubutor of this program*/
 package nl.reupload.animemanagermobile;
 
+import nl.reupload.animemanagermobile.data.DataManage;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.InputType;
@@ -21,8 +22,6 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import nl.reupload.animemanagermobile.R;
-import nl.reupload.animemanagermobile.data.DataManage;
 
 @Deprecated
 public class EditMediaObject extends Activity {

@@ -15,6 +15,7 @@ package nl.reupload.animemanagermobile.optionfragments;
 
 import java.io.File;
 
+import nl.reupload.animemanagermobile.data.AMMDatabase;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -22,21 +23,14 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import nl.reupload.animemanagermobile.R;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-import nl.reupload.animemanagermobile.R;
-import nl.reupload.animemanagermobile.data.AMMDatabase;
-import nl.reupload.animemanagermobile.data.AniDBWrapper;
-import nl.reupload.animemanagermobile.data.DataManage;
-import nl.reupload.animemanagermobile.dialogs.ShowPickerDialog;
 
 public class DevOptFragment extends Fragment {
 

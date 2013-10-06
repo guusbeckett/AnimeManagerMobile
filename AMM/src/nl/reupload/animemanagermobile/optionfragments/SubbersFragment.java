@@ -13,6 +13,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the Reupload Open Source Licence along with this library; if not, contact the distrubutor of this program*/
 package nl.reupload.animemanagermobile.optionfragments;
 
+import nl.reupload.animemanagermobile.data.AMMDatabase;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -25,6 +26,7 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import nl.reupload.animemanagermobile.R;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -32,8 +34,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import nl.reupload.animemanagermobile.R;
-import nl.reupload.animemanagermobile.data.AMMDatabase;
 
 public class SubbersFragment extends Fragment {
 

@@ -14,6 +14,11 @@ You should have received a copy of the Reupload Open Source Licence along with t
 package nl.reupload.animemanagermobile.releasetracker;
 
 import java.io.IOException;
+
+import nl.reupload.animemanagermobile.R;
+import nl.reupload.animemanagermobile.data.AMMDatabase;
+import nl.reupload.animemanagermobile.data.AniDBWrapper;
+
 import org.apache.http.ParseException;
 import org.apache.http.util.EntityUtils;
 
@@ -29,9 +34,6 @@ import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 import android.util.Base64;
 import android.util.Log;
-import nl.reupload.animemanagermobile.R;
-import nl.reupload.animemanagermobile.data.AMMDatabase;
-import nl.reupload.animemanagermobile.data.AniDBWrapper;
 
 public class FeedParser {
 	

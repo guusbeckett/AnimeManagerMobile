@@ -13,28 +13,22 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the Reupload Open Source Licence along with this library; if not, contact the distrubutor of this program*/
 package nl.reupload.animemanagermobile.asynctasks;
 
-import uk.ac.shef.wit.simmetrics.similaritymetrics.QGramsDistance;
 import nl.reupload.animemanagermobile.MediaObject;
-import nl.reupload.animemanagermobile.MediaPage;
 import nl.reupload.animemanagermobile.data.AniDBWrapper;
 import nl.reupload.animemanagermobile.data.DataManage;
 import nl.reupload.animemanagermobile.data.MangaUpdatesClient;
-import nl.reupload.animemanagermobile.dialogs.ShowPickerDialog;
-import nl.reupload.animemanagermobile.dialogs.ShowPickerDialog.OnDialogSelectorListener;
 import nl.reupload.animemanagermobile.mangareader.sources.MangaUpdatesSource;
+import uk.ac.shef.wit.simmetrics.similaritymetrics.QGramsDistance;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class MetaDataFetcher extends AsyncTask<Integer, Integer, Boolean> {

@@ -13,6 +13,11 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the Reupload Open Source Licence along with this library; if not, contact the distrubutor of this program*/
 package nl.reupload.animemanagermobile;
 
+import nl.reupload.animemanagermobile.optionfragments.DevOptFragment;
+import nl.reupload.animemanagermobile.optionfragments.FileLocationFrag;
+import nl.reupload.animemanagermobile.optionfragments.MangaSelectionFragment;
+import nl.reupload.animemanagermobile.optionfragments.MetadataFragment;
+import nl.reupload.animemanagermobile.optionfragments.SubbersFragment;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.content.Intent;
@@ -22,12 +27,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
-import nl.reupload.animemanagermobile.R;
-import nl.reupload.animemanagermobile.optionfragments.DevOptFragment;
-import nl.reupload.animemanagermobile.optionfragments.FileLocationFrag;
-import nl.reupload.animemanagermobile.optionfragments.MangaSelectionFragment;
-import nl.reupload.animemanagermobile.optionfragments.MetadataFragment;
-import nl.reupload.animemanagermobile.optionfragments.SubbersFragment;
 
 public class SettingsPage extends FragmentActivity {
 

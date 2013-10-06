@@ -21,13 +21,13 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import nl.reupload.animemanagermobile.R;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import nl.reupload.animemanagermobile.R;
 
 public class MangaView extends Activity {
 	private MangaView act;

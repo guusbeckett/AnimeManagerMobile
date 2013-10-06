@@ -12,6 +12,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the Reupload Open Source Licence along with this library; if not, contact the distrubutor of this program*/
 package nl.reupload.animemanagermobile.mangareader;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Matrix;
 import android.graphics.PointF;
@@ -20,10 +21,11 @@ import android.util.FloatMath;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import nl.reupload.animemanagermobile.R;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
-import nl.reupload.animemanagermobile.R;
 
+@SuppressLint("WrongViewCast")
 public class ding extends Activity implements OnTouchListener 
 {
     private static final String TAG = "Touch";

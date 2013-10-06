@@ -15,7 +15,7 @@ package nl.reupload.animemanagermobile;
 
 import java.io.File;
 import java.util.ArrayList;
-import nl.reupload.animemanagermobile.R;
+
 import nl.reupload.animemanagermobile.animefragmens.FragmentCategories;
 import nl.reupload.animemanagermobile.animefragmens.FragmentCharacters;
 import nl.reupload.animemanagermobile.animefragmens.FragmentDescription;
@@ -31,13 +31,7 @@ import nl.reupload.animemanagermobile.data.AniDBWrapper;
 import nl.reupload.animemanagermobile.data.DataManage;
 import nl.reupload.animemanagermobile.data.MangaUpdatesClient;
 import nl.reupload.animemanagermobile.data.MetadataDatabase;
-import nl.reupload.animemanagermobile.dialogs.ShowPickerDialog;
-import nl.reupload.animemanagermobile.dialogs.ShowPickerDialog.OnDialogSelectorListener;
-
-import uk.ac.shef.wit.simmetrics.TestMetrics;
-import uk.ac.shef.wit.simmetrics.metrichandlers.MetricHandler;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.QGramsDistance;
-
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
@@ -54,7 +48,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;

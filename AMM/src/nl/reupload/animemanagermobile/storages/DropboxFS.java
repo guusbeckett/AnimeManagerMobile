@@ -16,15 +16,14 @@ package nl.reupload.animemanagermobile.storages;
 import java.io.IOException;
 
 import nl.reupload.animemanagermobile.keysnstuff.KeysNStuff;
-
 import android.app.Activity;
 
 import com.dropbox.sync.android.DbxAccountManager;
 import com.dropbox.sync.android.DbxException;
+import com.dropbox.sync.android.DbxException.Unauthorized;
 import com.dropbox.sync.android.DbxFile;
 import com.dropbox.sync.android.DbxFileSystem;
 import com.dropbox.sync.android.DbxPath;
-import com.dropbox.sync.android.DbxException.Unauthorized;
 import com.dropbox.sync.android.DbxPath.InvalidPathException;
 
 public class DropboxFS extends FileSystem {

@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import nl.reupload.animemanagermobile.R;
 import nl.reupload.animemanagermobile.asynctasks.MetaDataFetcher;
 import nl.reupload.animemanagermobile.data.AMMDatabase;
 import nl.reupload.animemanagermobile.data.DataManage;
@@ -40,6 +39,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import nl.reupload.animemanagermobile.R;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;

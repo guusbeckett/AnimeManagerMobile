@@ -21,9 +21,9 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+import android.os.Process;
 import android.util.Log;
 import android.widget.Toast;
-import android.os.Process;
 
 public class ReleaseTrackingService extends Service {
   private Looper mServiceLooper;

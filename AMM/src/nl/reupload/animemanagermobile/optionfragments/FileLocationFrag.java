@@ -15,13 +15,7 @@ package nl.reupload.animemanagermobile.optionfragments;
 
 import java.util.Arrays;
 
-import com.dropbox.sync.android.DbxAccountManager;
-import com.microsoft.live.LiveAuthClient;
-import com.microsoft.live.LiveAuthException;
-import com.microsoft.live.LiveAuthListener;
-import com.microsoft.live.LiveConnectSession;
-import com.microsoft.live.LiveStatus;
-
+import nl.reupload.animemanagermobile.keysnstuff.KeysNStuff;
 import android.app.Activity;
 import android.app.Application;
 import android.app.ProgressDialog;
@@ -32,6 +26,7 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import nl.reupload.animemanagermobile.R;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -42,8 +37,13 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import nl.reupload.animemanagermobile.R;
-import nl.reupload.animemanagermobile.keysnstuff.KeysNStuff;
+
+import com.dropbox.sync.android.DbxAccountManager;
+import com.microsoft.live.LiveAuthClient;
+import com.microsoft.live.LiveAuthException;
+import com.microsoft.live.LiveAuthListener;
+import com.microsoft.live.LiveConnectSession;
+import com.microsoft.live.LiveStatus;
 
 public class FileLocationFrag extends Fragment implements OnItemSelectedListener {
 

@@ -18,12 +18,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.ParseException;
-import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.util.EntityUtils;
 
-import android.content.Entity;
 import android.util.Log;
 
 public class VideoFetcher {

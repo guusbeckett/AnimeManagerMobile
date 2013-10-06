@@ -33,7 +33,6 @@ import nl.reupload.animemanagermobile.storages.FileSystem;
 import nl.reupload.animemanagermobile.storages.MyAnimeListFS;
 import nl.reupload.animemanagermobile.storages.SkyDriveFS;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.http.util.ByteArrayBuffer;
 
 import android.app.Activity;

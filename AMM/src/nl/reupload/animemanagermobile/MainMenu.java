@@ -13,7 +13,9 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the Reupload Open Source Licence along with this library; if not, contact the distrubutor of this program*/
 package nl.reupload.animemanagermobile;
 
-import android.os.Bundle;
+import nl.reupload.animemanagermobile.data.AMMDatabase;
+import nl.reupload.animemanagermobile.releasetracker.ReleaseTrackingService;
+import nl.reupload.animemanagermobile.storages.SkyDriveFS;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.SearchManager;
@@ -23,17 +25,15 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import nl.reupload.animemanagermobile.R;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
-import nl.reupload.animemanagermobile.R;
-import nl.reupload.animemanagermobile.data.AMMDatabase;
-import nl.reupload.animemanagermobile.releasetracker.ReleaseTrackingService;
-import nl.reupload.animemanagermobile.storages.SkyDriveFS;
 
 @SuppressLint("NewApi")
 public class MainMenu extends Activity {

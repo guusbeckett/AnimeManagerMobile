@@ -13,8 +13,8 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the Reupload Open Source Licence along with this library; if not, contact the distrubutor of this program*/
 package nl.reupload.animemanagermobile.optionfragments;
 
-import java.nio.channels.FileLockInterruptionException;
-
+import nl.reupload.animemanagermobile.data.DataManage;
+import nl.reupload.animemanagermobile.data.MetadataDatabase;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -23,6 +23,7 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import nl.reupload.animemanagermobile.R;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -30,9 +31,6 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
-import nl.reupload.animemanagermobile.R;
-import nl.reupload.animemanagermobile.data.DataManage;
-import nl.reupload.animemanagermobile.data.MetadataDatabase;
 
 public class MetadataFragment extends Fragment {
 

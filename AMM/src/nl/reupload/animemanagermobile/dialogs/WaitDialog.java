@@ -13,11 +13,11 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the Reupload Open Source Licence along with this library; if not, contact the distrubutor of this program*/
 package nl.reupload.animemanagermobile.dialogs;
 
+import nl.reupload.animemanagermobile.R;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
-import nl.reupload.animemanagermobile.R;
 
 public class WaitDialog extends DialogFragment {
     @Override

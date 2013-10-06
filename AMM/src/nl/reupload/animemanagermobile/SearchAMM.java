@@ -15,37 +15,30 @@ package nl.reupload.animemanagermobile;
 
 import java.util.ArrayList;
 import java.util.Locale;
-import nl.reupload.animemanagermobile.R;
+
 import nl.reupload.animemanagermobile.animefragmens.listadapters.SearchResultAdapter;
 import nl.reupload.animemanagermobile.data.AniDBWrapper;
 import nl.reupload.animemanagermobile.data.DataManage;
 import nl.reupload.animemanagermobile.data.MangaUpdatesClient;
 import nl.reupload.animemanagermobile.data.MetadataDatabase;
-
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.SearchManager;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import nl.reupload.animemanagermobile.R;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -152,6 +145,7 @@ public class SearchAMM extends Activity implements OnItemClickListener {
 	    }
 	}
 	
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
 	        case android.R.id.home:

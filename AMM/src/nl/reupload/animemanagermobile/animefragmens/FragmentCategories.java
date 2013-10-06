@@ -15,18 +15,19 @@ package nl.reupload.animemanagermobile.animefragmens;
 
 import java.util.ArrayList;
 
+import nl.reupload.animemanagermobile.MediaObject;
+import nl.reupload.animemanagermobile.R;
+import nl.reupload.animemanagermobile.data.DataManage;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import nl.reupload.animemanagermobile.R;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import nl.reupload.animemanagermobile.MediaObject;
-import nl.reupload.animemanagermobile.R;
-import nl.reupload.animemanagermobile.data.DataManage;
 
 public class FragmentCategories extends Fragment {
 

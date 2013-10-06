@@ -13,7 +13,6 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the Reupload Open Source Licence along with this library; if not, contact the distrubutor of this program*/
 package nl.reupload.animemanagermobile;
 
-import nl.reupload.animemanagermobile.R;
 import nl.reupload.animemanagermobile.data.AMMDatabase;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -32,7 +31,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class RssItem extends Activity {
@@ -40,6 +38,7 @@ public class RssItem extends Activity {
 	private String guid;
 	private String feed;
 
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActionBar actionBar = getActionBar();
@@ -101,6 +100,7 @@ public class RssItem extends Activity {
 		return item;
 	}
 	
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		final Activity act = this;
 	    switch (item.getItemId()) {

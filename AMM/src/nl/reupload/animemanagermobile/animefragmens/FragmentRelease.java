@@ -13,6 +13,9 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the Reupload Open Source Licence along with this library; if not, contact the distrubutor of this program*/
 package nl.reupload.animemanagermobile.animefragmens;
 
+import nl.reupload.animemanagermobile.MediaObject;
+import nl.reupload.animemanagermobile.data.AMMDatabase;
+import nl.reupload.animemanagermobile.data.DataManage;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
@@ -23,23 +26,20 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import nl.reupload.animemanagermobile.R;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
-import nl.reupload.animemanagermobile.MediaObject;
-import nl.reupload.animemanagermobile.R;
-import nl.reupload.animemanagermobile.data.AMMDatabase;
-import nl.reupload.animemanagermobile.data.DataManage;
 
 public class FragmentRelease extends Fragment {
 

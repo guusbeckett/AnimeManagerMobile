@@ -15,6 +15,9 @@ package nl.reupload.animemanagermobile.animefragmens;
 
 import java.util.ArrayList;
 
+import nl.reupload.animemanagermobile.MediaObject;
+import nl.reupload.animemanagermobile.MediaPage;
+import nl.reupload.animemanagermobile.data.DataManage;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -23,19 +26,16 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import nl.reupload.animemanagermobile.R;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
-import nl.reupload.animemanagermobile.MediaObject;
-import nl.reupload.animemanagermobile.MediaPage;
-import nl.reupload.animemanagermobile.R;
-import nl.reupload.animemanagermobile.data.DataManage;
 
 public class FragmentRelatedSeries extends Fragment {
 

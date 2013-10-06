@@ -13,7 +13,6 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the Reupload Open Source Licence along with this library; if not, contact the distrubutor of this program*/
 package nl.reupload.animemanagermobile.storages;
 
-import com.google.api.services.drive.Drive;
 
 public class GoogleDriveFS extends FileSystem {
 	
@@ -26,7 +25,7 @@ public class GoogleDriveFS extends FileSystem {
 	  /** Global instance of the JSON factory. */
 	 //private static final  JSON_FACTORY = new JacksonFactory();
 	
-	 private Drive drive;
+	// private Drive drive;
 
 	@Override
 	public boolean writeStringToFile(String data, String filename) {

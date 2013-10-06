@@ -14,6 +14,12 @@ You should have received a copy of the Reupload Open Source Licence along with t
 package nl.reupload.animemanagermobile.animefragmens;
 
 import java.util.ArrayList;
+
+import nl.reupload.animemanagermobile.MediaObject;
+import nl.reupload.animemanagermobile.R;
+import nl.reupload.animemanagermobile.animefragmens.listadapters.CharacterListAdapter;
+import nl.reupload.animemanagermobile.data.AniDBWrapper;
+import nl.reupload.animemanagermobile.data.DataManage;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.graphics.Bitmap;
@@ -24,20 +30,16 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import nl.reupload.animemanagermobile.R;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
-import nl.reupload.animemanagermobile.MediaObject;
-import nl.reupload.animemanagermobile.R;
-import nl.reupload.animemanagermobile.animefragmens.listadapters.CharacterListAdapter;
-import nl.reupload.animemanagermobile.data.AniDBWrapper;
-import nl.reupload.animemanagermobile.data.DataManage;
 
 public class FragmentCharacters extends Fragment {
 

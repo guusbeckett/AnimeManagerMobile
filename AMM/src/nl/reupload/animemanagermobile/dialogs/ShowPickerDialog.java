@@ -13,15 +13,10 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the Reupload Open Source Licence along with this library; if not, contact the distrubutor of this program*/
 package nl.reupload.animemanagermobile.dialogs;
 
-import nl.reupload.animemanagermobile.dialogs.ShowPickerDialog.OnDialogSelectorListener;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.util.Log;
 
 @Deprecated

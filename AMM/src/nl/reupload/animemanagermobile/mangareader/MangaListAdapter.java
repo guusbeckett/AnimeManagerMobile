@@ -16,16 +16,17 @@ package nl.reupload.animemanagermobile.mangareader;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+
+import nl.reupload.animemanagermobile.data.DataManage;
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import nl.reupload.animemanagermobile.R;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import nl.reupload.animemanagermobile.R;
-import nl.reupload.animemanagermobile.data.DataManage;
  
 public class MangaListAdapter extends BaseAdapter {
  
