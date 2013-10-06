@@ -20,16 +20,19 @@ import nl.reupload.animemanagermobile.MediaObject;
 import nl.reupload.animemanagermobile.data.AniDBWrapper;
 import nl.reupload.animemanagermobile.data.DataManage;
 import nl.reupload.animemanagermobile.data.MangaUpdatesClient;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,6 +56,7 @@ public class FragmentGeneral extends Fragment {
 	private MediaObject[] list;
 	private boolean tempMode;
 
+	@SuppressLint("NewApi")
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -130,8 +134,19 @@ public class FragmentGeneral extends Fragment {
         		}
         	}
         	ImageView img = new ImageView(this.getActivity());
-        	img.setMinimumWidth(linlay.getWidth());
+//        	img.setMinimumWidth(linlay.getWidth());
         	img.setImageBitmap(bm);
+        	Point size = new Point();
+        	getActivity().getWindowManager().getDefaultDisplay().getSize(size);
+        	float scale = 0;
+        	if (size.x>bm.getHeight()) {
+        		scale = size.x/bm.getHeight();
+        	} else {
+        		scale = bm.getHeight()/size.x;
+        	}
+        	Log.d("scaling", scale+","+size.x+","+bm.getHeight());
+        	img.setScaleX(scale);
+        	img.setScaleY(scale);
         	
         	linlay.addView(img);
         }

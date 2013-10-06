@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import nl.reupload.animemanagermobile.animefragmens.listadapters.AnimeCardListAdapter;
 import nl.reupload.animemanagermobile.asynctasks.MetaDataFetcher;
 import nl.reupload.animemanagermobile.data.AMMDatabase;
 import nl.reupload.animemanagermobile.data.DataManage;
@@ -40,9 +41,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import nl.reupload.animemanagermobile.R;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -100,8 +103,13 @@ public class ViewList extends Activity implements OnItemClickListener {
                 }
         		DataManage.setList(lel);
 	        	Log.d("SUCCESS", "media succesfully read");
-	        	ArrayAdapter adapter = new ArrayAdapter<String>(this, 
-	                    android.R.layout.simple_list_item_1, MediaObject.convertMediaObjectArrayToStringArray(lel));
+	        	BaseAdapter adapter = null;
+	        	if (false) {
+		        	adapter = new ArrayAdapter<String>(this, 
+		                    android.R.layout.simple_list_item_1, MediaObject.convertMediaObjectArrayToStringArray(lel));
+	        	} else {
+	        		adapter = new AnimeCardListAdapter(this, lel, typeList);
+	        	}
 	        	ListView listView = new ListView(this);
 	        	listView.setAdapter(adapter);
 	        	rl.addView(listView);

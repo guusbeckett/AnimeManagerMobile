@@ -32,6 +32,7 @@ public class MediaObject implements Serializable {
 	private int total;
 	private int id;
 	private int type;
+	private String imageLoc;
 
 	public MediaObject(String title, int progress, int total) {
 		this.title = title;
@@ -120,5 +121,13 @@ public class MediaObject implements Serializable {
 
 	public void setType(int type) {
 		this.type = type;
+	}
+
+	public String getImageLoc() {
+		return imageLoc;
+	}
+
+	public void setImageLoc(String imageLoc) {
+		this.imageLoc = imageLoc;
 	}
 }
