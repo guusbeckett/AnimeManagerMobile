@@ -25,6 +25,7 @@ import nl.reupload.animemanagermobile.data.DataManage;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -34,6 +35,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -51,6 +54,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class ViewList extends Activity implements OnItemClickListener {
@@ -65,6 +69,7 @@ public class ViewList extends Activity implements OnItemClickListener {
 	private String feed;
 	private ArrayList<String> guids;
 
+	@SuppressLint("NewApi")
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,14 +108,43 @@ public class ViewList extends Activity implements OnItemClickListener {
                 }
         		DataManage.setList(lel);
 	        	Log.d("SUCCESS", "media succesfully read");
-	        	BaseAdapter adapter = null;
+	        	BaseAdapter adapt = null;
 	        	if (false) {
-		        	adapter = new ArrayAdapter<String>(this, 
+		        	adapt = new ArrayAdapter<String>(this, 
 		                    android.R.layout.simple_list_item_1, MediaObject.convertMediaObjectArrayToStringArray(lel));
 	        	} else {
-	        		adapter = new AnimeCardListAdapter(this, lel, typeList);
+	        		adapt = new AnimeCardListAdapter(this, lel, typeList);
 	        	}
+	        	final BaseAdapter adapter = adapt;
 	        	ListView listView = new ListView(this);
+//	        	listView.setBackgroundColor(Color.GRAY);
+	        	
+	        	listView.setDivider(new ColorDrawable(Color.TRANSPARENT));
+	        	listView.setDividerHeight(20);
+	        	listView.setHovered(true);
+	        	final Activity act = this;
+	        	SwipeDismissListViewTouchListener touchListener =
+	                    new SwipeDismissListViewTouchListener(
+	                            listView,
+	                            new SwipeDismissListViewTouchListener.DismissCallbacks() {
+	                                @Override
+	                                public boolean canDismiss(int position) {
+	                                    return true;
+	                                }
+
+	                                @Override
+	                                public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+	                                    for (int position : reverseSortedPositions) {
+	                                        ((AnimeCardListAdapter) adapter).remove(adapter.getItem(position));
+	                                        Toast.makeText(act, "Removed " + adapter.getItem(position), Toast.LENGTH_SHORT).show();
+	                                    }
+	                                    adapter.notifyDataSetChanged();
+	                                }
+	                            });
+	        	listView.setOnTouchListener(touchListener);
+	        	listView.setOnScrollListener(touchListener.makeScrollListener());
+	        	listView.setFooterDividersEnabled(true);
+	        	listView.setPadding(20, 20, 20, 20);
 	        	listView.setAdapter(adapter);
 	        	rl.addView(listView);
 	        	//listView.setOnItemSelectedListener(this);

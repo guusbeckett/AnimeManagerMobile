@@ -155,4 +155,9 @@ public class AnimeCardListAdapter extends BaseAdapter {
     public Bitmap getBitmapFromMemCache(String key) {
         return mMemoryCache.get(key);
     }
+
+	public void remove(Object item) {
+		// TODO Auto-generated method stub
+		
+	}
 }
