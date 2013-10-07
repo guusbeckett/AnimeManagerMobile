@@ -139,14 +139,14 @@ public class FragmentGeneral extends Fragment {
         	Point size = new Point();
         	getActivity().getWindowManager().getDefaultDisplay().getSize(size);
         	float scale = 0;
-        	if (size.x>bm.getHeight()) {
-        		scale = size.x/bm.getHeight();
-        	} else {
-        		scale = bm.getHeight()/size.x;
-        	}
-        	Log.d("scaling", scale+","+size.x+","+bm.getHeight());
-        	img.setScaleX(scale);
-        	img.setScaleY(scale);
+//        	if (size.x>bm.getHeight()) {
+//        		scale = size.x/bm.getHeight();
+//        	} else {
+//        		scale = bm.getHeight()/size.x;
+//        	}
+//        	Log.d("scaling", scale+","+size.x+","+bm.getHeight());
+//        	img.setScaleX(scale);
+//        	img.setScaleY(scale);
         	
         	linlay.addView(img);
         }

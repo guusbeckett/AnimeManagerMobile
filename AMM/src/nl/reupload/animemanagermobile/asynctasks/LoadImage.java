@@ -16,6 +16,7 @@ package nl.reupload.animemanagermobile.asynctasks;
 import java.lang.ref.WeakReference;
 
 import nl.reupload.animemanagermobile.animefragmens.listadapters.AnimeCardListAdapter;
+import nl.reupload.animemanagermobile.data.AniDBWrapper;
 import nl.reupload.animemanagermobile.data.DataManage;
 import nl.reupload.animemanagermobile.dialogs.ShowPickerDialog;
 import android.app.Activity;
@@ -31,9 +32,8 @@ public class LoadImage extends AsyncTask<String, String, Bitmap> {
 	private AnimeCardListAdapter cardloader;
 	private WeakReference imageViewReference;
 	
-	public LoadImage(AnimeCardListAdapter act, ImageView view, boolean online, boolean temp) {
+	public LoadImage(AnimeCardListAdapter act, ImageView view, boolean temp) {
 		imageViewReference = new WeakReference(view);
-		this.online = online;
 		this.temp = temp;
 		this.cardloader = act;
 	}
@@ -42,12 +42,14 @@ public class LoadImage extends AsyncTask<String, String, Bitmap> {
 	protected Bitmap doInBackground(String... params) {
 		Bitmap bm = null;
 		for (String item : params) {
-			if (online) {
-				
-			} else {
-				bm  = DataManage.loadImageFromExternal(item, cardloader.getActivity());
-				cardloader.addBitmapToMemoryCache(String.valueOf(params[0]), bm);
-
+			if (item != null) {
+				if (!DataManage.doesExternalFileExist("/images/" + item, cardloader.getActivity())) {
+					AniDBWrapper.fetchImage(item, cardloader.getActivity(), "");
+				}
+				try {
+					bm  = DataManage.loadImageFromExternal(item, cardloader.getActivity());
+					cardloader.addBitmapToMemoryCache(String.valueOf(item), bm);	
+				} catch (Exception e) {}
 			}
 		}
 		return bm;
@@ -62,9 +64,11 @@ public class LoadImage extends AsyncTask<String, String, Bitmap> {
   protected void onPostExecute(Bitmap bm) {
 //      showDialog("Downloaded " + result + " bytes");
 	  if (bm!=null) {
+		  try {
 		  ImageView view = (ImageView) imageViewReference.get();
 		  view.setImageBitmap(bm);
 		  view = null;
+		  } catch (Exception e) {}
 	  }
   }
 

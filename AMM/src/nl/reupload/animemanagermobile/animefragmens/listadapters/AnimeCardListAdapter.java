@@ -38,12 +38,14 @@ public class AnimeCardListAdapter extends BaseAdapter {
 	private MediaObject[] list;
 	private Activity act;
 	private LruCache<String, Bitmap> mMemoryCache;
+	private int type;
  
     public AnimeCardListAdapter(Activity act, MediaObject[] list, int type) {
         inflater = (LayoutInflater)act.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         appendListWithMetadata(list, act, type);
         this.list = list;
         this.act = act;
+        this.type = type;
         final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
 
         // Use 1/8th of the available memory for this memory cache.
@@ -68,8 +70,8 @@ public class AnimeCardListAdapter extends BaseAdapter {
 	        		metadataParse = AniDBWrapper.parseAniDBfile(id, act);
 	        		if (metadataParse != null) {
 	        			list2[i].setImageLoc(metadataParse[10]);
-//	        			if (metadataParse[1]!="null")
-//	        				list2[i].setTotal(Integer.parseInt(metadataParse[1]));
+	        			if (metadataParse[1]!=null)
+	        				list2[i].setTotal(Integer.parseInt(metadataParse[1]));
 	        		}
 	        	}
 	        	else {
@@ -118,7 +120,12 @@ public class AnimeCardListAdapter extends BaseAdapter {
  
         // Setting all values in listview
 	    title.setText(item.getTitle());
-	    subTitle.setText(item.getProgress()+"/"+item.getTotal());
+	    if (type==1||type==3)
+	    	subTitle.setText(item.getProgress()+"/"+item.getTotal());
+	    else {
+	    	if (item.getTotal()>0)
+	    		subTitle.setText(item.getTotal() + ((type==1||type==2||type==5)?" Episodes":" Chapters"));
+	    }
 	    ImageView image = (ImageView)vi.findViewById(R.id.anime_card_image);
 	    if (item.getImageLoc()!=null) {
 	    	
@@ -129,7 +136,7 @@ public class AnimeCardListAdapter extends BaseAdapter {
 	            image.setImageBitmap(bitmap);
 	        } else {
 	            image.setImageBitmap(null);
-		    	new LoadImage(this, image, false, false).execute(item.getImageLoc());
+		    	new LoadImage(this, image, false).execute(item.getImageLoc());
 	        }
 
 	    	

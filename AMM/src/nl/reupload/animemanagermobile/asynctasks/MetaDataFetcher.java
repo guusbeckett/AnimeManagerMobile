@@ -57,7 +57,13 @@ public class MetaDataFetcher extends AsyncTask<Integer, Integer, Boolean> {
 	@Override
 	protected Boolean doInBackground(Integer... params) {
 		if (!DataManage.getBanned())
+		{
+			try {
 			handleMetadata(type, media.getId());
+			} catch (Exception e) { 
+				//TODO handle this	
+			}
+		}
 		return true;
 	}
 	
@@ -103,10 +109,12 @@ public class MetaDataFetcher extends AsyncTask<Integer, Integer, Boolean> {
 									
 									if (media.getId() == 0)
 						      		DataManage.register(media.getTitle(), Integer.parseInt(titles[which].split("\\^")[1]), act, type);
+									try {
 									if (type == 1 || type == 2 || type == 5)
 										AniDBWrapper.grabAnimeMetadata(Integer.parseInt(titles[which].split("\\^")[1]), act);
 									else 
 										MangaUpdatesClient.grabMangaMetadata(Integer.parseInt(titles[which].split("\\^")[1]), act);
+									} catch (Exception e){}
 									publishProgress(0);
 								}
 								Log.d("select", which+"");
