@@ -31,6 +31,9 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -109,7 +112,9 @@ public class ViewList extends Activity implements OnItemClickListener {
         		DataManage.setList(lel);
 	        	Log.d("SUCCESS", "media succesfully read");
 	        	BaseAdapter adapt = null;
-	        	if (false) {
+	        	SharedPreferences settings = this.getSharedPreferences("AMMprefs", 0);
+	        	final int style = settings.getInt("ViewListStyle", 0);
+	        	if (style == 0) {
 		        	adapt = new ArrayAdapter<String>(this, 
 		                    android.R.layout.simple_list_item_1, MediaObject.convertMediaObjectArrayToStringArray(lel));
 	        	} else {
@@ -117,34 +122,105 @@ public class ViewList extends Activity implements OnItemClickListener {
 	        	}
 	        	final BaseAdapter adapter = adapt;
 	        	ListView listView = new ListView(this);
-//	        	listView.setBackgroundColor(Color.GRAY);
-	        	
-	        	listView.setDivider(new ColorDrawable(Color.TRANSPARENT));
-	        	listView.setDividerHeight(20);
-	        	listView.setHovered(true);
+	        	if (settings.getBoolean("ListCards", false))
+	        	{
+		        	listView.setDivider(new ColorDrawable(Color.TRANSPARENT));
+		        	listView.setDividerHeight(20);
+		        	listView.setHovered(true);
+		        	listView.setFooterDividersEnabled(true);
+		        	listView.setPadding(20, 20, 20, 20);
+	        	}
 	        	final Activity act = this;
-	        	SwipeDismissListViewTouchListener touchListener =
-	                    new SwipeDismissListViewTouchListener(
-	                            listView,
-	                            new SwipeDismissListViewTouchListener.DismissCallbacks() {
-	                                @Override
-	                                public boolean canDismiss(int position) {
-	                                    return true;
-	                                }
-
-	                                @Override
-	                                public void onDismiss(ListView listView, int[] reverseSortedPositions) {
-	                                    for (int position : reverseSortedPositions) {
-	                                        ((AnimeCardListAdapter) adapter).remove(adapter.getItem(position));
-	                                        Toast.makeText(act, "Removed " + adapter.getItem(position), Toast.LENGTH_SHORT).show();
-	                                    }
-	                                    adapter.notifyDataSetChanged();
-	                                }
-	                            });
-	        	listView.setOnTouchListener(touchListener);
-	        	listView.setOnScrollListener(touchListener.makeScrollListener());
-	        	listView.setFooterDividersEnabled(true);
-	        	listView.setPadding(20, 20, 20, 20);
+	        	if (settings.getBoolean("ListSwype", false))
+	        	{
+		        	SwipeDismissListViewTouchListener touchListener =
+		                    new SwipeDismissListViewTouchListener(
+		                            listView,
+		                            new SwipeDismissListViewTouchListener.DismissCallbacks() {
+		                                @Override
+		                                public boolean canDismiss(int position) {
+		                                    return true;
+		                                }
+	
+		                                @Override
+		                                public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+		                                    for (int position : reverseSortedPositions) {
+		                                        AlertDialog.Builder alert = new AlertDialog.Builder(act);
+		                                        MediaObject backup = null;
+		                                        final int oldpos = position;
+		                                        switch (style) {
+												case 0:
+													backup = lel[position];
+		                                        	alert.setTitle("Move " + adapter.getItem(oldpos) + " to: ");
+		                                        	((ArrayAdapter<String>) adapter).remove(adapter.getItem(position).toString());
+													break;
+												case 1:
+													backup = (MediaObject) adapter.getItem(position);
+		                                        	alert.setTitle("Move " + ((MediaObject) adapter.getItem(position)).getTitle() + " to: ");
+		                                        	((AnimeCardListAdapter) adapter).remove(adapter.getItem(position));
+		                                        	break;
+												case 2:
+													backup = (MediaObject) adapter.getItem(position);
+		                                        	alert.setTitle("Move " + ((MediaObject) adapter.getItem(position)).getTitle() + " to: ");
+		                                        	((AnimeCardListAdapter) adapter).remove(adapter.getItem(position));
+		                                        	break;
+													
+												};
+												final MediaObject back = backup;
+		                                    	alert.setAdapter(new ArrayAdapter<String>(act, android.R.layout.simple_list_item_1, new String[]{"Watching", "Seen", "Backlog", "Trash"}), new OnClickListener() {
+													
+													@Override
+													public void onClick(DialogInterface dialog, int which) {
+														switch (which) {
+															case 0:
+																break;
+															case 1:
+																break;
+															case 2:
+																break;
+														}
+													}
+												});
+		                                        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {	                                              @Override
+			                                        public void onClick(DialogInterface dialog, int whichButton) {
+			                                        	switch (style) {
+															case 0:
+																((ArrayAdapter<String>) adapter).insert(back.toString(), oldpos);
+															case 1:
+																((AnimeCardListAdapter) adapter).insert(oldpos, back);
+															case 2:
+																break;
+			                                        	}
+			                                        	
+			                                        	adapter.notifyDataSetChanged();
+			                                        }
+		                                        });
+		                                        alert.setOnCancelListener(new OnCancelListener() {
+													
+													@Override
+													public void onCancel(DialogInterface dialog) {
+														switch (style) {
+														case 0:
+															((ArrayAdapter<String>) adapter).insert(back.getTitle(), oldpos);
+															break;
+														case 1:
+															((AnimeCardListAdapter) adapter).insert(oldpos, back);
+															break;
+														case 2:
+															break;
+		                                        	}
+														//FIXME Make general handler
+			                                        	adapter.notifyDataSetChanged();
+													}
+												});
+		                                        alert.show();
+		                                    }
+		                                    adapter.notifyDataSetChanged();
+		                                }
+		                            });
+		        	listView.setOnTouchListener(touchListener);
+		        	listView.setOnScrollListener(touchListener.makeScrollListener());
+	        	}
 	        	listView.setAdapter(adapter);
 	        	rl.addView(listView);
 	        	//listView.setOnItemSelectedListener(this);
@@ -180,6 +256,11 @@ public class ViewList extends Activity implements OnItemClickListener {
         }
         
     }
+	
+	
+	private void returnItem(BaseAdapter adapt, Object object, int pos, int style) {
+		
+	}
 	
 	private String[] getFeedHeaders() {
 		ArrayList<String> list = new ArrayList<String>();

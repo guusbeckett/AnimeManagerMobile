@@ -13,6 +13,8 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the Reupload Open Source Licence along with this library; if not, contact the distrubutor of this program*/
 package nl.reupload.animemanagermobile.animefragmens.listadapters;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -157,7 +159,22 @@ public class AnimeCardListAdapter extends BaseAdapter {
     }
 
 	public void remove(Object item) {
-		// TODO Auto-generated method stub
+		ArrayList<MediaObject> newlist = new ArrayList<MediaObject>();
+		for (int i=0;i<list.length;i++) {
+			newlist.add(list[i]);
+		}
+		newlist.remove(item);
+		list = newlist.toArray(new MediaObject[0]);
+		
+	}
+
+	public void insert(int oldpos, MediaObject backup) {
+		ArrayList<MediaObject> newlist = new ArrayList<MediaObject>();
+		for (int i=0;i<list.length;i++) {
+			newlist.add(list[i]);
+		}
+		newlist.add(oldpos, backup);
+		list = newlist.toArray(new MediaObject[0]);
 		
 	}
 }

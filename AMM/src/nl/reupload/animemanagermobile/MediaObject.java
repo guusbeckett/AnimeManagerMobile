@@ -14,6 +14,7 @@ You should have received a copy of the Reupload Open Source Licence along with t
 package nl.reupload.animemanagermobile;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import android.util.Log;
 
@@ -67,13 +68,13 @@ public class MediaObject implements Serializable {
 		return title;
 	}
 
-	public static String[] convertMediaObjectArrayToStringArray(
+	public static ArrayList<String> convertMediaObjectArrayToStringArray(
 			MediaObject[] items) {
-		String[] newItems = new String[items.length];
-		int i = 0;
+		ArrayList<String> newItems = new ArrayList<String>();
+//		int i = 0;
 		for (MediaObject object : items) {
-			newItems[i] = object.getTitle();
-			i++;
+//			newItems[i] = object.getTitle();
+			newItems.add(object.getTitle());
 		}
 		return newItems;
 	}

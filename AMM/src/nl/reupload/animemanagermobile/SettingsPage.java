@@ -18,6 +18,7 @@ import nl.reupload.animemanagermobile.optionfragments.FileLocationFrag;
 import nl.reupload.animemanagermobile.optionfragments.MangaSelectionFragment;
 import nl.reupload.animemanagermobile.optionfragments.MetadataFragment;
 import nl.reupload.animemanagermobile.optionfragments.SubbersFragment;
+import nl.reupload.animemanagermobile.optionfragments.ViewListSettingFragment;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.content.Intent;
@@ -55,6 +56,8 @@ public class SettingsPage extends FragmentActivity {
 	        		SubbersFragment.class, null);
 	        mTabsAdapter.addTab(actionBar.newTab().setText(R.string.meta_storage),
 	        		MetadataFragment.class, null);
+	        mTabsAdapter.addTab(actionBar.newTab().setText("View List Options"),
+	        		ViewListSettingFragment.class, null);
 	        mTabsAdapter.addTab(actionBar.newTab().setText("Manga Storage"),
 	        		MangaSelectionFragment.class, null);
 	        mTabsAdapter.addTab(actionBar.newTab().setText("Dev Options"),
